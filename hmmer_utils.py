@@ -137,5 +137,17 @@ def get_hmmer_info(query, primary_hmm, cust_hmm, n=5, e_cutoff=.001, query_is_ac
         os.remove(pid_prefix+"hmm_out.tmp.tab")
         return pfam_desc_list
     except KeyboardInterrupt:
+	try:
+	    os.remove(pid_prefix+'pFamInfo.tmp.tab')
+	except:
+	    pass
+	try:
+            os.remove(pid_prefix+"fasta_file.tmp.fasta")
+	except:
+	    pass
+	try:
+            os.remove(pid_prefix+"hmm_out.tmp.tab")
+	except:
+	    pass
         logger.critical("SIGINT recieved during HMMScan")
         raise KeyboardInterrupt

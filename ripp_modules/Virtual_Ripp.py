@@ -140,28 +140,34 @@ class Virtual_Ripp(object):
     def run_fimo_simple(self):
     #TODO change to temp file
         pid = str(os.getpid())
-        with open("tmp_files/" + pid + "FIMO.seq", 'w+') as tfile:
-            tfile.write(">query\n%s" % (self.sequence))
-        query_motif_file = "ripp_modules/" + self.peptide_type + '/' + self.peptide_type + "_fimo.txt"
-        command = ["$HOME/meme/bin/fimo --text --verbosity 1 " + query_motif_file + ' ' + "tmp_files/" + pid + "FIMO.seq"]
-        try:
-            out, err, retcode = execute(command)
-        except OSError:
-            logger.error("Could not run FIMO on %s" % (self.peptide_type))
-            try:
-                os.remove(pid+"TEMP.seq")
-            except OSError:
-                pass
-            return ""
-        if retcode != 0:
-            logger.error('FIMO returned %d: %r while searching %r', retcode,
-                            err, self.query_motif_file)
-            return []
-        try:
-            os.remove("tmp_files/" + pid + "FIMO.seq")
-        except OSError:
-                pass
-        return out
+	try:
+		with open("tmp_files/" + pid + "FIMO.seq", 'w+') as tfile:
+		    tfile.write(">query\n%s" % (self.sequence))
+		query_motif_file = "ripp_modules/" + self.peptide_type + '/' + self.peptide_type + "_fimo.txt"
+		command = ["$HOME/meme/bin/fimo --text --verbosity 1 " + query_motif_file + ' ' + "tmp_files/" + pid + "FIMO.seq"]
+		try:
+		    out, err, retcode = execute(command)
+		except OSError:
+		    logger.error("Could not run FIMO on %s" % (self.peptide_type))
+		    try:
+		        os.remove(pid+"TEMP.seq")
+		    except OSError:
+		        pass
+		    return ""
+		if retcode != 0:
+		    logger.error('FIMO returned %d: %r while searching %r', retcode,
+		                    err, self.query_motif_file)
+		    return []
+		try:
+		    os.remove("tmp_files/" + pid + "FIMO.seq")
+		except OSError:
+		        pass
+	except KeyboardInterrupt:
+		try:
+		    os.remove("tmp_files/" + pid + "FIMO.seq")
+		except OSError:
+		        pass
+    return out
     
     def get_min_dist(self, coords_list):
         if coords_list == []:

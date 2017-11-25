@@ -154,8 +154,7 @@ def __main__():
     try: 
         os.mkdir("tmp_files")
     except OSError:
-        shutil.rmtree("tmp_files")
-        os.mkdir("tmp_files")
+	pass
 #==============================================================================
 #   Check arguments        
 #==============================================================================
@@ -315,14 +314,12 @@ def __main__():
             except OSError:
                 logger.debug("Temp feature file appears to be missing...")
          
-        shutil.rmtree("tmp_files")
         
     except KeyboardInterrupt as e:
         logger.critical("Keyboard interrupt recieved. Shutting down RODEO.")
         request_thread.join()
         for process in processes:
             process.join()
-        shutil.rmtree("tmp_files")
     
 if __name__ == '__main__':
     __main__()
