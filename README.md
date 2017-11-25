@@ -1,7 +1,5 @@
 # RODEO 2
-Welcome to the new RODEO! This is a beta version, so there are sure to be bugs. Please try and crashe it/make it not work for you in ways which could happen in a legit scenario. Try massive queries. Give it queries that don't exist. Disconnect the internet. Really try whatever I'd appreciate it. 
-
-Since I don't and won't be using RODEO as often as most of you, I am not as aware of the various use cases as you. Therefore, if there's something you want that is missing out of the current RODEO, please ask. 
+Welcome to the new RODEO! Exhaustive documentation on how RODEO2 should be used can be found on the [RODEO website.](www.ripprodeo.org). The explanation below is a brief summary of how to use RODEO. Please report any bugs either via GitHub or by contacting the developers directly.
 
 Lastly, I have one important note. IF YOU WANT TO KILL RODEO/END THE PROCESS, USE Ctrl+C! Do not use Ctrl+Z or another combination, as these are not able to be processed properly and could result in [ZOMBIE PROCESSES](https://stackoverflow.com/questions/20688982/zombie-process-vs-orphan-process). 
 
@@ -16,7 +14,7 @@ Lastly, I have one important note. IF YOU WANT TO KILL RODEO/END THE PROCESS, US
 
 1. Pull the git repository down onto your computer.
 2. In the hmm_dir folder of the repo, press your Pfam-A file (press TIGRFAM too if desired)
-    * You can just copy the hmm files from RODEO 1.0 into the folder instead if you'd like.
+    * You can just copy the hmm files from RODEO 1.0 (Perl version) into the folder instead if you'd like.
     * If you are worried about space, you can edit the PFAM_DIR variable in the general section of the `confs/default.conf` file.
 
 There may be things missing. Please let me know.
@@ -69,10 +67,7 @@ HMM_ANNOTATION_IDm [colorm]
 ### More Notes (some redudancy)
 1. Output is currently not verbose (You will not see all debug output). For those of you who would like to see it, uncomment line 16 and comment line 17 in `rodeo_main.py`
 2. Output is not in order if ran in parallel. Output should still make sense but the accessions might not be in the same order due to parallel processing.
-3. Test outputs are in a folder titled as such. Please look through and make sure things make sense :)
 
 
 ### TODO list
 1. Update sacti module search for rSAM
-2. "Log10 of what?"
-3. Colors for lanthi
