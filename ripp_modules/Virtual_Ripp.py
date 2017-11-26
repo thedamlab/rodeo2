@@ -140,7 +140,7 @@ class Virtual_Ripp(object):
     def run_fimo_simple(self):
     #TODO change to temp file
         pid = str(os.getpid())
-	try:
+        try:
             with open("tmp_files/" + pid + "FIMO.seq", 'w+') as tfile:
                 tfile.write(">query\n%s" % (self.sequence))
             query_motif_file = "ripp_modules/" + self.peptide_type + '/' + self.peptide_type + "_fimo.txt"
@@ -162,7 +162,7 @@ class Virtual_Ripp(object):
                 os.remove("tmp_files/" + pid + "FIMO.seq")
             except OSError:
                     pass
-	except KeyboardInterrupt:
+        except KeyboardInterrupt:
             try:
                 os.remove("tmp_files/" + pid + "FIMO.seq")
             except OSError:

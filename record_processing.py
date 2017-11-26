@@ -83,7 +83,8 @@ def process_record_worker(unprocessed_records_q, processed_records_q, args, mast
                 elif master_conf['general']['variables']['fetch_type'].lower() == 'nucs':
                     record.trim_to_n_nucleotides(master_conf['general']['variables']['fetch_n'])
                 record.annotate_w_hmmer(master_conf['general']['variables']['pfam_dir'], args.custom_hmm)
-                record.set_intergenic_seqs()
+                record.set_intergenic_seqs(min_aa_seq_length=master_conf['general']['variables']['precursor_min'], 
+                                           max_aa_seq_length=master_conf['general']['variables']['precursor_max'])
                 record.set_intergenic_orfs(min_aa_seq_length=master_conf['general']['variables']['precursor_min'], 
                                            max_aa_seq_length=master_conf['general']['variables']['precursor_max'],
                                            overlap=master_conf['general']['variables']['overlap']) 

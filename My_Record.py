@@ -172,7 +172,7 @@ class My_Record(object):
 ##            p.terminate()
 #        p.close()
 
-    def set_intergenic_seqs(self):
+    def set_intergenic_seqs(self, min_length, max_length):
         """Sets the sequences between called CDSs"""
         #First need to check if we have trimmed our sequence yet
         MIN_CUTOFF = 75 #Minimum number of intergenic nucs to be considered for ORF scanning        
@@ -180,7 +180,7 @@ class My_Record(object):
             self.window_end = len(self.cluster_sequence)
         start = self.window_start
         for cds in self.CDSs:
-            if len(cds.pfam_descr_list) == 0:
+            if len(cds.pfam_descr_list) == 0 and (min_length <= cds.sequence <= max_length):
                 self.intergenic_orfs.append(cds)
             end = min(cds.start, cds.end)
             if end-start >= MIN_CUTOFF:
