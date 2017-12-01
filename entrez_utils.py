@@ -144,7 +144,7 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
                             tmp = start
                             start = end
                             end = tmp
-                        if nuccore_accession_id == accession_id:
+                        if nuccore_accession_id.split('.')[0].upper() == accession_id.split('.')[0].upper():
                             ret_record.query_index = len(ret_record.CDSs)
                     else:
                         continue
