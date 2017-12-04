@@ -36,13 +36,15 @@ Created on Mon Aug  7 20:58:10 2017
 # GNU Affero General Public License for more details.
 #==============================================================================
 
-import os
+import socket
+import traceback
 from Bio import Entrez, SeqIO
 from Bio.Seq import Seq
 from Bio.Alphabet import generic_dna
 from My_Record import My_Record, Sub_Seq
 import logging
 from rodeo_main import VERBOSITY
+from timeout_decorator import timeout, TimeoutError
 
 logger = logging.getLogger(__name__)
 logger.setLevel(VERBOSITY)
@@ -59,8 +61,9 @@ ch.setFormatter(formatter)
 # add ch to logger
 logger.addHandler(ch)
 
-Entrez.email = 'kille2@illinois.edu'
+Entrez.email = str(socket.gethostname()) + 'kille2@illinois.edu' 
 
+@timeout(1200)
 def get_gb_handles(prot_accession_id):
     """Returns a list of .gb/.gbk filestreams from protein db accession.
     
@@ -70,7 +73,7 @@ def get_gb_handles(prot_accession_id):
         -3 = Any response failure from Entrez database (error on database side)
     """
     tries = 3 #Max number of times to try the database before it gives up
-    
+    logger.info("Fetching %s data from GenBank." % prot_accession_id)
     for i in range(tries):
         try:
             record = Entrez.read(Entrez.esearch("protein",term=prot_accession_id))
@@ -103,14 +106,17 @@ def get_gb_handles(prot_accession_id):
             return handles
         except KeyboardInterrupt:
             raise KeyboardInterrupt
+        except TimeoutError:
+            logger.error("Timeout while reaching genbank for %s." % (prot_accession_id))
+            return -1
         except Exception as e:
-            if i == tries - 1:
-                logger.error("Failed to fetch record.")
-                logger.error(e)
+            logger.error("Failed to fetch record.")
+            logger.error(e)
             pass
     return -3
 
 #gb_handle should only be a handle to ONE query 
+@timeout(300)
 def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
     """Takes an input gb_filestream and query accession_id.
     Returns a record containing basic information about the query.
@@ -119,16 +125,23 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
     ERROR CODES:
         -1 = Couldn't process .gb filestream for some reason...
     """
+    logger.info("Parsing %s handle." % nuccore_accession_id)
     try:
         try:
             gb_record = SeqIO.parse(gb_handle, "genbank", generic_dna)
         except KeyboardInterrupt:
             raise KeyboardInterrupt
-        except:
+        except Exception as e:
             logger.error("Error parsing GenBank handle for %s" % (nuccore_accession_id))
             logger.error(e)
-    
+        first_record = True
+        any_record = False
         for record in gb_record: #Should only be one record in gb_record
+            if not first_record:
+                logger.info("Multiple records in gb_record for %s. Only using the first one" % (nuccore_accession_id))
+                break
+            first_record = False
+            any_record = True
             ret_record = My_Record(nuccore_accession_id)
             ret_record.cluster_accession = record.id
             ret_record.cluster_sequence = record.seq
@@ -154,14 +167,21 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
                         continue
                     cds = Sub_Seq(seq_type='CDS', seq=seq, start=start, end=end, direction=direction, accession_id=accession_id)
                     ret_record.CDSs.append(cds)
-        if len(ret_record.cluster_sequence) > 0 and len(ret_record.CDSs) > 0:
+        if any_record and len(ret_record.cluster_sequence) > 0 and len(ret_record.CDSs) > 0:
             logger.debug("Record made for %s" % (ret_record.cluster_accession))
             return ret_record
         else:
+            logger.error("Corrupted GenBank record for %s" % (nuccore_accession_id))
+            logger.error(e)
+            traceback.print_exc()
             return -1
     except KeyboardInterrupt:
         raise KeyboardInterrupt
+    except TimeoutError:
+        logger.error("Timeout while reaching genbank for %s" % (nuccore_accession_id))
+        return -1
     except Exception as e:
         logger.error("Corrupted GenBank record for %s" % (nuccore_accession_id))
-        logger.error(gb_record)
         logger.error(e)
+        traceback.print_exc()
+        return -1
