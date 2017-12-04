@@ -63,6 +63,7 @@ class Error_report(object):
     
     def __init__(self, query, error_message):
         self.query = query
+        self.query_accession_id = query
         self.error_message = error_message
         
 def process_record_worker(unprocessed_records_q, processed_records_q, args, master_conf, ripp_modules, index):
@@ -136,7 +137,7 @@ def fill_request_queue(queries, processed_records_q, unprocessed_records_q, args
                     continue
             else:#gbk file
                 try:
-                    gb_handles = [open(query)]
+                    gb_handles = [query]
                 except OSError as e:
                     error_message = "Error opening %s" % (query)
                     logger.error(e)
@@ -146,13 +147,16 @@ def fill_request_queue(queries, processed_records_q, unprocessed_records_q, args
                 record = get_record_from_gb_handle(handle, query)
                 if record < 0:
                     if record == -1:
-                        error_message = "Couldn't process .Genbank filestream. May be corrupt."\
-                          % (query, record)
+                        error_message = "Couldn't process %s Genbank filestream. May be corrupt."\
+                          % (query)
                     else:
                         error_message = "Unknown error"
                     unprocessed_records_q.put(Error_report(query, error_message))
-                    continue
-                logger.debug("Putting %s on the queue" % (record.query_accession_id))
+                    if not master_conf['general']['variables']['evaluate_all']:
+                        break
+                    else:
+                        continue
+                logger.info("Putting %s on the queue" % (record.query_accession_id))
                 unprocessed_records_q.put(record)
                 if not master_conf['general']['variables']['evaluate_all']:
                     break
