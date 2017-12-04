@@ -37,7 +37,6 @@ Created on Mon Aug  7 20:34:38 2017
 #==============================================================================
 
 import logging
-import threading
 import multiprocessing
 import shutil
 import os
@@ -232,8 +231,8 @@ def __main__():
         for i in range(args.num_cores):
             processes.append(multiprocessing.Process(target=record_processing.process_record_worker, args=(unprocessed_records_q, processed_records_q, args, master_conf, ripp_modules, i)))
             processes[-1].start()
-        request_thread = threading.Thread(target=fill_request_queue, args=(queries, processed_records_q, unprocessed_records_q, args, master_conf, ripp_modules,))
-        request_thread.start()
+        request_proc = multiprocessing.Process(target=fill_request_queue, args=(queries, processed_records_q, unprocessed_records_q, args, master_conf, ripp_modules,))
+        request_proc.start()
         record = processed_records_q.get()
         queue_cap_count = 0
 #==============================================================================
@@ -247,13 +246,14 @@ def __main__():
                     break
                 record =  processed_records_q.get()
                 continue
-            query = queries[query_no]
+            query = record.query_accession_id
             query_no += 1
             logger.info("Writing output for query #%d.\t%s" % (query_no, query))
             if type(record) == Error_report:
                 logger.error(("For %s:\t" + record.error_message) % (record.query))
                 main_html_generator.write_failed_query(main_html, record.query, record.error_message)
-                ripp_html_generator.write_failed_query(ripp_htmls[peptide_type], record.query, record.error_message)
+                for peptide_type in peptide_types:
+                    ripp_html_generator.write_failed_query(ripp_htmls[peptide_type], record.query, record.error_message)
                 record = processed_records_q.get()
                 continue
     
@@ -317,9 +317,9 @@ def __main__():
         
     except KeyboardInterrupt as e:
         logger.critical("Keyboard interrupt recieved. Shutting down RODEO.")
-        request_thread.join()
+        request_proc.join(5)
         for process in processes:
-            process.join()
+            process.join(5)
     
 if __name__ == '__main__':
     __main__()
