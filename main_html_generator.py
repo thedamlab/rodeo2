@@ -87,8 +87,14 @@ def write_header(html_file, master_conf):
         </div></div>
         </div>""")
 
-def draw_CDS_arrow(main_html, cds, sub_by, scale_factor):
-    fill_color = "white" #TODO make changes
+def get_fill_color(cds, peptide_conf):
+    for i in range(len(cds.pfam_descr_list)):
+        if cds.pfam_descr_list[i][0] in peptide_conf['pfam_colors'].keys():
+            return peptide_conf['pfam_colors'][cds.pfam_descr_list[i][0]]
+    return "white"
+
+def draw_CDS_arrow(main_html, cds, main_conf, sub_by, scale_factor):
+    fill_color = get_fill_color(cds, main_conf)
     start = cds.start
     end = cds.end
     #HMM info
@@ -138,7 +144,7 @@ def draw_CDS_arrow(main_html, cds, sub_by, scale_factor):
 #    main_html.write(str(index))
 #    main_html.write("</text>")
 
-def draw_orf_diagram(main_html, record):
+def draw_orf_diagram(main_html, record, main_conf):
     main_html.write('<h3>Architecture</h3>\n')
     main_html.write('<svg width="1060" height="53">')
     bsc_start = min(record.CDSs[0].start, record.CDSs[0].end)
@@ -146,7 +152,7 @@ def draw_orf_diagram(main_html, record):
     sub_by = bsc_start - 500
     scale_factor = (660./(bsc_end - bsc_start))
     for cds in record.CDSs:
-        draw_CDS_arrow(main_html, cds, sub_by, scale_factor)
+        draw_CDS_arrow(main_html, cds, main_conf, sub_by, scale_factor)
     main_html.write('</svg>')
 #    main_html.write('<svg width="1060" height="53">')
 #    index = 0
@@ -272,7 +278,7 @@ def write_record(main_html, master_conf, record):
     main_html.write('<h2 id="%s"> Results for %s [%s]\n' % (record.query_accession_id, record.query_accession_id, record.cluster_genus_species))
     main_html.write('<a href="#header"><small><small>back to top</small></small></a></h2>') #TODO keep for single?
     main_html.write('<p></p>') # TODO why
-    draw_orf_diagram(main_html, record)
+    draw_orf_diagram(main_html, record, master_conf['general'])
     main_html.write('<p></p>') 
     main_html.write('<a href="https://www.ncbi.nlm.nih.gov/nuccore/%s">Link to nucleotide sequence</a>' % (record.cluster_accession))
     draw_cds_table(main_html, record)
