@@ -93,7 +93,7 @@ def process_record_worker(unprocessed_records_q, processed_records_q, args, mast
                     module = ripp_modules[peptide_type]
                     record.set_ripps(module, master_conf)
                     record.score_ripps(module, master_conf['general']['variables']['pfam_dir'], args.custom_hmm)
-                logger.info("Worker process %s finished processing %s" % (my_id, record.query_accession_id))
+                logger.debug("Worker process %s finished processing %s" % (my_id, record.query_accession_id))
                 processed_records_q.put(record)
             except KeyboardInterrupt:
                 raise KeyboardInterrupt
@@ -156,7 +156,7 @@ def fill_request_queue(queries, processed_records_q, unprocessed_records_q, args
                         break
                     else:
                         continue
-                logger.info("Putting %s on the queue" % (record.query_accession_id))
+                logger.debug("Putting %s on the queue" % (record.query_accession_id))
                 unprocessed_records_q.put(record)
                 if not master_conf['general']['variables']['evaluate_all']:
                     break
