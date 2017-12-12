@@ -172,7 +172,6 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
             return ret_record
         else:
             logger.error("Corrupted GenBank record for %s" % (nuccore_accession_id))
-            logger.error(e)
             traceback.print_exc()
             return -1
     except KeyboardInterrupt:
