@@ -67,7 +67,7 @@ def __main__():
                         help='Accession number, genbank file or .txt file with an accession or .gbk query on each line') #accession # or gi
     parser.add_argument('-out', '--output_dir', type=str,
                         help='Name of output folder')
-    parser.add_argument('-c', '--conf_file', nargs='*', default=['confs/default.conf'], 
+    parser.add_argument('-c', '--conf_file', nargs='*', default=[], 
                         help='Maximum size of potential ORF') 
     parser.add_argument('-hmm', '--custom_hmm', nargs='*', default=[], 
                         help='Maximum size of potential ORF') 
@@ -122,7 +122,8 @@ def __main__():
 #   Handle configureations
 #==============================================================================
     confs = []
-    for conf in args.conf_file:
+    
+    for conf in ['confs/default.conf'] + args.conf_file:
         try:
             confs.append(config_parser.parse_config_file(conf))
         except KeyboardInterrupt:
