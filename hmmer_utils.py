@@ -58,16 +58,6 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 pid_prefix = None    
 
-#TODO try/except blocks for error checking processes
-def _generate_fasta(accession):
-    out_file = open("fasta_file.tmp.fasta", 'w+')
-    esearch_process = subprocess.Popen(["/home/bryce/edirect/esearch", "-db", "protein", "-query", accession],
-                                       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    efetch_process = subprocess.Popen(["/home/bryce/edirect/efetch", "-format", "fasta"], 
-                                      stdin=esearch_process.stdout, stdout=out_file)
-    efetch_process.communicate()
-    out_file.close()
-
 def _generate_fasta_from_string(query_string):
     handle = open(pid_prefix+"fasta_file.tmp.fasta", "w+")
     handle.write(">temp_string\n" + query_string)
@@ -113,10 +103,7 @@ def get_hmmer_info(query, primary_hmm, cust_hmm, n=5, e_cutoff=.001, query_is_ac
     try:
         global pid_prefix
         pid_prefix = "tmp_files/" + str(os.getpid())
-        if query_is_accession:
-            _generate_fasta(query)
-        else:
-            _generate_fasta_from_string(query)
+        _generate_fasta_from_string(query)
         pfam_desc_list = []
         try:
             _generate_hmmer(primary_hmm)
@@ -137,17 +124,17 @@ def get_hmmer_info(query, primary_hmm, cust_hmm, n=5, e_cutoff=.001, query_is_ac
         os.remove(pid_prefix+"hmm_out.tmp.tab")
         return pfam_desc_list
     except KeyboardInterrupt:
-	try:
-	    os.remove(pid_prefix+'pFamInfo.tmp.tab')
-	except:
-	    pass
-	try:
+        try:
+            os.remove(pid_prefix+'pFamInfo.tmp.tab')
+        except:
+            pass
+        try:
             os.remove(pid_prefix+"fasta_file.tmp.fasta")
-	except:
-	    pass
-	try:
+        except:
+            pass
+        try:
             os.remove(pid_prefix+"hmm_out.tmp.tab")
-	except:
-	    pass
+        except:
+            pass
         logger.critical("SIGINT recieved during HMMScan")
         raise KeyboardInterrupt

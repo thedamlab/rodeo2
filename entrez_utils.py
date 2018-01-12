@@ -63,7 +63,7 @@ logger.addHandler(ch)
 
 Entrez.email = str(socket.gethostname()) + 'kille2@illinois.edu' 
 
-@timeout(1200)
+@timeout(300)
 def get_gb_handles(prot_accession_id):
     """Returns a list of .gb/.gbk filestreams from protein db accession.
     
@@ -108,9 +108,9 @@ def get_gb_handles(prot_accession_id):
             raise KeyboardInterrupt
         except TimeoutError:
             logger.error("Timeout while reaching genbank for %s." % (prot_accession_id))
-            return -1
+            return -3
         except Exception as e:
-            logger.error("Failed to fetch record.")
+            logger.error("Failed to fetch record for %s." % (prot_accession_id))
             logger.error(e)
             pass
     return -3
@@ -137,6 +137,7 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
         first_record = True
         any_record = False
         for record in gb_record: #Should only be one record in gb_record
+            accession_found = False
             if not first_record:
                 logger.info("Multiple records in gb_record for %s. Only using the first one" % (nuccore_accession_id))
                 break
@@ -159,6 +160,7 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
                             end = tmp
                         if nuccore_accession_id.split('.')[0].upper() == accession_id.split('.')[0].upper():
                             ret_record.query_index = len(ret_record.CDSs)
+                            accession_found = True
                     else:
                         continue
                     if 'translation' in feature.qualifiers.keys():
@@ -167,6 +169,9 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
                         continue
                     cds = Sub_Seq(seq_type='CDS', seq=seq, start=start, end=end, direction=direction, accession_id=accession_id)
                     ret_record.CDSs.append(cds)
+        if not accession_found:
+            logger.error("Accession %s not found in nucleotide sequence %s" % ( ret_record.cluster_acession, nuccore_accession_id))
+            return -1
         if any_record and len(ret_record.cluster_sequence) > 0 and len(ret_record.CDSs) > 0:
             logger.debug("Record made for %s" % (ret_record.cluster_accession))
             return ret_record

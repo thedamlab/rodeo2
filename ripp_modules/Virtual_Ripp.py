@@ -156,7 +156,7 @@ class Virtual_Ripp(object):
                 return ""
             if retcode != 0:
                 logger.error('FIMO returned %d: %r while searching %r', retcode,
-                                err, self.query_motif_file)
+                                err, query_motif_file)
                 return []
             try:
                 os.remove("tmp_files/" + pid + "FIMO.seq")

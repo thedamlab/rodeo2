@@ -97,6 +97,8 @@ def __main__():
                         help="Score RiPPs even if they don't have a valid split site")
     parser.add_argument('-print', '--print_precursors', action='store_true', default=None,
                         help="Print precursors in HTML file")
+    parser.add_argument('-w', '--web', action='store_true', default=False,
+                        help="Only to use when running as a web tool")
     
     args, _ = parser.parse_known_args()
 #==============================================================================
