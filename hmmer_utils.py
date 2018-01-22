@@ -87,7 +87,16 @@ def _parse(n, e_cutoff):
                 description = ' '.join(tmp_list[NUM_COLUMNS-1:])
                 e_val = tmp_list[6]
                 if float(e_val) < e_cutoff and len(ret_list) < n: #Will go through one extra line but oh well #TODO
-                    ret_list.append((pfam_accession, description, float(e_val)))
+                    found = False
+                    for i in range(len(ret_list)):
+                        (pfam_accession2, description2, e_val2) = ret_list[i]
+                        if pfam_accession == pfam_accession2:
+                            found = True
+                            if float(e_val) < float(e_val2):
+                                ret_list[i] = (pfam_accession, description2, float(e_val2))
+                            break
+                    if not found:
+                        ret_list.append((pfam_accession, description, float(e_val)))
                 else:
                     break
     ret_list_final = []
@@ -120,7 +129,17 @@ def get_hmmer_info(query, primary_hmm, cust_hmm, n=5, e_cutoff=.001, query_is_ac
             except OSError:
                 logger.error("Couldn't find %s" % (hmm))
         
-        pfam_desc_list = sorted(pfam_desc_list, key=lambda entry: entry[2])
+        if len(pfam_desc_list) > 0:
+            pfam_desc_list = sorted(pfam_desc_list, key=lambda entry: entry[2])
+            pfam_desc_list = sorted(pfam_desc_list, key=lambda entry: entry[0])
+            pfam_temp_list = [pfam_desc_list[0]]
+            (curr_pfam, curr_desc, curr_eval) = pfam_desc_list[0]
+            for i in range(len(pfam_desc_list)):
+                if pfam_desc_list[i][0] == pfam_temp_list[-1][0]:
+                    continue
+                pfam_temp_list.append(pfam_desc_list[i])
+                
+            pfam_desc_list = sorted(pfam_temp_list, key=lambda entry: entry[2])
         os.remove(pid_prefix+'pFamInfo.tmp.tab')
         os.remove(pid_prefix+"fasta_file.tmp.fasta")
         os.remove(pid_prefix+"hmm_out.tmp.tab")
