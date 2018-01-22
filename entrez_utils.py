@@ -134,14 +134,11 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
         except Exception as e:
             logger.error("Error parsing GenBank handle for %s" % (nuccore_accession_id))
             logger.error(e)
-        first_record = True
         any_record = False
+        accession_found = False
         for record in gb_record: #Should only be one record in gb_record
-            accession_found = False
-            if not first_record:
-                logger.info("Multiple records in gb_record for %s. Only using the first one" % (nuccore_accession_id))
-                break
-            first_record = False
+#            if not first_record:
+#                logger.info("Multiple records in gb_record for %s." % (nuccore_accession_id))
             any_record = True
             ret_record = My_Record(nuccore_accession_id)
             ret_record.cluster_accession = record.id
@@ -151,6 +148,10 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
                 if feature.type == 'CDS':
                     start = int(feature.location.start)
                     end = int(feature.location.end)
+                    locus_tag = ""
+                    accession_id = ""
+                    if 'locus_tag' in feature.qualifiers.keys():
+                        locus_tag = feature.qualifiers['locus_tag'][0]
                     if 'protein_id' in feature.qualifiers.keys():
                         accession_id = feature.qualifiers['protein_id'][0]
                         direction = feature.strand
@@ -158,19 +159,20 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
                             tmp = start
                             start = end
                             end = tmp
-                        if nuccore_accession_id.split('.')[0].upper() == accession_id.split('.')[0].upper():
-                            ret_record.query_index = len(ret_record.CDSs)
-                            accession_found = True
-                    else:
-                        continue
+                    if nuccore_accession_id.split('.')[0].upper() == accession_id.split('.')[0].upper() or \
+                       nuccore_accession_id.split('.')[0].upper() == locus_tag.split('.')[0].upper():
+                        ret_record.query_index = len(ret_record.CDSs)
+                        accession_found = True
                     if 'translation' in feature.qualifiers.keys():
                         seq = feature.qualifiers['translation'][0]
-                    else:
-                        continue
                     cds = Sub_Seq(seq_type='CDS', seq=seq, start=start, end=end, direction=direction, accession_id=accession_id)
                     ret_record.CDSs.append(cds)
+            if accession_found and any_record and len(ret_record.cluster_sequence) > 0 and len(ret_record.CDSs) > 0:
+                logger.debug("Record made for %s" % (ret_record.cluster_accession))
+                
+                return ret_record
         if not accession_found:
-            logger.error("Accession %s not found in nucleotide sequence %s" % ( ret_record.cluster_acession, nuccore_accession_id))
+            logger.error("Accession %s not found." % (nuccore_accession_id))
             return -1
         if any_record and len(ret_record.cluster_sequence) > 0 and len(ret_record.CDSs) > 0:
             logger.debug("Record made for %s" % (ret_record.cluster_accession))
@@ -189,3 +191,4 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
         logger.error(e)
         traceback.print_exc()
         return -1
+    return -1
