@@ -82,6 +82,8 @@ def _parse(n, e_cutoff):
                     tmp_list.append(item)
             if tmp_list[1] != pfam_accession: #Check to make sure its not the same as the last one
                 pfam_accession = tmp_list[1].split('.')[0]
+                if pfam_accession == '-':
+                    pfam_accession = tmp_list[0]
                 description = ' '.join(tmp_list[NUM_COLUMNS-1:])
                 e_val = tmp_list[6]
                 if float(e_val) < e_cutoff and len(ret_list) < n: #Will go through one extra line but oh well #TODO

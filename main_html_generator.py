@@ -211,9 +211,9 @@ def draw_cds_table(main_html, record):
                 main_html.write("<td>%s" % (cds.pfam_descr_list[0][0]))
             n = 5
             for pfamid, _, _, in cds.pfam_descr_list[1:n]:
-                if cds.pfam_descr_list[0][0][:2] == "PF":
+                if pfamid[:2] == "PF":
                     main_html.write("<br><a href='http://pfam.xfam.org/family/%s'>%s</a>" % (pfamid, pfamid))
-                elif cds.pfam_descr_list[0][0][:4] == "TIGR":
+                elif pfamid[:4] == "TIGR":
                     main_html.write("<br><a href='http://www.jcvi.org/cgi-bin/tigrfams/HmmReportPage.cgi?acc=%s'>%s</a>" % (pfamid, pfamid))
                 else:
                     main_html.write("<br>%s" % (pfamid))
