@@ -148,6 +148,8 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
                 if feature.type == 'CDS':
                     start = int(feature.location.start)
                     end = int(feature.location.end)
+                    seq = "NO SEQ IN DATABASE"
+                    direction = 1
                     locus_tag = ""
                     accession_id = ""
                     if 'locus_tag' in feature.qualifiers.keys():
