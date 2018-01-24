@@ -88,7 +88,6 @@ def write_header(html_file, master_conf):
         </div>""")
 
 def get_fill_color(cds, peptide_conf):
-    print(peptide_conf['pfam_colors'].keys())
     for i in range(len(cds.pfam_descr_list)):
         if cds.pfam_descr_list[i][0].upper() in peptide_conf['pfam_colors'].keys():
             return peptide_conf['pfam_colors'][cds.pfam_descr_list[i][0].upper()]
