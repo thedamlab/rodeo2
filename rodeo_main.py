@@ -303,6 +303,8 @@ def __main__():
             My_Record.update_score_w_svm(output_dir, records)
         except KeyboardInterrupt:
             raise KeyboardInterrupt
+        except IndexError:
+            logger.error("No valid results. Input may be invalid or Genbank may not be responding")
         except Exception as e:
             logger.error("Error running SVM")
             logger.error(e)
