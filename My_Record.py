@@ -149,10 +149,13 @@ class My_Record(object):
                               self.window_end + fetch_distance)
         self._clean_CDSs()
         
-    def annotate_w_hmmer(self, primary_hmm, cust_hmm):
+    def annotate_w_hmmer(self, primary_hmm, cust_hmm, min_length, max_length):
         self.pfam_2_coords = {}
         for CDS in self.CDSs:
             CDS.pfam_descr_list = hmmer_utils.get_hmmer_info(CDS.sequence, primary_hmm, cust_hmm) #Possible input for n and e_cutoff here
+            if len(CDS.pfam_descr_list) == 0 and min_length <= len(CDS.sequence) <= max_length:
+                self.intergenic_orfs.append(CDS)
+                continue
             for annot in CDS.pfam_descr_list:
                 if annot[0] not in self.pfam_2_coords.keys(): #annot[0] is the PF* key
                     self.pfam_2_coords[annot[0]] = []

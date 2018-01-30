@@ -89,6 +89,8 @@ def write_header(html_file, master_conf):
 
 def get_fill_color(cds, peptide_conf):
     for i in range(len(cds.pfam_descr_list)):
+        if cds.pfam_descr_list[i][3].upper() in peptide_conf['pfam_colors'].keys():
+            return peptide_conf['pfam_colors'][cds.pfam_descr_list[i][3].upper()]
         if cds.pfam_descr_list[i][0].upper() in peptide_conf['pfam_colors'].keys():
             return peptide_conf['pfam_colors'][cds.pfam_descr_list[i][0].upper()]
     return "white"
@@ -188,8 +190,9 @@ def draw_cds_table(main_html, record):
       <th scope="col">direction</th>
       <th scope="col">length (aa)</th>
       <th scope="col">Pfam/HMM</th>
-      <th scope="col">E-value</th>    
+      <th scope="col">name</th>
       <th scope="col">description</th>
+      <th scope="col">E-value</th>    
     </tr>""")
     for cds in record.CDSs:
         main_html.write("<tr>\n")
@@ -202,6 +205,7 @@ def draw_cds_table(main_html, record):
             main_html.write("<td>NO PFAM MATCH</td>")
             main_html.write("<td>-</td>")
             main_html.write("<td>-</td>")
+            main_html.write("<td>-</td>")
         else:
             if cds.pfam_descr_list[0][0][:2] == "PF":
                 main_html.write("<td><a href='http://pfam.xfam.org/family/%s'>%s</a>" % (cds.pfam_descr_list[0][0], cds.pfam_descr_list[0][0]))
@@ -209,22 +213,30 @@ def draw_cds_table(main_html, record):
                 main_html.write("<td><a href='http://www.jcvi.org/cgi-bin/tigrfams/HmmReportPage.cgi?acc=%s'>%s</a>" % (cds.pfam_descr_list[0][0], cds.pfam_descr_list[0][0]))
             else:
                 main_html.write("<td>%s" % (cds.pfam_descr_list[0][0]))
+#            main_html.write("-%s"%(cds.pfam_descr_list[0][3]))
             n = 5
-            for pfamid, _, _, in cds.pfam_descr_list[1:n]:
+            for pfamid, _, _, _, in cds.pfam_descr_list[1:n]:
                 if pfamid[:2] == "PF":
                     main_html.write("<br><a href='http://pfam.xfam.org/family/%s'>%s</a>" % (pfamid, pfamid))
                 elif pfamid[:4] == "TIGR":
                     main_html.write("<br><a href='http://www.jcvi.org/cgi-bin/tigrfams/HmmReportPage.cgi?acc=%s'>%s</a>" % (pfamid, pfamid))
                 else:
                     main_html.write("<br>%s" % (pfamid))
-            e_val = cds.pfam_descr_list[0][2]
-            main_html.write("</td><td>%.2E" % Decimal(e_val))
-            for _, _, e_val, in cds.pfam_descr_list[1:n]:
-                main_html.write("<br>%.2E" % Decimal(e_val))
+                    
+            main_html.write("</td><td>%s"%(cds.pfam_descr_list[0][3]))
+            for _, _, _, name in cds.pfam_descr_list[1:n]:
+                main_html.write("<br>%s"%(name))
+                
             descr = cds.pfam_descr_list[0][1]
             main_html.write("</td><td>%s" % (descr))
-            for _, descr, _, in cds.pfam_descr_list[1:n]:
+            for _, descr, _, _, in cds.pfam_descr_list[1:n]:
                 main_html.write("<br>%s" % (descr))
+                
+            e_val = cds.pfam_descr_list[0][2]
+            main_html.write("</td><td>%.2E" % Decimal(e_val))
+            for _, _, e_val, _, in cds.pfam_descr_list[1:n]:
+                main_html.write("<br>%.2E" % Decimal(e_val))
+            
             main_html.write("</td>")
         main_html.write("</tr>") 
     main_html.write("</tbody></table><p></p>")

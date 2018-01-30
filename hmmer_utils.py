@@ -82,31 +82,32 @@ def _parse(n, e_cutoff):
                     tmp_list.append(item)
             if tmp_list[1] != pfam_accession: #Check to make sure its not the same as the last one
                 pfam_accession = tmp_list[1].split('.')[0]
-                if pfam_accession == '-':
-                    pfam_accession = tmp_list[0]
+#                if pfam_accession == '-':
+#                    pfam_accession = "N/A"
+                pfam_name = tmp_list[0]
                 description = ' '.join(tmp_list[NUM_COLUMNS-1:])
                 e_val = tmp_list[6]
                 if float(e_val) < e_cutoff and len(ret_list) < n: #Will go through one extra line but oh well #TODO
                     found = False
                     for i in range(len(ret_list)):
-                        (pfam_accession2, description2, e_val2) = ret_list[i]
-                        if pfam_accession == pfam_accession2:
+                        (pfam_accession2, description2, e_val2, name2) = ret_list[i]
+                        if pfam_accession == pfam_accession2 and pfam_name == name2:
                             found = True
                             if float(e_val) < float(e_val2):
-                                ret_list[i] = (pfam_accession, description2, float(e_val2))
+                                ret_list[i] = (pfam_accession, description2, float(e_val2), pfam_name)
                             break
                     if not found:
-                        ret_list.append((pfam_accession, description, float(e_val)))
+                        ret_list.append((pfam_accession, description, float(e_val), pfam_name))
                 else:
                     break
     ret_list_final = []
-    for acc, desc, e_val in ret_list:
+    for acc, desc, e_val, name in ret_list:
         in_list = False
-        for final_acc, _, _ in ret_list_final:
-            if acc == final_acc:
+        for final_acc, _, _, final_name in ret_list_final:
+            if acc == final_acc and name == final_name:
                 in_list = True
         if not in_list:
-            ret_list_final.append((acc, desc, e_val))
+            ret_list_final.append((acc, desc, e_val, name))
     return ret_list_final
 
 def get_hmmer_info(query, primary_hmm, cust_hmm, n=5, e_cutoff=.001, query_is_accession=False): #TODO handle lists of accessions
@@ -125,7 +126,8 @@ def get_hmmer_info(query, primary_hmm, cust_hmm, n=5, e_cutoff=.001, query_is_ac
         for hmm in cust_hmm:
             try:
                 _generate_hmmer(hmm)
-                pfam_desc_list += _parse(n, e_cutoff) 
+                add_list = _parse(n, e_cutoff)
+                pfam_desc_list += add_list
             except OSError:
                 logger.error("Couldn't find %s" % (hmm))
         
@@ -133,9 +135,9 @@ def get_hmmer_info(query, primary_hmm, cust_hmm, n=5, e_cutoff=.001, query_is_ac
             pfam_desc_list = sorted(pfam_desc_list, key=lambda entry: entry[2])
             pfam_desc_list = sorted(pfam_desc_list, key=lambda entry: entry[0])
             pfam_temp_list = [pfam_desc_list[0]]
-            (curr_pfam, curr_desc, curr_eval) = pfam_desc_list[0]
+            (curr_pfam, curr_desc, curr_eval, curr_name) = pfam_desc_list[0]
             for i in range(len(pfam_desc_list)):
-                if pfam_desc_list[i][0] == pfam_temp_list[-1][0]:
+                if pfam_desc_list[i][0] == pfam_temp_list[-1][0] and pfam_desc_list[i][3] == pfam_temp_list[-1][3]:
                     continue
                 pfam_temp_list.append(pfam_desc_list[i])
                 
