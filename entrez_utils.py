@@ -148,7 +148,7 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
                 if feature.type == 'CDS':
                     start = int(feature.location.start)
                     end = int(feature.location.end)
-                    seq = "NO SEQ IN DATABASE"
+                    seq = ""
                     direction = 1
                     locus_tag = ""
                     accession_id = ""
@@ -161,12 +161,16 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
                             tmp = start
                             start = end
                             end = tmp
+                    if accession_id == "":
+                        continue
                     if nuccore_accession_id.split('.')[0].upper() == accession_id.split('.')[0].upper() or \
                        nuccore_accession_id.split('.')[0].upper() == locus_tag.split('.')[0].upper():
                         ret_record.query_index = len(ret_record.CDSs)
                         accession_found = True
                     if 'translation' in feature.qualifiers.keys():
                         seq = feature.qualifiers['translation'][0]
+                    if seq == "NO SEQ IN DATABASE":
+                        print(feature)
                     cds = Sub_Seq(seq_type='CDS', seq=seq, start=start, end=end, direction=direction, accession_id=accession_id)
                     ret_record.CDSs.append(cds)
             if accession_found and any_record and len(ret_record.cluster_sequence) > 0 and len(ret_record.CDSs) > 0:
