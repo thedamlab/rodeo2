@@ -148,8 +148,10 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
                 if feature.type == 'CDS':
                     start = int(feature.location.start)
                     end = int(feature.location.end)
-                    seq = ""
+                    seq = "_" * abs(start-end)
                     direction = 1
+                    if end < start:
+                        direction = -1
                     locus_tag = ""
                     accession_id = ""
                     if 'locus_tag' in feature.qualifiers.keys():
@@ -162,7 +164,18 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
                             start = end
                             end = tmp
                     if accession_id == "":
-                        continue
+                        if locus_tag == "":
+                            continue
+                        else:
+                            if 'inference' in feature.qualifiers.keys():
+                                inference = feature.qualifiers['inference'][0]
+                                splits = inference.split(':')
+                                if splits[-2] == "RefSeq": 
+                                    accession_id = splits[-1]
+                                else:
+                                    accession_id = locus_tag
+                            else:
+                                accession_id = locus_tag
                     if nuccore_accession_id.split('.')[0].upper() == accession_id.split('.')[0].upper() or \
                        nuccore_accession_id.split('.')[0].upper() == locus_tag.split('.')[0].upper():
                         ret_record.query_index = len(ret_record.CDSs)
