@@ -276,7 +276,7 @@ def __main__():
                     direction = "-"
                 row = [query, record.cluster_genus_species, record.cluster_accession,
                        cds.accession_id, cds.start, cds.end, direction]
-                for pfam_acc, desc, e_val in cds.pfam_descr_list:
+                for pfam_acc, desc, e_val, name in cds.pfam_descr_list:
                     row += [pfam_acc, desc, e_val]
                 module.co_occur_write_row(output_dir, row)
                 

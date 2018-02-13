@@ -117,12 +117,21 @@ class Ripp(Virtual_Ripp):
         
     def set_split(self):
         #TODO add more regexes
-        match = re.search('(T[A-Z]{7,10}(D|E)[A-Z]{5,20}\*)', self.sequence + '*')
+        match = re.search('(T[A-Z]{7,10}(D|E)[A-Z]{5,10}\*)', self.sequence + '*')
         if match is None:
-            self.split_index = -1
-        else:
+            match = re.search('(T[A-Z]{7,10}(D|E)[A-Z]{10,15}\*)', self.sequence + '*')
+            if match is None:
+                match = re.search('(T[A-Z]{7,10}(D|E)[A-Z]{15,20}\*)', self.sequence + '*')
+                if match is None:
+                    match = re.search('(T[A-Z]{10,18}(D|E)[A-Z]{5,10}\*)', self.sequence + '*')
+                    if match is None:
+                        match = re.search('(T[A-Z]{10,18}(D|E)[A-Z]{10,15}\*)', self.sequence + '*')
+                        if match is None:
+                            match = re.search('(T[A-Z]{10,18}(D|E)[A-Z]{15,20}\*)', self.sequence + '*')
+        if match is not None:
             self.split_index = match.start() + 2
-        
+        else:
+            self.split_index = -1
         if self.split_index == -1 or abs(len(self.sequence)-self.split_index) < 5:
             self.valid_split = False
             self.split_index = int(.25*len(self.sequence))
