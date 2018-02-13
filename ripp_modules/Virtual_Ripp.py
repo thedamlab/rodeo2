@@ -45,6 +45,9 @@ import logging
 from rodeo_main import VERBOSITY
 VERBOSITY = logging.DEBUG
 
+WEB_TOOL = False
+
+
 logger = logging.getLogger(__name__)
 logger.setLevel(VERBOSITY)
 # create console handler and set level to debug
@@ -144,7 +147,10 @@ class Virtual_Ripp(object):
             with open("tmp_files/" + pid + "FIMO.seq", 'w+') as tfile:
                 tfile.write(">query\n%s" % (self.sequence))
             query_motif_file = "ripp_modules/" + self.peptide_type + '/' + self.peptide_type + "_fimo.txt"
-            command = ["$HOME/meme/bin/fimo --text --verbosity 1 " + query_motif_file + ' ' + "tmp_files/" + pid + "FIMO.seq"]
+            if WEB_TOOL:
+                command = ["/home/ubuntu/meme/bin/fimo --text --verbosity 1 " + query_motif_file + ' ' + "tmp_files/" + pid + "FIMO.seq"]
+            else:
+                command = ["$HOME/meme/bin/fimo --text --verbosity 1 " + query_motif_file + ' ' + "tmp_files/" + pid + "FIMO.seq"]
             try:
                 out, err, retcode = execute(command)
             except OSError:

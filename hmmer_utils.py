@@ -42,6 +42,8 @@ import subprocess
 import logging 
 from rodeo_main import VERBOSITY
 
+WEB_TOOL = False
+
 logger = logging.getLogger(__name__)
 logger.setLevel(VERBOSITY)
 # create console handler and set level to debug
@@ -124,12 +126,24 @@ def get_hmmer_info(query, primary_hmm, cust_hmm, n=5, e_cutoff=.001, query_is_ac
             logger.error("Couldn't find %s" % (primary_hmm)) 
         
         for hmm in cust_hmm:
-            try:
-                _generate_hmmer(hmm)
-                add_list = _parse(n, e_cutoff)
-                pfam_desc_list += add_list
-            except OSError:
-                logger.error("Couldn't find %s" % (hmm))
+            if WEB_TOOL:
+                try:
+                    for f in os.listdir(hmm):
+                        if f[-4:].lower() != '.hmm' and f[-4:].lower() != '.lib':
+                            continue
+                        if f == 'Pfam-A.hmm':
+                            continue
+                        _generate_hmmer(hmm + f)
+                        pfam_desc_list += _parse(n, e_cutoff)
+                except OSError:
+                    logger.error("Couldn't find %s" % (hmm))
+            else:
+                try:
+                    _generate_hmmer(hmm)
+                    add_list = _parse(n, e_cutoff)
+                    pfam_desc_list += add_list
+                except OSError:
+                    logger.error("Couldn't find %s" % (hmm))
         
         if len(pfam_desc_list) > 0:
             pfam_desc_list = sorted(pfam_desc_list, key=lambda entry: entry[2])

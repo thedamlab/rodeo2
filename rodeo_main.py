@@ -45,6 +45,11 @@ import config_parser
 import traceback
 import sys
 
+WEB_TOOL = False
+if WEB_TOOL:
+    RODEO_DIR = "/home/ubuntu/website/go/rodeo2/"
+    os.chdir(RODEO_DIR)
+
 #VERBOSITY = logging.DEBUG
 VERBOSITY = logging.INFO
 QUEUE_CAP = "END_OF_QUEUE"
