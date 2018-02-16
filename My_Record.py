@@ -183,8 +183,9 @@ class My_Record(object):
             self.window_end = len(self.cluster_sequence)
         start = self.window_start
         for cds in self.CDSs:
-            if len(cds.pfam_descr_list) == 0 and (min_length <= cds.sequence <= max_length):
-                self.intergenic_orfs.append(cds)
+#            if len(cds.pfam_descr_list) == 0 and (min_length <= len(cds.sequence) <= max_length):
+#                print(cds.sequence)
+#                self.intergenic_orfs.append(cds)
             end = min(cds.start, cds.end)
             if end-start >= MIN_CUTOFF:
                 #end == start could happen if the first cds starts at 0
@@ -272,6 +273,7 @@ class My_Record(object):
                             upstream_sequence = str(self.cluster_sequence[potential_orf.start-13:potential_orf.start+4])
                         potential_orf.upstream_sequence = upstream_sequence
                         self.intergenic_orfs.append(potential_orf)
+                        
         self.intergenic_orfs.sort(key=lambda seq: seq.start)
         #Get rid of duplicates. Duplicate ORFs will appear when the overlap is
         #set such that two intergenic sequences are expanded to a point where 
@@ -281,6 +283,8 @@ class My_Record(object):
             if self.intergenic_orfs[i].start == self.intergenic_orfs[i-1].start:
                 del self.intergenic_orfs[i]
             i += 1
+        
+       
         return
     
     def set_ripps(self, module, master_conf):
@@ -293,6 +297,7 @@ class My_Record(object):
             ripp = module.Ripp(orf.start, orf.end, str(orf.sequence), orf.upstream_sequence, self.pfam_2_coords)
             if ripp.valid_split or master_conf[module.peptide_type]['variables']['exhaustive']:
                 self.ripps[module.peptide_type].append(ripp)
+                
                 
     def score_ripps(self, module, pfam_hmm, cust_hmm):
         logger.debug("Scoring %s ripps for %s" % (module.peptide_type, self.query_accession_id))

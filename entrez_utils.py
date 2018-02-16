@@ -148,7 +148,7 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
                 if feature.type == 'CDS':
                     start = int(feature.location.start)
                     end = int(feature.location.end)
-                    seq = "_" * abs(start-end)
+                    seq = "X" * abs(start-end)
                     direction = 1
                     if end < start:
                         direction = -1
