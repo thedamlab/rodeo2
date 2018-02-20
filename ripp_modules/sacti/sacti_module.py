@@ -51,6 +51,7 @@ from ripp_modules.Virtual_Ripp import Virtual_Ripp
 import hmmer_utils
 
 peptide_type = "sacti"
+CUTOFF = 20
 index = 0
 
 def write_csv_headers(output_dir):
@@ -92,7 +93,7 @@ def run_svm(output_dir):
         row[9] = svm_output
         if int(svm_output) == 1:
             row[6] = int(row[6]) + 10
-        if int(row[6]) > 17: #CUTOFF
+        if int(row[6]) > CUTOFF: #CUTOFF
             row[7] = 'Y'
         else:
             row[7] = 'N'
@@ -115,6 +116,7 @@ class Ripp(Virtual_Ripp):
         self.set_split()
 #        self.set_monoisotopic_mass()
         self.csv_columns = [self.leader, self.core, self.start, self.end]
+        self.CUTOFF = CUTOFF
         
     #TODO better split for sactis?    #TAG CHRIS
     def set_split(self):
@@ -227,7 +229,7 @@ class Ripp(Virtual_Ripp):
             
         precursor_hmm_info = hmmer_utils.get_hmmer_info(self.sequence, pfam_hmm, cust_hmm)
         pfams = []
-        for pfam_dot, _, _, in precursor_hmm_info:
+        for pfam_dot, _, _, _, in precursor_hmm_info:
             pfams.append(pfam_dot.split('.')[0])
         
         #Peptide matches SboA hmm (PF11420)

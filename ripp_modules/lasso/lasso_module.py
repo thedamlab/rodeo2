@@ -49,6 +49,7 @@ from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from ripp_modules.Virtual_Ripp import Virtual_Ripp
 
 peptide_type = "lasso"
+CUTOFF = 15
 index = 0
 
 
@@ -92,7 +93,7 @@ def run_svm(output_dir):
         row[9] = svm_output
         if int(svm_output) == 1:
             row[6] = int(row[6]) + 10
-        if int(row[6]) > 17: #CUTOFF
+        if int(row[6]) > CUTOFF: #CUTOFF
             row[7] = 'Y'
         else:
             row[7] = 'N'
@@ -114,6 +115,7 @@ class Ripp(Virtual_Ripp):
         self.set_split()
         self.set_monoisotopic_mass()
         self.csv_columns = [self.leader, self.core, self.start, self.end]
+        self.CUTOFF = CUTOFF
         
     def set_split(self):
         #TODO add more regexes
@@ -158,6 +160,7 @@ class Ripp(Virtual_Ripp):
         CC_mass = 2*self._num_bridges
         # dehydration indicative of cyclization     
         bond = 18.02
+#        print(self.core)
         monoisotopic_mass = ProteinAnalysis(self.core.replace('X', ''), monoisotopic=True).molecular_weight()
         self._monoisotopic_weight = monoisotopic_mass + CC_mass - bond
         
