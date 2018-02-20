@@ -44,12 +44,13 @@ import argparse
 import config_parser
 import traceback
 import sys
+from shutil import copyfile
 
 WEB_TOOL = False
 if WEB_TOOL:
     RODEO_DIR = "/home/ubuntu/website/go/rodeo2/"
     os.chdir(RODEO_DIR)
-
+VERSION = "2.1.1"
 #VERBOSITY = logging.DEBUG
 VERBOSITY = logging.INFO
 QUEUE_CAP = "END_OF_QUEUE"
@@ -141,7 +142,17 @@ def __main__():
     master_conf = config_parser.merge_confs(confs)
     master_conf = config_parser.merge_conf_and_arg(master_conf, args)
     general_conf = master_conf['general']
-
+    if WEB_TOOL:
+        general_conf['variables']['pfam_dir'] = "/home/ubuntu/website/go/rodeo2/hmm_dir/Pfam-A.hmm"
+        
+    def pretty(d, indent=0):
+        for key, value in d.items():
+            print('\t' * indent + str(key))
+            if isinstance(value, dict):
+                pretty(value, indent+1)
+            else:
+                print('\t' * (indent+1) + str(value))
+#    pretty(general_conf)
 #==============================================================================
 #   Set up output directory
 #==============================================================================
@@ -155,6 +166,16 @@ def __main__():
         shutil.rmtree(args.output_dir)
         os.mkdir(args.output_dir)
     
+    try:
+        os.mkdir(args.output_dir + '/confs')
+        for conf_file in ['confs/default.conf'] + args.conf_file:
+            try:
+                name = conf_file.split('/')[-1]
+                copyfile(conf_file, args.output_dir + '/confs/' + name)
+            except:
+                 logger.warning("Problem copying configuration file {}".format("conf_file"))
+    except:
+        logger.warning("Problem creating configuration copy directory")
     if overwriting_folder:
         logger.warning("Overwriting %s folder." % (args.output_dir))
     
@@ -282,7 +303,7 @@ def __main__():
                 row = [query, record.cluster_genus_species, record.cluster_accession,
                        cds.accession_id, cds.start, cds.end, direction]
                 for pfam_acc, desc, e_val, name in cds.pfam_descr_list:
-                    row += [pfam_acc, desc, e_val]
+                    row += [pfam_acc, name, desc, e_val]
                 module.co_occur_write_row(output_dir, row)
                 
             main_html_generator.write_record(main_html, master_conf, record)
@@ -301,6 +322,7 @@ def __main__():
         main_html.write("</html>")
         
         #Update score w SVM.
+        
         try:
             for peptide_type in peptide_types:
                 module = ripp_modules[peptide_type]
@@ -310,6 +332,8 @@ def __main__():
             raise KeyboardInterrupt
         except IndexError:
             logger.error("No valid results. Input may be invalid or Genbank may not be responding")
+        except ValueError as e:
+            logger.critical("Value error when finalizing results. This most likely means that no results were obtained and that all queries failed.")
         except Exception as e:
             logger.error("Error running SVM")
             logger.error(e)
