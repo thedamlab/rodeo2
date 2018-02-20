@@ -40,6 +40,7 @@ import csv
 import datetime
 import My_Record
 from decimal import Decimal
+from rodeo_main import VERSION
 
 def write_header(html_file, master_conf):
     html_file.write("""
@@ -75,6 +76,7 @@ def write_header(html_file, master_conf):
                  <table class="table table-condensed" style="width:100%;">
                         <tr><th scope="row">Run Time</th><td>""" + datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y") + """</td></tr>
                         """)
+    html_file.write('<tr><th scope="row">Version</th><td>' + VERSION +  "</td></tr>\n")
     html_file.write('<tr><th scope="row">Gene Window</th><td>+/-' + str(master_conf['general']['variables']['fetch_n'])+ "  " + master_conf['general']['variables']['fetch_type'] + "</td></tr>\n")
     html_file.write("""
                         <tr><th scope="row">Peptide Range</th><td>""" + str(master_conf['general']['variables']['precursor_min']) + "-" + str(master_conf['general']['variables']['precursor_max']) + """ aa</td></tr>
@@ -82,11 +84,25 @@ def write_header(html_file, master_conf):
                   </table>
          </div>
          <div class="col-md-6">
-                    <div class="panel panel-default">
-        </table>
-        </div></div>
-        </div>""")
+                    <div class="panel panel-default">""")
+    write_legend(html_file, master_conf)
 
+def write_legend(main_html, conf):
+    main_html.write("""<div class="panel-heading">Annotation Legend</div>
+                <table class="table table-striped">
+                        <tr>
+                            <th>Appearance</th>
+                            <th>Accession/Name</th>
+                             
+                        </tr>""")
+    for pfam in conf['general']['pfam_colors'].keys():
+        main_html.write("<td><div class='square' style='outline-color:black;background-color:{}; color:grey;'>{}</div></td>\n".format(conf['general']['pfam_colors'][pfam], ""))
+        main_html.write("<td>{}</td>\n".format(pfam))
+        main_html.write('</tr>\n')
+    main_html.write("""</table>
+                        </div></div>
+                        </div>""")
+    
 def get_fill_color(cds, peptide_conf):
     for i in range(len(cds.pfam_descr_list)):
         if cds.pfam_descr_list[i][3].upper() in peptide_conf['pfam_colors'].keys():
@@ -100,7 +116,10 @@ def draw_CDS_arrow(main_html, cds, main_conf, sub_by, scale_factor):
     start = cds.start
     end = cds.end
     #HMM info
-    if len(cds.pfam_descr_list) == 0:
+    if cds.inferred:
+        pfamID = "INFERRED GENE"
+        pfam_desc = ""
+    elif len(cds.pfam_descr_list) == 0:
         pfamID = "No Pfam match"
         pfam_desc = ""
     else:
@@ -202,7 +221,10 @@ def draw_cds_table(main_html, record):
             <td>%s</td>
             <td>%d</td>""" % (cds.accession_id, cds.accession_id, cds.start, cds.end, cds.direction, len(cds.sequence)))
         if len(cds.pfam_descr_list) == 0:
-            main_html.write("<td>NO PFAM MATCH</td>")
+            if cds.inferred:
+                main_html.write("<td>INFERRED GENE</td>")
+            else:
+                main_html.write("<td>NO PFAM MATCH</td>")
             main_html.write("<td>-</td>")
             main_html.write("<td>-</td>")
             main_html.write("<td>-</td>")
@@ -243,11 +265,12 @@ def draw_cds_table(main_html, record):
        
 
 def draw_orf_table(main_html, record, print_all):
+    if not print_all:
+        return
     main_html.write("""<table class="table table-bordered">
   <tbody>
     <tr>""")
-    if print_all:
-        main_html.write("""
+    main_html.write("""
       <th scope="col">peptide</th>""")
     main_html.write("""
       <th scope="col">start</th>

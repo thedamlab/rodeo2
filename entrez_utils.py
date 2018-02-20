@@ -146,9 +146,10 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
             ret_record.cluster_genus_species = record.annotations['organism'] #TODO verify
             for feature in record.features:
                 if feature.type == 'CDS':
+                    inferred = False
                     start = int(feature.location.start)
                     end = int(feature.location.end)
-                    seq = "X" * abs(start-end)
+                    seq = "X" * (abs(start-end)/3)
                     direction = 1
                     if end < start:
                         direction = -1
@@ -167,6 +168,7 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
                         if locus_tag == "":
                             continue
                         else:
+                            inferred = True
                             if 'inference' in feature.qualifiers.keys():
                                 inference = feature.qualifiers['inference'][0]
                                 splits = inference.split(':')
@@ -184,6 +186,10 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
                         seq = feature.qualifiers['translation'][0]
                     
                     cds = Sub_Seq(seq_type='CDS', seq=seq, start=start, end=end, direction=direction, accession_id=accession_id)
+                    if inferred:
+                        cds.inferred = True
+                    else:
+                        cds.inferred = False
                     ret_record.CDSs.append(cds)
             if accession_found and any_record and len(ret_record.cluster_sequence) > 0 and len(ret_record.CDSs) > 0:
                 logger.debug("Record made for %s" % (ret_record.cluster_accession))

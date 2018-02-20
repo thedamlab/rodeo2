@@ -49,9 +49,9 @@ def main_write_row(output_folder, row):
     
 def co_occur_write_headers(output_folder):
     headers = ['Query', 'Genus/Species', 'Nucleotide_acc', 'Protein_acc', 'start', 'end', 'dir',\
-               'PfamID1', 'Description', 'E-value1',
-               'PfamID2', 'Description', 'E-value2',
-               'PfamID3', 'Description', 'E-value3']
+               'PfamID1', 'Name1', 'Description1', 'E-value1',
+               'PfamID2', 'Name2', 'Description2', 'E-value2',
+               'PfamID3', 'Name3', 'Description3', 'E-value3']
     features_writer = csv.writer(open(output_folder + "/main_co_occur.csv", 'w'))
     features_writer.writerow(headers)
     

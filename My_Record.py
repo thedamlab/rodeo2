@@ -303,6 +303,11 @@ class My_Record(object):
         logger.debug("Scoring %s ripps for %s" % (module.peptide_type, self.query_accession_id))
         for ripp in self.ripps[module.peptide_type]:
             ripp.set_score(pfam_hmm, cust_hmm)
+    
+    def color_ripps(self, module):
+        logger.debug("Setting confidence for %s ripps for %s" % (module.peptide_type, self.query_accession_id))
+        for ripp in self.ripps[module.peptide_type]:
+            ripp.confidence = float(ripp.score)/(ripp.CUTOFF)
                 
     def print_info(self):
         print("="*50)

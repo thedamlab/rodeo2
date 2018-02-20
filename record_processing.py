@@ -95,6 +95,7 @@ def process_record_worker(unprocessed_records_q, processed_records_q, args, mast
                     module = ripp_modules[peptide_type]
                     record.set_ripps(module, master_conf)
                     record.score_ripps(module, master_conf['general']['variables']['pfam_dir'], args.custom_hmm)
+                    record.color_ripps(module)
                 logger.debug("Worker process %s finished processing %s" % (my_id, record.query_accession_id))
                 processed_records_q.put(record)
             except KeyboardInterrupt:

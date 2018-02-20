@@ -40,6 +40,7 @@ import csv
 import datetime
 import My_Record
 from decimal import Decimal
+from rodeo_main import VERSION
 
 def write_header(html_file, master_conf, peptide_type):
     html_file.write("""
@@ -68,13 +69,14 @@ def write_header(html_file, master_conf, peptide_type):
      
     <script src='https://img.jgi.doe.gov//js/overlib.js'></script>
     <div class="container">
-    <h1 align="center" id="header">RODEO</h1>
+    <h1 align="center" id="header">RODEO2</h1>
     <div class="row">
          <div class="col-md-5">
             <h3>Parameters</h3>
                  <table class="table table-condensed" style="width:100%;">
                         <tr><th scope="row">Run Time</th><td>""" + datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y") + """</td></tr>
                         """)
+    html_file.write('<tr><th scope="row">Version</th><td>' + VERSION +  "</td></tr>\n")
     html_file.write('<tr><th scope="row">Gene Window</th><td>+/-' + str(master_conf['general']['variables']['fetch_n'])+ "  " + master_conf['general']['variables']['fetch_type'] + "</td></tr>\n")
     html_file.write("""
                         <tr><th scope="row">Peptide Range</th><td>""" + str(master_conf[peptide_type]['variables']['precursor_min']) + "-" + str(master_conf[peptide_type]['variables']['precursor_max']) + """ aa</td></tr>
@@ -83,10 +85,26 @@ def write_header(html_file, master_conf, peptide_type):
                   </table>
          </div>
          <div class="col-md-6">
-                    <div class="panel panel-default">
-        </table>
-        </div></div>
-        </div>""" % (peptide_type))
+                    <div class="panel panel-default">""" % (peptide_type))
+    write_legend(html_file, master_conf, peptide_type)
+
+def write_legend(main_html, conf, peptide_type):
+    main_html.write("""<div class="panel-heading">Annotation Legend</div>
+                <table class="table table-striped">
+                        <tr>
+                            <th>Appearance</th>
+                            <th>Accession/Name</th>
+                        </tr>""")
+    for pfam in conf[peptide_type]['pfam_colors'].keys():
+        main_html.write("<td><div class='square' style='outline-color:black;background-color:{}; color:grey;'>{}</div></td>\n".format(conf[peptide_type]['pfam_colors'][pfam], ""))
+        main_html.write("<td>{}</td>\n".format(pfam))
+        main_html.write('</tr>\n')
+    main_html.write("<td><div class='square' style='outline-color:black;background-color:{}; color:grey;'>{}</div></td>\n".format("black", ""))
+    main_html.write("<td>{}</td>\n".format("predicted " + peptide_type +" peptide"))
+    main_html.write('</tr>\n')
+    main_html.write("""</table>
+                        </div></div>
+                        </div>""")
 
 def get_fill_color(cds, peptide_conf):
     for i in range(len(cds.pfam_descr_list)):
@@ -102,7 +120,10 @@ def draw_CDS_arrow(main_html, cds, peptide_conf, sub_by, scale_factor):
     end = cds.end
     #HMM info
     if len(cds.pfam_descr_list) == 0:
-        pfamID = "No Pfam match"
+        if cds.inferred:
+            pfamID = "INFERRED GENE"
+        else:
+            pfamID = "No Pfam match"
         pfam_desc = ""
     else:
         pfamID = cds.pfam_descr_list[0][0].split('.')[0] #No need for version?
@@ -130,7 +151,7 @@ def draw_CDS_arrow(main_html, cds, peptide_conf, sub_by, scale_factor):
     main_html.write(')" onMouseOut="return nd()"/>')
 
 def draw_orf_arrow(main_html, orf, sub_by, scale_factor, index):
-    fill_color = "white"
+    fill_color = "rgba(0, 0, 0, {}) ".format((orf.confidence**2))
     start = orf.start
     end = orf.end
     arrow_wid = int((start - sub_by) * scale_factor)
@@ -164,7 +185,7 @@ def draw_orf_diagram(main_html, peptide_conf, record, peptide_type):
     index = 0
     for ripp in record.ripps[peptide_type]:
 	index += 1
-        if ripp.score <= 0:
+        if ripp.score <= ripp.CUTOFF/4.0:
             continue
         if peptide_conf['variables']['precursor_min'] <= len(ripp.sequence) <= peptide_conf['variables']['precursor_max']:
             draw_orf_arrow(main_html, ripp, sub_by, scale_factor, index)
@@ -209,7 +230,10 @@ def draw_cds_table(main_html, record):
             <td>%s</td>
             <td>%d</td>""" % (cds.accession_id, cds.accession_id, cds.start, cds.end, cds.direction, len(cds.sequence)))
         if len(cds.pfam_descr_list) == 0:
-            main_html.write("<td>NO PFAM MATCH</td>")
+            if cds.inferred:
+                main_html.write("<td>INFERRED GENE</td>")
+            else:
+                main_html.write("<td>NO PFAM MATCH</td>")
             main_html.write("<td>-</td>")
             main_html.write("<td>-</td>")
             main_html.write("<td>-</td>")
@@ -251,18 +275,19 @@ def draw_cds_table(main_html, record):
 
 def draw_orf_table(main_html, record, peptide_type, master_conf):
     print_precursors = master_conf[peptide_type]['variables']['print_precursors']
+    if not print_precursors:
+        return
     main_html.write("""<table class="table table-bordered">
               <tbody>
                 <tr>
                 <th scope="col">index</th>""")
-    if print_precursors:
-        if peptide_type in ["lasso", "lanthi", "sacti", "thio"]:
-            main_html.write("""
-                  <th scope="col">leader</th>
-                  <th scope="col">core</th>""")
-        else:
-            main_html.write("""
-              <th scope="col">peptide</th>""")
+    if peptide_type in ["lasso", "lanthi", "sacti", "thio"]:
+        main_html.write("""
+              <th scope="col">leader</th>
+              <th scope="col">core</th>""")
+    else:
+        main_html.write("""
+          <th scope="col">peptide</th>""")
     main_html.write("""
       <th scope="col">start</th>
       <th scope="col">end</th>
