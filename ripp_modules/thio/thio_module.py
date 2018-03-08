@@ -120,12 +120,23 @@ class Ripp(Virtual_Ripp):
         #Regular expressions; try 1 first, then 2, etc.
         rex1 = re.compile('([I|V]AS)')
         rex2 = re.compile('([G|A|S]AS)')
+        rex3 = re.compile('([S|A|T][Q|K|T][V|A|I|M]M[A|S]A)')
+        rex4 = re.compile('([L|M|I|V][P|S|T|V|M][E|D][T|M|V|G|N|I|L|A|S][G|A|T|S]A)')
+        rex5 = re.compile('(DL[T|S][V|E]T[M|L])')
         end = 0
         #For each regular expression, check if there is a match that is <10 AA from the end
-        if re.search(rex1,self.sequence) and len(re.split(rex1,self.sequence)[-1]) > 10:
+
+        if re.search(rex3,self.sequence) and len(re.split(rex3,self.sequence)[-1]) > 10:
+            start, end = [m.span() for m in rex3.finditer(self.sequence)][-1]
+        elif re.search(rex4,self.sequence) and len(re.split(rex4,self.sequence)[-1]) > 10:
+            start, end = [m.span() for m in rex4.finditer(self.sequence)][-1]
+            print(self.sequence)
+        elif re.search(rex5,self.sequence) and len(re.split(rex5,self.sequence)[-1]) > 10:
+            start, end = [m.span() for m in rex5.finditer(self.sequence)][-1]
+        elif re.search(rex1,self.sequence) and len(re.split(rex1,self.sequence)[-1]) > 10:
             start, end = [m.span() for m in rex1.finditer(self.sequence)][-1]
             end -= 5
-        elif re.search(rex2,self.sequence) and len(re.split(rex1,self.sequence)[-1]) > 10:
+        elif re.search(rex2,self.sequence) and len(re.split(rex2,self.sequence)[-1]) > 10:
             start, end = [m.span() for m in rex2.finditer(self.sequence)][-1]
             end -= 5 
         self.split_index = end
