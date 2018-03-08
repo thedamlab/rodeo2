@@ -7,6 +7,9 @@ Created on Mon Aug  7 20:58:10 2017
 """
 
 #==============================================================================
+# NCBI utilities policies are available here:
+# https://www.ncbi.nlm.nih.gov/home/about/policies/
+#==============================================================================
 # Copyright (C) 2017 Bryce L. Kille
 # University of Illinois
 # Department of Chemistry
@@ -61,7 +64,7 @@ ch.setFormatter(formatter)
 # add ch to logger
 logger.addHandler(ch)
 
-Entrez.email = str(socket.gethostname()) + 'kille2@illinois.edu' 
+Entrez.email ='kille2@illinois.edu' 
 
 @timeout(300)
 def get_gb_handles(prot_accession_id):
