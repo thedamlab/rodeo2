@@ -203,7 +203,7 @@ def __main__():
         try:
             input_handle = open(query)
             for line in input_handle:
-                if line.rstrip() == "\n" or line.rstrip() == "": 
+                if line.strip() == "\n" or line.rstrip() == "": 
                     continue
                 queries.append(line.rstrip())        
         except OSError:
