@@ -65,7 +65,7 @@ def _generate_fasta_from_string(query_string):
     handle.write(">temp_string\n" + query_string)
 
 def _generate_hmmer(hmm_file):
-    hmmer_process = subprocess.call(["hmmscan", "-o", pid_prefix+"hmm_out.tmp.tab", "--noali",
+    hmmer_process = subprocess.call(["hmmscan", "-o", pid_prefix+"hmm_out.tmp.tab", "--cpu=1", "--noali",
                                       "--domtblout", pid_prefix+"pFamInfo.tmp.tab", hmm_file,
                                       pid_prefix+"fasta_file.tmp.fasta"])    
 
