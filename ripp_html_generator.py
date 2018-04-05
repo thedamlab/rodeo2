@@ -187,8 +187,9 @@ def draw_orf_diagram(main_html, peptide_conf, record, peptide_type):
 	index += 1
         if ripp.score <= ripp.CUTOFF/4.0:
             continue
-        if peptide_conf['variables']['precursor_min'] <= len(ripp.sequence) <= peptide_conf['variables']['precursor_max']:
-            draw_orf_arrow(main_html, ripp, sub_by, scale_factor, index)
+        if peptide_conf['variables']['precursor_min'] <= len(ripp.sequence) <= peptide_conf['variables']['precursor_max'] or \
+                        ("M" in ripp.sequence[-peptide_conf['variables']['precursor_max']:]):
+                        draw_orf_arrow(main_html, ripp, sub_by, scale_factor, index)
     main_html.write('</svg>')
     bar_length = scale_factor * 1000
     bar_legx = bar_length + 5
@@ -296,8 +297,9 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
     </tr>""")
     index = 1
     for ripp in record.ripps[peptide_type]:
-        if not (master_conf[peptide_type]['variables']['precursor_min'] <= len(ripp.sequence) <= master_conf[peptide_type]['variables']['precursor_max']):
-            continue
+        if not master_conf[peptide_type]['variables']['precursor_min'] <= len(ripp.sequence) <= master_conf[peptide_type]['variables']['precursor_max'] and \
+                        not ("M" in ripp.sequence[-master_conf[peptide_type]['variables']['precursor_max']:]):
+                        continue
         main_html.write("<tr>\n")
         main_html.write("<td>%d</td>" % (index))
         if print_precursors:
