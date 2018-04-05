@@ -1,0 +1,2681 @@
+********************************************************************************
+MEME - Motif discovery tool
+********************************************************************************
+MEME version 4.12.0 (Release date: Tue Jun 27 16:22:50 2017 -0700)
+
+For further information on how to interpret these results or to get
+a copy of the MEME software please access http://meme-suite.org .
+
+This file may be used as input to the MAST algorithm for searching
+sequence databases for matches to groups of motifs.  MAST is available
+for interactive use and downloading at http://meme-suite.org .
+********************************************************************************
+
+
+********************************************************************************
+REFERENCE
+********************************************************************************
+If you use this program in your research, please cite:
+
+Timothy L. Bailey and Charles Elkan,
+"Fitting a mixture model by expectation maximization to discover
+motifs in biopolymers", Proceedings of the Second International
+Conference on Intelligent Systems for Molecular Biology, pp. 28-36,
+AAAI Press, Menlo Park, California, 1994.
+********************************************************************************
+
+
+********************************************************************************
+TRAINING SET
+********************************************************************************
+DATAFILE= thiomuracin_cuts.fasta
+ALPHABET= ACDEFGHIKLMNPQRSTVWY
+Sequence name            Weight Length  Sequence name            Weight Length  
+-------------            ------ ------  -------------            ------ ------  
+cut_1                    1.0000      6  cut_2                    1.0000      6  
+cut_3                    1.0000      6  cut_4                    1.0000      6  
+cut_5                    1.0000      6  cut_6                    1.0000      6  
+cut_7                    1.0000      6  cut_8                    1.0000      6  
+cut_9                    1.0000      6  cut_10                   1.0000      6  
+cut_11                   1.0000      6  cut_12                   1.0000      6  
+cut_13                   1.0000      6  cut_14                   1.0000      6  
+cut_15                   1.0000      6  cut_16                   1.0000      6  
+cut_17                   1.0000      6  cut_18                   1.0000      6  
+cut_19                   1.0000      6  cut_20                   1.0000      6  
+cut_21                   1.0000      6  cut_22                   1.0000      6  
+cut_23                   1.0000      6  cut_24                   1.0000      6  
+cut_25                   1.0000      6  cut_26                   1.0000      6  
+cut_27                   1.0000      6  cut_28                   1.0000      6  
+cut_29                   1.0000      6  cut_30                   1.0000      6  
+cut_31                   1.0000      6  cut_32                   1.0000      6  
+cut_33                   1.0000      6  cut_34                   1.0000      6  
+cut_35                   1.0000      6  cut_36                   1.0000      6  
+cut_37                   1.0000      6  cut_38                   1.0000      6  
+cut_39                   1.0000      6  cut_40                   1.0000      6  
+cut_41                   1.0000      6  cut_42                   1.0000      6  
+cut_43                   1.0000      6  cut_44                   1.0000      6  
+cut_45                   1.0000      6  cut_46                   1.0000      6  
+cut_47                   1.0000      6  cut_48                   1.0000      6  
+cut_49                   1.0000      6  cut_50                   1.0000      6  
+cut_51                   1.0000      6  cut_52                   1.0000      6  
+cut_53                   1.0000      6  cut_54                   1.0000      6  
+cut_55                   1.0000      6  cut_56                   1.0000      6  
+cut_57                   1.0000      6  cut_58                   1.0000      6  
+cut_59                   1.0000      6  cut_60                   1.0000      6  
+cut_61                   1.0000      6  cut_62                   1.0000      6  
+cut_63                   1.0000      6  cut_64                   1.0000      6  
+cut_65                   1.0000      6  cut_66                   1.0000      6  
+cut_67                   1.0000      6  cut_68                   1.0000      6  
+cut_69                   1.0000      6  cut_70                   1.0000      6  
+cut_71                   1.0000      6  cut_72                   1.0000      6  
+cut_73                   1.0000      6  cut_74                   1.0000      6  
+cut_75                   1.0000      6  cut_76                   1.0000      6  
+cut_77                   1.0000      6  cut_78                   1.0000      6  
+cut_79                   1.0000      6  cut_80                   1.0000      6  
+cut_81                   1.0000      6  cut_82                   1.0000      6  
+cut_83                   1.0000      6  cut_84                   1.0000      6  
+cut_85                   1.0000      6  cut_86                   1.0000      6  
+cut_87                   1.0000      6  cut_88                   1.0000      6  
+cut_89                   1.0000      6  cut_90                   1.0000      6  
+cut_91                   1.0000      6  cut_92                   1.0000      6  
+cut_93                   1.0000      6  cut_94                   1.0000      6  
+cut_95                   1.0000      6  cut_96                   1.0000      6  
+cut_97                   1.0000      6  cut_98                   1.0000      6  
+cut_99                   1.0000      6  cut_100                  1.0000      6  
+cut_101                  1.0000      6  cut_102                  1.0000      6  
+cut_103                  1.0000      6  cut_104                  1.0000      6  
+cut_105                  1.0000      6  cut_106                  1.0000      6  
+cut_107                  1.0000      6  cut_108                  1.0000      6  
+cut_109                  1.0000      6  cut_110                  1.0000      6  
+cut_111                  1.0000      6  cut_112                  1.0000      6  
+cut_113                  1.0000      6  cut_114                  1.0000      6  
+cut_115                  1.0000      6  cut_116                  1.0000      6  
+cut_117                  1.0000      6  cut_118                  1.0000      6  
+cut_119                  1.0000      6  cut_120                  1.0000      6  
+cut_121                  1.0000      6  cut_122                  1.0000      6  
+cut_123                  1.0000      6  cut_124                  1.0000      6  
+cut_125                  1.0000      6  cut_126                  1.0000      6  
+cut_127                  1.0000      6  cut_128                  1.0000      6  
+cut_129                  1.0000      6  cut_130                  1.0000      6  
+cut_131                  1.0000      6  cut_132                  1.0000      6  
+cut_133                  1.0000      6  cut_134                  1.0000      6  
+cut_135                  1.0000      6  cut_136                  1.0000      6  
+cut_137                  1.0000      6  cut_138                  1.0000      6  
+cut_139                  1.0000      6  cut_140                  1.0000      6  
+cut_141                  1.0000      6  cut_142                  1.0000      6  
+cut_143                  1.0000      6  cut_144                  1.0000      6  
+cut_145                  1.0000      6  cut_146                  1.0000      6  
+cut_147                  1.0000      6  cut_148                  1.0000      6  
+cut_149                  1.0000      6  cut_150                  1.0000      6  
+cut_151                  1.0000      6  cut_152                  1.0000      6  
+cut_153                  1.0000      6  cut_154                  1.0000      6  
+cut_155                  1.0000      6  cut_156                  1.0000      6  
+cut_157                  1.0000      6  cut_158                  1.0000      6  
+cut_159                  1.0000      6  cut_160                  1.0000      6  
+cut_161                  1.0000      6  cut_162                  1.0000      6  
+cut_163                  1.0000      6  cut_164                  1.0000      6  
+cut_165                  1.0000      6  cut_166                  1.0000      6  
+cut_167                  1.0000      6  cut_168                  1.0000      6  
+cut_169                  1.0000      6  cut_170                  1.0000      6  
+cut_171                  1.0000      6  cut_172                  1.0000      6  
+cut_173                  1.0000      6  cut_174                  1.0000      6  
+cut_175                  1.0000      6  cut_176                  1.0000      6  
+cut_177                  1.0000      6  cut_178                  1.0000      6  
+cut_179                  1.0000      6  cut_180                  1.0000      6  
+cut_181                  1.0000      6  cut_182                  1.0000      6  
+cut_183                  1.0000      6  cut_184                  1.0000      6  
+cut_185                  1.0000      6  cut_186                  1.0000      6  
+cut_187                  1.0000      6  cut_188                  1.0000      6  
+cut_189                  1.0000      6  cut_190                  1.0000      6  
+cut_191                  1.0000      6  cut_192                  1.0000      6  
+cut_193                  1.0000      6  cut_194                  1.0000      6  
+cut_195                  1.0000      6  cut_196                  1.0000      6  
+cut_197                  1.0000      6  cut_198                  1.0000      6  
+cut_199                  1.0000      6  cut_200                  1.0000      6  
+cut_201                  1.0000      6  cut_202                  1.0000      6  
+cut_203                  1.0000      6  cut_204                  1.0000      6  
+cut_205                  1.0000      6  cut_206                  1.0000      6  
+cut_207                  1.0000      6  cut_208                  1.0000      6  
+cut_209                  1.0000      6  cut_210                  1.0000      6  
+cut_211                  1.0000      6  cut_212                  1.0000      6  
+cut_213                  1.0000      6  cut_214                  1.0000      6  
+cut_215                  1.0000      6  cut_216                  1.0000      6  
+cut_217                  1.0000      6  cut_218                  1.0000      6  
+cut_219                  1.0000      6  cut_220                  1.0000      6  
+cut_221                  1.0000      6  cut_222                  1.0000      6  
+cut_223                  1.0000      6  cut_224                  1.0000      6  
+cut_225                  1.0000      6  cut_226                  1.0000      6  
+cut_227                  1.0000      6  cut_228                  1.0000      6  
+cut_229                  1.0000      6  cut_230                  1.0000      6  
+cut_231                  1.0000      6  cut_232                  1.0000      6  
+cut_233                  1.0000      6  cut_234                  1.0000      6  
+cut_235                  1.0000      6  cut_236                  1.0000      6  
+cut_237                  1.0000      6  cut_238                  1.0000      6  
+cut_239                  1.0000      6  cut_240                  1.0000      6  
+cut_241                  1.0000      6  cut_242                  1.0000      6  
+cut_243                  1.0000      6  cut_244                  1.0000      6  
+cut_245                  1.0000      6  cut_246                  1.0000      6  
+cut_247                  1.0000      6  cut_248                  1.0000      6  
+cut_249                  1.0000      6  cut_250                  1.0000      6  
+cut_251                  1.0000      6  cut_252                  1.0000      6  
+cut_253                  1.0000      6  cut_254                  1.0000      6  
+cut_255                  1.0000      6  cut_256                  1.0000      6  
+cut_257                  1.0000      6  cut_258                  1.0000      6  
+cut_259                  1.0000      6  cut_260                  1.0000      6  
+cut_261                  1.0000      6  cut_262                  1.0000      6  
+cut_263                  1.0000      6  cut_264                  1.0000      6  
+cut_265                  1.0000      6  cut_266                  1.0000      6  
+cut_267                  1.0000      6  cut_268                  1.0000      6  
+cut_269                  1.0000      6  cut_270                  1.0000      6  
+cut_271                  1.0000      6  cut_272                  1.0000      6  
+cut_273                  1.0000      6  cut_274                  1.0000      6  
+cut_275                  1.0000      6  cut_276                  1.0000      6  
+cut_277                  1.0000      6  cut_278                  1.0000      6  
+cut_279                  1.0000      6  cut_280                  1.0000      6  
+cut_281                  1.0000      6  cut_282                  1.0000      6  
+cut_283                  1.0000      6  cut_284                  1.0000      6  
+cut_285                  1.0000      6  cut_286                  1.0000      6  
+cut_287                  1.0000      6  cut_288                  1.0000      6  
+cut_289                  1.0000      6  cut_290                  1.0000      6  
+cut_291                  1.0000      6  cut_292                  1.0000      6  
+cut_293                  1.0000      6  cut_294                  1.0000      6  
+cut_295                  1.0000      6  cut_296                  1.0000      6  
+cut_297                  1.0000      6  cut_298                  1.0000      6  
+cut_299                  1.0000      6  cut_300                  1.0000      6  
+cut_301                  1.0000      6  cut_302                  1.0000      6  
+cut_303                  1.0000      6  cut_304                  1.0000      6  
+cut_305                  1.0000      6  cut_306                  1.0000      6  
+cut_307                  1.0000      6  cut_308                  1.0000      6  
+cut_309                  1.0000      6  cut_310                  1.0000      6  
+cut_311                  1.0000      6  cut_312                  1.0000      6  
+cut_313                  1.0000      6  cut_314                  1.0000      6  
+cut_315                  1.0000      6  cut_316                  1.0000      6  
+cut_317                  1.0000      6  cut_318                  1.0000      6  
+cut_319                  1.0000      6  cut_320                  1.0000      6  
+cut_321                  1.0000      6  cut_322                  1.0000      6  
+cut_323                  1.0000      6  cut_324                  1.0000      6  
+cut_325                  1.0000      6  cut_326                  1.0000      6  
+cut_327                  1.0000      6  cut_328                  1.0000      6  
+cut_329                  1.0000      6  cut_330                  1.0000      6  
+cut_331                  1.0000      6  cut_332                  1.0000      6  
+cut_333                  1.0000      6  cut_334                  1.0000      6  
+cut_335                  1.0000      6  cut_336                  1.0000      6  
+cut_337                  1.0000      6  cut_338                  1.0000      6  
+cut_339                  1.0000      6  cut_340                  1.0000      6  
+cut_341                  1.0000      6  cut_342                  1.0000      6  
+cut_343                  1.0000      6  cut_344                  1.0000      6  
+cut_345                  1.0000      6  cut_346                  1.0000      6  
+cut_347                  1.0000      6  cut_348                  1.0000      6  
+cut_349                  1.0000      6  cut_350                  1.0000      6  
+cut_351                  1.0000      6  cut_352                  1.0000      6  
+cut_353                  1.0000      6  cut_354                  1.0000      6  
+cut_355                  1.0000      6  cut_356                  1.0000      6  
+cut_357                  1.0000      6  cut_358                  1.0000      6  
+cut_359                  1.0000      6  cut_360                  1.0000      6  
+cut_361                  1.0000      6  cut_362                  1.0000      6  
+cut_363                  1.0000      6  cut_364                  1.0000      6  
+cut_365                  1.0000      6  cut_366                  1.0000      6  
+cut_367                  1.0000      6  cut_368                  1.0000      6  
+cut_369                  1.0000      6  cut_370                  1.0000      6  
+cut_371                  1.0000      6  cut_372                  1.0000      6  
+cut_373                  1.0000      6  cut_374                  1.0000      6  
+cut_375                  1.0000      6  cut_376                  1.0000      6  
+cut_377                  1.0000      6  cut_378                  1.0000      6  
+cut_379                  1.0000      6  cut_380                  1.0000      6  
+cut_381                  1.0000      6  cut_382                  1.0000      6  
+cut_383                  1.0000      6  cut_384                  1.0000      6  
+cut_385                  1.0000      6  cut_386                  1.0000      6  
+cut_387                  1.0000      6  cut_388                  1.0000      6  
+cut_389                  1.0000      6  cut_390                  1.0000      6  
+cut_391                  1.0000      6  cut_392                  1.0000      6  
+cut_393                  1.0000      6  cut_394                  1.0000      6  
+cut_395                  1.0000      6  cut_396                  1.0000      6  
+cut_397                  1.0000      6  cut_398                  1.0000      6  
+cut_399                  1.0000      6  cut_400                  1.0000      6  
+cut_401                  1.0000      6  cut_402                  1.0000      6  
+cut_403                  1.0000      6  cut_404                  1.0000      6  
+cut_405                  1.0000      6  cut_406                  1.0000      6  
+cut_407                  1.0000      6  cut_408                  1.0000      6  
+cut_409                  1.0000      6  cut_410                  1.0000      6  
+cut_411                  1.0000      6  cut_412                  1.0000      6  
+cut_413                  1.0000      6  cut_414                  1.0000      6  
+cut_415                  1.0000      6  cut_416                  1.0000      6  
+cut_417                  1.0000      6  cut_418                  1.0000      6  
+cut_419                  1.0000      6  cut_420                  1.0000      6  
+cut_421                  1.0000      6  cut_422                  1.0000      6  
+cut_423                  1.0000      6  cut_424                  1.0000      6  
+cut_425                  1.0000      6  cut_426                  1.0000      6  
+cut_427                  1.0000      6  cut_428                  1.0000      6  
+cut_429                  1.0000      6  cut_430                  1.0000      6  
+cut_431                  1.0000      6  cut_432                  1.0000      6  
+cut_433                  1.0000      6  cut_434                  1.0000      6  
+cut_435                  1.0000      6  cut_436                  1.0000      6  
+cut_437                  1.0000      6  cut_438                  1.0000      6  
+cut_439                  1.0000      6  cut_440                  1.0000      6  
+cut_441                  1.0000      6  cut_442                  1.0000      6  
+cut_443                  1.0000      6  cut_444                  1.0000      6  
+cut_445                  1.0000      6  cut_446                  1.0000      6  
+cut_447                  1.0000      6  cut_448                  1.0000      6  
+cut_449                  1.0000      6  cut_450                  1.0000      6  
+cut_451                  1.0000      6  cut_452                  1.0000      6  
+cut_453                  1.0000      6  cut_454                  1.0000      6  
+cut_455                  1.0000      6  cut_456                  1.0000      6  
+cut_457                  1.0000      6  cut_458                  1.0000      6  
+cut_459                  1.0000      6  cut_460                  1.0000      6  
+cut_461                  1.0000      6  cut_462                  1.0000      6  
+cut_463                  1.0000      6  cut_464                  1.0000      6  
+cut_465                  1.0000      6  cut_466                  1.0000      6  
+cut_467                  1.0000      6  cut_468                  1.0000      6  
+cut_469                  1.0000      6  cut_470                  1.0000      6  
+cut_471                  1.0000      6  cut_472                  1.0000      6  
+cut_473                  1.0000      6  cut_474                  1.0000      6  
+cut_475                  1.0000      6  cut_476                  1.0000      6  
+cut_477                  1.0000      6  cut_478                  1.0000      6  
+cut_479                  1.0000      6  cut_480                  1.0000      6  
+cut_481                  1.0000      6  cut_482                  1.0000      6  
+cut_483                  1.0000      6  cut_484                  1.0000      6  
+cut_485                  1.0000      6  cut_486                  1.0000      6  
+cut_487                  1.0000      6  cut_488                  1.0000      6  
+cut_489                  1.0000      6  cut_490                  1.0000      6  
+cut_491                  1.0000      6  cut_492                  1.0000      6  
+cut_493                  1.0000      6  cut_494                  1.0000      6  
+cut_495                  1.0000      6  cut_496                  1.0000      6  
+cut_497                  1.0000      6  cut_498                  1.0000      6  
+cut_499                  1.0000      6  cut_500                  1.0000      6  
+cut_501                  1.0000      6  cut_502                  1.0000      6  
+cut_503                  1.0000      6  cut_504                  1.0000      6  
+cut_505                  1.0000      6  cut_506                  1.0000      6  
+cut_507                  1.0000      6  cut_508                  1.0000      6  
+cut_509                  1.0000      6  cut_510                  1.0000      6  
+cut_511                  1.0000      6  cut_512                  1.0000      6  
+cut_513                  1.0000      6  cut_514                  1.0000      6  
+cut_515                  1.0000      6  cut_516                  1.0000      6  
+cut_517                  1.0000      6  cut_518                  1.0000      6  
+cut_519                  1.0000      6  cut_520                  1.0000      6  
+cut_521                  1.0000      6  cut_522                  1.0000      6  
+cut_523                  1.0000      6  cut_524                  1.0000      6  
+cut_525                  1.0000      6  cut_526                  1.0000      6  
+cut_527                  1.0000      6  cut_528                  1.0000      6  
+cut_529                  1.0000      6  cut_530                  1.0000      6  
+cut_531                  1.0000      6  cut_532                  1.0000      6  
+cut_533                  1.0000      6  cut_534                  1.0000      6  
+cut_535                  1.0000      6  cut_536                  1.0000      6  
+cut_537                  1.0000      6  cut_538                  1.0000      6  
+cut_539                  1.0000      6  cut_540                  1.0000      6  
+cut_541                  1.0000      6  cut_542                  1.0000      6  
+cut_543                  1.0000      6  cut_544                  1.0000      6  
+cut_545                  1.0000      6  cut_546                  1.0000      6  
+cut_547                  1.0000      6  cut_548                  1.0000      6  
+cut_549                  1.0000      6  cut_550                  1.0000      6  
+cut_551                  1.0000      6  cut_552                  1.0000      6  
+cut_553                  1.0000      6  cut_554                  1.0000      6  
+cut_555                  1.0000      6  cut_556                  1.0000      6  
+cut_557                  1.0000      6  cut_558                  1.0000      6  
+cut_559                  1.0000      6  
+********************************************************************************
+
+********************************************************************************
+COMMAND LINE SUMMARY
+********************************************************************************
+This information can also be useful in the event you wish to report a
+problem with the MEME software.
+
+command: meme thiomuracin_cuts.fasta -nmotifs 1 -minw 6 -maxw 6 -oc thiomuracin 
+
+model:  mod=         zoops    nmotifs=         1    evt=           inf
+object function=  E-value of product of p-values
+width:  minw=            6    maxw=            6
+width:  wg=             11    ws=              1    endgaps=       yes
+nsites: minsites=        2    maxsites=      559    wnsites=       0.8
+theta:  spmap=         pam    spfuzz=        120
+global: substring=     yes    branching=      no    wbranch=        no
+em:     prior=       megap    b=           16770    maxiter=        50
+        distance=    1e-05
+data:   n=            3354    N=             559    shuffle=        -1
+
+sample: seed=            0    ctfrac=         -1    maxwords=       -1
+Dirichlet mixture priors file: prior30.plib
+Letter frequencies in dataset:
+A 0.202 C 0.000 D 0.004 E 0.156 F 0.001 G 0.131 H 0.001 I 0.037 K 0.002 
+L 0.106 M 0.064 N 0.013 P 0.108 Q 0.001 R 0.000 S 0.038 T 0.102 V 0.035 
+W 0.000 Y 0.000 
+Background letter frequencies (from dataset with add-one prior applied):
+A 0.201 C 0.000 D 0.004 E 0.155 F 0.001 G 0.130 H 0.001 I 0.037 K 0.002 
+L 0.106 M 0.064 N 0.014 P 0.107 Q 0.001 R 0.000 S 0.038 T 0.102 V 0.036 
+W 0.000 Y 0.000 
+********************************************************************************
+
+
+********************************************************************************
+MOTIF LPETGA MEME-1	width =   6  sites = 549  llr = 4236  E-value = 1.3e-1319
+********************************************************************************
+--------------------------------------------------------------------------------
+	Motif LPETGA MEME-1 Description
+--------------------------------------------------------------------------------
+Simplified        A  ::::1a
+pos.-specific     C  ::::::
+probability       D  ::::::
+matrix            E  ::9:::
+                  F  ::::::
+                  G  :::17:
+                  H  ::::::
+                  I  1::1::
+                  K  ::::::
+                  L  6::1::
+                  M  2::2::
+                  N  :::1::
+                  P  :7::::
+                  Q  ::::::
+                  R  ::::::
+                  S  :1::1:
+                  T  :1:41:
+                  V  11:1::
+                  W  ::::::
+                  Y  ::::::
+
+         bits   11.7       
+                10.5       
+                 9.4       
+                 8.2       
+Relative         7.0       
+Entropy          5.9       
+(11.1 bits)      4.7       
+                 3.5       
+                 2.3 * *  *
+                 1.2 ******
+                 0.0 ------
+
+Multilevel           LPETGA
+consensus               M  
+sequence                   
+                           
+                           
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif LPETGA MEME-1 sites sorted by position p-value
+--------------------------------------------------------------------------------
+Sequence name             Start   P-value             Site 
+-------------             ----- ---------            ------
+cut_362                       1  6.39e-07          . LPENGA           
+cut_152                       1  6.39e-07          . LPENGA           
+cut_151                       1  6.39e-07          . LPENGA           
+cut_150                       1  6.39e-07          . LPENGA           
+cut_149                       1  6.39e-07          . LPENGA           
+cut_104                       1  6.39e-07          . LPENGA           
+cut_100                       1  6.39e-07          . LPENGA           
+cut_99                        1  6.39e-07          . LPENGA           
+cut_97                        1  6.39e-07          . LPENGA           
+cut_96                        1  6.39e-07          . LPENGA           
+cut_95                        1  6.39e-07          . LPENGA           
+cut_94                        1  6.39e-07          . LPENGA           
+cut_93                        1  6.39e-07          . LPENGA           
+cut_91                        1  6.39e-07          . LPENGA           
+cut_89                        1  6.39e-07          . LPENGA           
+cut_88                        1  6.39e-07          . LPENGA           
+cut_87                        1  6.39e-07          . LPENGA           
+cut_85                        1  6.39e-07          . LPENGA           
+cut_82                        1  6.39e-07          . LPENGA           
+cut_80                        1  6.39e-07          . LPENGA           
+cut_72                        1  6.39e-07          . LPENGA           
+cut_59                        1  6.39e-07          . LPENGA           
+cut_58                        1  6.39e-07          . LPENGA           
+cut_27                        1  6.39e-07          . LPENGA           
+cut_559                       1  5.54e-06          . LPETGA           
+cut_558                       1  5.54e-06          . LPETGA           
+cut_557                       1  5.54e-06          . LPETGA           
+cut_471                       1  5.54e-06          . LPETGA           
+cut_158                       1  5.54e-06          . LPETGA           
+cut_156                       1  5.54e-06          . LPETGA           
+cut_153                       1  5.54e-06          . LPETGA           
+cut_115                       1  5.54e-06          . LPETGA           
+cut_114                       1  5.54e-06          . LPETGA           
+cut_113                       1  5.54e-06          . LPETGA           
+cut_107                       1  5.54e-06          . LPETGA           
+cut_103                       1  5.54e-06          . LPETGA           
+cut_92                        1  5.54e-06          . LPETGA           
+cut_90                        1  5.54e-06          . LPETGA           
+cut_86                        1  5.54e-06          . LPETGA           
+cut_81                        1  5.54e-06          . LPETGA           
+cut_78                        1  5.54e-06          . LPETGA           
+cut_76                        1  5.54e-06          . LPETGA           
+cut_75                        1  5.54e-06          . LPETGA           
+cut_71                        1  5.54e-06          . LPETGA           
+cut_70                        1  5.54e-06          . LPETGA           
+cut_43                        1  5.54e-06          . LPETGA           
+cut_39                        1  5.54e-06          . LPETGA           
+cut_14                        1  5.54e-06          . LPETGA           
+cut_13                        1  5.54e-06          . LPETGA           
+cut_12                        1  5.54e-06          . LPETGA           
+cut_11                        1  5.54e-06          . LPETGA           
+cut_7                         1  5.54e-06          . LPETGA           
+cut_6                         1  5.54e-06          . LPETGA           
+cut_527                       1  8.80e-06          . LPEMGA           
+cut_526                       1  8.80e-06          . LPEMGA           
+cut_310                       1  8.80e-06          . LPEMGA           
+cut_231                       1  8.80e-06          . LPEMGA           
+cut_230                       1  8.80e-06          . LPEMGA           
+cut_229                       1  8.80e-06          . LPEMGA           
+cut_228                       1  8.80e-06          . LPEMGA           
+cut_227                       1  8.80e-06          . LPEMGA           
+cut_226                       1  8.80e-06          . LPEMGA           
+cut_225                       1  8.80e-06          . LPEMGA           
+cut_224                       1  8.80e-06          . LPEMGA           
+cut_223                       1  8.80e-06          . LPEMGA           
+cut_222                       1  8.80e-06          . LPEMGA           
+cut_221                       1  8.80e-06          . LPEMGA           
+cut_220                       1  8.80e-06          . LPEMGA           
+cut_217                       1  8.80e-06          . LPEMGA           
+cut_216                       1  8.80e-06          . LPEMGA           
+cut_215                       1  8.80e-06          . LPEMGA           
+cut_213                       1  8.80e-06          . LPEMGA           
+cut_212                       1  8.80e-06          . LPEMGA           
+cut_211                       1  8.80e-06          . LPEMGA           
+cut_209                       1  8.80e-06          . LPEMGA           
+cut_208                       1  8.80e-06          . LPEMGA           
+cut_207                       1  8.80e-06          . LPEMGA           
+cut_205                       1  8.80e-06          . LPEMGA           
+cut_204                       1  8.80e-06          . LPEMGA           
+cut_203                       1  8.80e-06          . LPEMGA           
+cut_202                       1  8.80e-06          . LPEMGA           
+cut_200                       1  8.80e-06          . LPEMGA           
+cut_199                       1  8.80e-06          . LPEMGA           
+cut_196                       1  8.80e-06          . LPEMGA           
+cut_195                       1  8.80e-06          . LPEMGA           
+cut_192                       1  8.80e-06          . LPEMGA           
+cut_190                       1  8.80e-06          . LPEMGA           
+cut_189                       1  8.80e-06          . LPEMGA           
+cut_188                       1  8.80e-06          . LPEMGA           
+cut_185                       1  8.80e-06          . LPEMGA           
+cut_184                       1  8.80e-06          . LPEMGA           
+cut_182                       1  8.80e-06          . LPEMGA           
+cut_181                       1  8.80e-06          . LPEMGA           
+cut_179                       1  8.80e-06          . LPEMGA           
+cut_178                       1  8.80e-06          . LPEMGA           
+cut_175                       1  8.80e-06          . LPEMGA           
+cut_148                       1  8.80e-06          . LPEMGA           
+cut_147                       1  8.80e-06          . LPEMGA           
+cut_146                       1  8.80e-06          . LPEMGA           
+cut_145                       1  8.80e-06          . LPEMGA           
+cut_144                       1  8.80e-06          . LPEMGA           
+cut_143                       1  8.80e-06          . LPEMGA           
+cut_140                       1  8.80e-06          . LPEMGA           
+cut_138                       1  8.80e-06          . LPEMGA           
+cut_137                       1  8.80e-06          . LPEMGA           
+cut_134                       1  8.80e-06          . LPEMGA           
+cut_133                       1  8.80e-06          . LPEMGA           
+cut_132                       1  8.80e-06          . LPEMGA           
+cut_131                       1  8.80e-06          . LPEMGA           
+cut_130                       1  8.80e-06          . LPEMGA           
+cut_129                       1  8.80e-06          . LPEMGA           
+cut_127                       1  8.80e-06          . LPEMGA           
+cut_125                       1  8.80e-06          . LPEMGA           
+cut_124                       1  8.80e-06          . LPEMGA           
+cut_123                       1  8.80e-06          . LPEMGA           
+cut_122                       1  8.80e-06          . LPEMGA           
+cut_121                       1  8.80e-06          . LPEMGA           
+cut_120                       1  8.80e-06          . LPEMGA           
+cut_119                       1  8.80e-06          . LPEMGA           
+cut_118                       1  8.80e-06          . LPEMGA           
+cut_40                        1  8.80e-06          . LPEMGA           
+cut_34                        1  8.80e-06          . LPEMGA           
+cut_29                        1  8.80e-06          . LPEMGA           
+cut_26                        1  8.80e-06          . LPEMGA           
+cut_25                        1  8.80e-06          . LPEMGA           
+cut_24                        1  8.80e-06          . LPEMGA           
+cut_23                        1  8.80e-06          . LPEMGA           
+cut_10                        1  8.80e-06          . LPEMGA           
+cut_9                         1  8.80e-06          . LPEMGA           
+cut_8                         1  8.80e-06          . LPEMGA           
+cut_551                       1  1.22e-05          . IPETGA           
+cut_550                       1  1.22e-05          . IPETGA           
+cut_514                       1  1.22e-05          . IPETGA           
+cut_511                       1  1.22e-05          . IPETGA           
+cut_507                       1  1.22e-05          . IPETGA           
+cut_505                       1  1.22e-05          . IPETGA           
+cut_504                       1  1.22e-05          . IPETGA           
+cut_135                       1  1.22e-05          . LPEVGA           
+cut_128                       1  1.22e-05          . LPEVGA           
+cut_126                       1  1.22e-05          . LPEVGA           
+cut_38                        1  1.22e-05          . LPDTGA           
+cut_36                        1  1.22e-05          . LPDTGA           
+cut_525                       1  1.40e-05          . LPDMGA           
+cut_478                       1  1.40e-05          . LPDMGA           
+cut_174                       1  1.40e-05          . LPDMGA           
+cut_136                       1  1.40e-05          . LPDMGA           
+cut_117                       1  1.58e-05          . QPEMGA           
+cut_116                       1  1.58e-05          . QPEMGA           
+cut_543                       1  2.13e-05          . LSETGA           
+cut_538                       1  2.13e-05          . LSETGA           
+cut_522                       1  2.13e-05          . MPETGA           
+cut_521                       1  2.13e-05          . MPETGA           
+cut_479                       1  2.13e-05          . MPEHGA           
+cut_430                       1  2.13e-05          . MPETGA           
+cut_423                       1  2.13e-05          . MPETGA           
+cut_358                       1  2.13e-05          . MPEHGA           
+cut_357                       1  2.13e-05          . MPEHGA           
+cut_334                       1  2.13e-05          . LSETGA           
+cut_329                       1  2.13e-05          . LSETGA           
+cut_328                       1  2.13e-05          . LSETGA           
+cut_327                       1  2.13e-05          . LSETGA           
+cut_326                       1  2.13e-05          . LSETGA           
+cut_325                       1  2.13e-05          . LSETGA           
+cut_324                       1  2.13e-05          . LSETGA           
+cut_323                       1  2.13e-05          . LSETGA           
+cut_322                       1  2.13e-05          . LSETGA           
+cut_321                       1  2.13e-05          . LSETGA           
+cut_320                       1  2.13e-05          . LSETGA           
+cut_319                       1  2.13e-05          . LSETGA           
+cut_318                       1  2.13e-05          . LSETGA           
+cut_307                       1  2.13e-05          . LSETGA           
+cut_306                       1  2.13e-05          . LSETGA           
+cut_305                       1  2.13e-05          . LSETGA           
+cut_298                       1  2.13e-05          . LSETGA           
+cut_297                       1  2.13e-05          . LSETGA           
+cut_296                       1  2.13e-05          . LSETGA           
+cut_295                       1  2.13e-05          . LSETGA           
+cut_294                       1  2.13e-05          . LSETGA           
+cut_293                       1  2.13e-05          . LSETGA           
+cut_291                       1  2.13e-05          . LSETGA           
+cut_290                       1  2.13e-05          . LSETGA           
+cut_289                       1  2.13e-05          . LSETGA           
+cut_288                       1  2.13e-05          . LSETGA           
+cut_287                       1  2.13e-05          . LSETGA           
+cut_286                       1  2.13e-05          . LSETGA           
+cut_285                       1  2.13e-05          . LSETGA           
+cut_284                       1  2.13e-05          . LSETGA           
+cut_283                       1  2.13e-05          . LSETGA           
+cut_382                       1  2.69e-05          . LVENGA           
+cut_369                       1  2.69e-05          . LVENGA           
+cut_368                       1  2.69e-05          . LVENGA           
+cut_366                       1  2.69e-05          . LVENGA           
+cut_365                       1  2.69e-05          . LVENGA           
+cut_364                       1  2.69e-05          . LVENGA           
+cut_180                       1  2.69e-05          . VPETGA           
+cut_177                       1  2.69e-05          . VPETGA           
+cut_176                       1  2.69e-05          . VPETGA           
+cut_173                       1  2.69e-05          . VPETGA           
+cut_172                       1  2.69e-05          . VPETGA           
+cut_171                       1  2.69e-05          . VPETGA           
+cut_170                       1  2.69e-05          . VPETGA           
+cut_169                       1  2.69e-05          . VPETGA           
+cut_168                       1  2.69e-05          . VPETGA           
+cut_167                       1  2.69e-05          . VPETGA           
+cut_166                       1  2.69e-05          . VPETGA           
+cut_165                       1  2.69e-05          . VPETGA           
+cut_164                       1  2.69e-05          . VPETGA           
+cut_163                       1  2.69e-05          . VPETGA           
+cut_162                       1  2.69e-05          . VPETGA           
+cut_161                       1  2.69e-05          . VPETGA           
+cut_160                       1  2.69e-05          . VPETGA           
+cut_159                       1  2.69e-05          . VPETGA           
+cut_154                       1  2.69e-05          . VPETGA           
+cut_5                         1  2.69e-05          . VPETGA           
+cut_2                         1  2.69e-05          . VPETGA           
+cut_467                       1  2.93e-05          . MPEVGA           
+cut_463                       1  2.93e-05          . MPEVGA           
+cut_462                       1  2.93e-05          . MPEVGA           
+cut_457                       1  2.93e-05          . MPEVGA           
+cut_456                       1  2.93e-05          . MPEVGA           
+cut_455                       1  2.93e-05          . MPEVGA           
+cut_454                       1  2.93e-05          . MPEVGA           
+cut_446                       1  2.93e-05          . MPEVGA           
+cut_439                       1  2.93e-05          . MPEVGA           
+cut_437                       1  2.93e-05          . MPEVGA           
+cut_372                       1  2.93e-05          . MPEVGA           
+cut_292                       1  2.93e-05          . MPEVGA           
+cut_157                       1  3.71e-05          . LPESGA           
+cut_155                       1  3.71e-05          . LPESGA           
+cut_110                       1  3.71e-05          . LPESGA           
+cut_109                       1  3.71e-05          . LPESGA           
+cut_108                       1  3.71e-05          . LPESGA           
+cut_106                       1  3.71e-05          . LPESGA           
+cut_105                       1  3.71e-05          . LPESGA           
+cut_83                        1  3.71e-05          . LPESGA           
+cut_77                        1  3.71e-05          . LPESGA           
+cut_64                        1  3.71e-05          . LPESGA           
+cut_61                        1  3.71e-05          . LPESGA           
+cut_57                        1  3.71e-05          . LPESGA           
+cut_1                         1  3.71e-05          . LPESGA           
+cut_363                       1  5.29e-05          . LTETGA           
+cut_361                       1  5.29e-05          . LTETGA           
+cut_360                       1  5.29e-05          . LTETGA           
+cut_60                        1  5.29e-05          . LPENAA           
+cut_474                       1  6.36e-05          . LPEGGA           
+cut_101                       1  6.36e-05          . LPEGGA           
+cut_98                        1  6.36e-05          . LPEGGA           
+cut_84                        1  6.36e-05          . LPEGGA           
+cut_74                        1  6.36e-05          . LPEGGA           
+cut_73                        1  6.36e-05          . LPEGGA           
+cut_68                        1  6.36e-05          . LPEGGA           
+cut_67                        1  6.36e-05          . LPEGGA           
+cut_66                        1  6.36e-05          . LPEGGA           
+cut_65                        1  6.36e-05          . LPEGGA           
+cut_63                        1  6.36e-05          . LPEGGA           
+cut_62                        1  6.36e-05          . LPEGGA           
+cut_56                        1  6.36e-05          . LPEGGA           
+cut_55                        1  6.36e-05          . LPEGGA           
+cut_54                        1  6.36e-05          . LPEGGA           
+cut_53                        1  6.36e-05          . LPEGGA           
+cut_52                        1  6.36e-05          . LPEGGA           
+cut_51                        1  6.36e-05          . LPEGGA           
+cut_48                        1  6.36e-05          . LPEGGA           
+cut_47                        1  6.36e-05          . LPEGGA           
+cut_45                        1  6.36e-05          . LPEGGA           
+cut_44                        1  6.36e-05          . LPEGGA           
+cut_42                        1  6.36e-05          . LPEGGA           
+cut_41                        1  6.36e-05          . LPEGGA           
+cut_33                        1  6.36e-05          . LPEGGA           
+cut_32                        1  6.36e-05          . LPEGGA           
+cut_31                        1  6.36e-05          . LPEGGA           
+cut_30                        1  6.36e-05          . LPEGGA           
+cut_28                        1  6.36e-05          . LPEGGA           
+cut_22                        1  6.36e-05          . LPEGGA           
+cut_21                        1  6.36e-05          . LPEGGA           
+cut_20                        1  6.36e-05          . LPEGGA           
+cut_19                        1  6.36e-05          . LPEGGA           
+cut_18                        1  6.36e-05          . LPEGGA           
+cut_17                        1  6.36e-05          . LPEGGA           
+cut_16                        1  6.36e-05          . LPEGGA           
+cut_15                        1  6.36e-05          . LPEGGA           
+cut_139                       1  7.57e-05          . LPELGA           
+cut_549                       1  8.57e-05          . LPETAA           
+cut_532                       1  8.57e-05          . LPETAA           
+cut_531                       1  8.57e-05          . LPETAA           
+cut_530                       1  8.57e-05          . LPETAA           
+cut_529                       1  8.57e-05          . LPETAA           
+cut_523                       1  8.57e-05          . LPETAA           
+cut_486                       1  8.57e-05          . LPETAA           
+cut_485                       1  8.57e-05          . LPETAA           
+cut_477                       1  8.57e-05          . LPETAA           
+cut_476                       1  8.57e-05          . LPETAA           
+cut_460                       1  8.57e-05          . LPETAA           
+cut_458                       1  8.57e-05          . LPETAA           
+cut_350                       1  8.57e-05          . LPETAA           
+cut_349                       1  8.57e-05          . LPETAA           
+cut_347                       1  8.57e-05          . LPETAA           
+cut_276                       1  8.57e-05          . LPETAA           
+cut_219                       1  8.57e-05          . LPETAA           
+cut_201                       1  8.57e-05          . LPETAA           
+cut_183                       1  8.57e-05          . LPETAA           
+cut_112                       1  8.57e-05          . LPETAA           
+cut_111                       1  8.57e-05          . LPETAA           
+cut_491                       1  9.40e-05          . LTEVGA           
+cut_470                       1  9.40e-05          . LTEVGA           
+cut_340                       1  9.40e-05          . IPETTA           
+cut_339                       1  9.40e-05          . IPETTA           
+cut_338                       1  9.40e-05          . IPETTA           
+cut_337                       1  9.40e-05          . IPETTA           
+cut_317                       1  9.40e-05          . IPETTA           
+cut_316                       1  9.40e-05          . IPETTA           
+cut_315                       1  9.40e-05          . IPETTA           
+cut_313                       1  9.40e-05          . IPETTA           
+cut_304                       1  9.40e-05          . IPETTA           
+cut_303                       1  9.40e-05          . IPETTA           
+cut_302                       1  9.40e-05          . IPETTA           
+cut_301                       1  9.40e-05          . IPETTA           
+cut_300                       1  9.40e-05          . IPETTA           
+cut_299                       1  9.40e-05          . IPETTA           
+cut_282                       1  9.40e-05          . IPETTA           
+cut_281                       1  9.40e-05          . IPETTA           
+cut_280                       1  9.40e-05          . IPETTA           
+cut_279                       1  9.40e-05          . IPETTA           
+cut_278                       1  9.40e-05          . IPETTA           
+cut_277                       1  9.40e-05          . IPETTA           
+cut_275                       1  9.40e-05          . IPETTA           
+cut_274                       1  9.40e-05          . IPETTA           
+cut_273                       1  9.40e-05          . IPETTA           
+cut_272                       1  9.40e-05          . IPETTA           
+cut_271                       1  9.40e-05          . IPETTA           
+cut_270                       1  9.40e-05          . IPETTA           
+cut_267                       1  9.40e-05          . IPETTA           
+cut_266                       1  9.40e-05          . IPETTA           
+cut_264                       1  9.40e-05          . IPETTA           
+cut_263                       1  9.40e-05          . IPETTA           
+cut_262                       1  9.40e-05          . IPETTA           
+cut_261                       1  9.40e-05          . IPETTA           
+cut_260                       1  9.40e-05          . IPETTA           
+cut_259                       1  9.40e-05          . IPETTA           
+cut_258                       1  9.40e-05          . IPETTA           
+cut_257                       1  9.40e-05          . IPETTA           
+cut_256                       1  9.40e-05          . IPETTA           
+cut_255                       1  9.40e-05          . IPETTA           
+cut_254                       1  9.40e-05          . IPETTA           
+cut_253                       1  9.40e-05          . IPETTA           
+cut_252                       1  9.40e-05          . IPETTA           
+cut_251                       1  9.40e-05          . IPETTA           
+cut_250                       1  9.40e-05          . IPETTA           
+cut_248                       1  9.40e-05          . IPETTA           
+cut_247                       1  9.40e-05          . IPETTA           
+cut_246                       1  9.40e-05          . IPETTA           
+cut_245                       1  9.40e-05          . IPETTA           
+cut_244                       1  9.40e-05          . IPETTA           
+cut_243                       1  9.40e-05          . IPETTA           
+cut_242                       1  9.40e-05          . IPETTA           
+cut_241                       1  9.40e-05          . IPETTA           
+cut_240                       1  9.40e-05          . IPETTA           
+cut_234                       1  9.40e-05          . IPETTA           
+cut_233                       1  9.40e-05          . IPETTA           
+cut_232                       1  9.40e-05          . IPETTA           
+cut_309                       1  1.07e-04          . LPEMAA           
+cut_308                       1  1.07e-04          . LPEMAA           
+cut_218                       1  1.07e-04          . LPEMAA           
+cut_214                       1  1.07e-04          . LPEMAA           
+cut_210                       1  1.07e-04          . LPEMAA           
+cut_206                       1  1.07e-04          . LPEMAA           
+cut_198                       1  1.07e-04          . LPEMAA           
+cut_197                       1  1.07e-04          . LPEMAA           
+cut_194                       1  1.07e-04          . LPEMAA           
+cut_193                       1  1.07e-04          . LPEMAA           
+cut_191                       1  1.07e-04          . LPEMAA           
+cut_187                       1  1.07e-04          . LPEMAA           
+cut_186                       1  1.07e-04          . LPEMAA           
+cut_351                       1  1.24e-04          . IPDMSA           
+cut_535                       1  1.45e-04          . MPEFAA           
+cut_533                       1  1.45e-04          . MPEFAA           
+cut_528                       1  1.45e-04          . MPEGGA           
+cut_520                       1  1.45e-04          . MDEVGA           
+cut_461                       1  1.45e-04          . LPDMAA           
+cut_542                       1  1.80e-04          . LSETAA           
+cut_541                       1  1.80e-04          . LSETAA           
+cut_540                       1  1.80e-04          . LSETAA           
+cut_539                       1  1.80e-04          . LSETAA           
+cut_537                       1  1.80e-04          . LSETAA           
+cut_536                       1  1.80e-04          . LSETAA           
+cut_534                       1  1.80e-04          . LSETAA           
+cut_518                       1  1.80e-04          . LSETAA           
+cut_517                       1  1.80e-04          . LSETAA           
+cut_516                       1  1.80e-04          . LSETAA           
+cut_515                       1  1.80e-04          . LSETAA           
+cut_482                       1  1.80e-04          . LSETAA           
+cut_475                       1  1.80e-04          . LSETAA           
+cut_249                       1  1.80e-04          . LSETAA           
+cut_142                       1  1.80e-04          . LSETAA           
+cut_503                       1  1.90e-04          . MTEVGA           
+cut_494                       1  1.90e-04          . MVEIGA           
+cut_492                       1  1.90e-04          . MTEVGA           
+cut_490                       1  1.90e-04          . MVEIGA           
+cut_489                       1  1.90e-04          . MTEVGA           
+cut_468                       1  1.90e-04          . MTEVGA           
+cut_466                       1  1.90e-04          . MTEVGA           
+cut_465                       1  1.90e-04          . MTEVGA           
+cut_464                       1  1.90e-04          . MTEVGA           
+cut_459                       1  1.90e-04          . MTEVGA           
+cut_453                       1  1.90e-04          . MTEVGA           
+cut_435                       1  1.90e-04          . HSEIGA           
+cut_427                       1  1.90e-04          . MVEIGA           
+cut_426                       1  1.90e-04          . MVEIGA           
+cut_425                       1  1.90e-04          . MVEIGA           
+cut_424                       1  1.90e-04          . MVEIGA           
+cut_422                       1  1.90e-04          . MVEIGA           
+cut_409                       1  1.90e-04          . MTEVGA           
+cut_407                       1  1.90e-04          . MTEVGA           
+cut_400                       1  1.90e-04          . MVEIGA           
+cut_395                       1  1.90e-04          . MTEVGA           
+cut_394                       1  1.90e-04          . MVEIGA           
+cut_391                       1  1.90e-04          . MVEIGA           
+cut_390                       1  1.90e-04          . MVEIGA           
+cut_389                       1  1.90e-04          . MVEIGA           
+cut_387                       1  1.90e-04          . MVEIGA           
+cut_385                       1  1.90e-04          . MVEIGA           
+cut_377                       1  1.90e-04          . MVEIGA           
+cut_376                       1  1.90e-04          . MVEIGA           
+cut_375                       1  1.90e-04          . MTEVGA           
+cut_373                       1  1.90e-04          . MVEIGA           
+cut_371                       1  1.90e-04          . MVEIGA           
+cut_356                       1  1.90e-04          . MTEVGA           
+cut_355                       1  1.90e-04          . MTEVGA           
+cut_354                       1  1.90e-04          . MTEVGA           
+cut_37                        1  1.90e-04          . VPEGGA           
+cut_35                        1  1.90e-04          . VPEGGA           
+cut_473                       1  2.41e-04          . LPEAGA           
+cut_472                       1  2.41e-04          . LPEAGA           
+cut_469                       1  2.41e-04          . LPEAGA           
+cut_436                       1  2.41e-04          . MTEIGA           
+cut_359                       1  2.41e-04          . LVEGGA           
+cut_50                        1  2.41e-04          . LPEAGA           
+cut_49                        1  2.41e-04          . LPEAGA           
+cut_46                        1  2.41e-04          . LPEAGA           
+cut_434                       1  3.21e-04          . LTELGA           
+cut_429                       1  3.21e-04          . LTELGA           
+cut_384                       1  3.21e-04          . LTELGA           
+cut_379                       1  3.21e-04          . LTELGA           
+cut_448                       1  4.01e-04          . MMEVGA           
+cut_447                       1  4.01e-04          . MMEVGA           
+cut_481                       1  4.24e-04          . NTEVGA           
+cut_480                       1  4.24e-04          . NTEVGA           
+cut_445                       1  4.24e-04          . NTEVGA           
+cut_444                       1  4.24e-04          . NTEVGA           
+cut_438                       1  4.24e-04          . NTEVGA           
+cut_417                       1  4.24e-04          . NTEVGA           
+cut_341                       1  4.24e-04          . LPSTAA           
+cut_498                       1  4.74e-04          . MMEIGA           
+cut_497                       1  4.74e-04          . MMEIGA           
+cut_496                       1  4.74e-04          . MMEIGA           
+cut_495                       1  4.74e-04          . MMEIGA           
+cut_452                       1  4.74e-04          . MMEIGA           
+cut_451                       1  4.74e-04          . MMEIGA           
+cut_450                       1  4.74e-04          . MMEIGA           
+cut_449                       1  4.74e-04          . MMEIGA           
+cut_443                       1  4.74e-04          . MMEIGA           
+cut_442                       1  4.74e-04          . MMEIGA           
+cut_441                       1  4.74e-04          . MMEIGA           
+cut_440                       1  4.74e-04          . MMEIGA           
+cut_388                       1  4.74e-04          . MIEIGA           
+cut_378                       1  4.74e-04          . MIEIGA           
+cut_484                       1  5.06e-04          . MTEVSA           
+cut_408                       1  5.06e-04          . MTEVSA           
+cut_402                       1  5.06e-04          . MTEVSA           
+cut_401                       1  5.06e-04          . MTEVSA           
+cut_399                       1  5.06e-04          . MTEVSA           
+cut_397                       1  5.06e-04          . MTEVSA           
+cut_239                       1  5.47e-04          . IPSTAA           
+cut_238                       1  5.47e-04          . IPSTAA           
+cut_237                       1  5.47e-04          . IPSTAA           
+cut_236                       1  5.47e-04          . IPSTAA           
+cut_235                       1  5.47e-04          . IPSTAA           
+cut_4                         1  5.47e-04          . LAETGA           
+cut_3                         1  5.47e-04          . LAETGA           
+cut_396                       1  6.82e-04          . VTELGA           
+cut_392                       1  6.82e-04          . VTELGA           
+cut_79                        1  6.82e-04          . LPENGG           
+cut_69                        1  6.82e-04          . LPENGG           
+cut_546                       1  7.73e-04          . MEEMGA           
+cut_524                       1  7.73e-04          . MEEMGA           
+cut_519                       1  7.73e-04          . MAENGA           
+cut_374                       1  7.73e-04          . MAENGA           
+cut_501                       1  8.07e-04          . LTELSA           
+cut_500                       1  8.07e-04          . LTELSA           
+cut_499                       1  8.07e-04          . LTELSA           
+cut_433                       1  8.07e-04          . LTELSA           
+cut_432                       1  8.07e-04          . LTELSA           
+cut_428                       1  8.07e-04          . LTELSA           
+cut_420                       1  8.07e-04          . LTELSA           
+cut_419                       1  8.07e-04          . LTELSA           
+cut_418                       1  8.07e-04          . LTELSA           
+cut_416                       1  8.07e-04          . LTELSA           
+cut_414                       1  8.07e-04          . LTELSA           
+cut_413                       1  8.07e-04          . LTELSA           
+cut_412                       1  8.07e-04          . LTELSA           
+cut_411                       1  8.07e-04          . LTELSA           
+cut_406                       1  8.07e-04          . LTELSA           
+cut_405                       1  8.07e-04          . LTELSA           
+cut_404                       1  8.07e-04          . LTELSA           
+cut_403                       1  8.07e-04          . LTELSA           
+cut_398                       1  8.07e-04          . LTELSA           
+cut_548                       1  9.95e-04          . KSILGA           
+cut_513                       1  9.95e-04          . KSILGA           
+cut_512                       1  9.95e-04          . KSILGA           
+cut_393                       1  1.05e-03          . MTEIDA           
+cut_544                       1  1.16e-03          . LDTMGA           
+cut_488                       1  1.23e-03          . LVENGT           
+cut_370                       1  1.23e-03          . LVENGT           
+cut_345                       1  1.23e-03          . IPSSAA           
+cut_344                       1  1.23e-03          . IPSSAA           
+cut_343                       1  1.23e-03          . IPSSAA           
+cut_342                       1  1.23e-03          . IPSSAA           
+cut_410                       1  1.37e-03          . AVETGA           
+cut_555                       1  1.84e-03          . MDTMGA           
+cut_510                       1  2.16e-03          . KEIMGA           
+cut_508                       1  2.16e-03          . KEIMGA           
+cut_506                       1  2.16e-03          . KEIMGA           
+cut_502                       1  2.16e-03          . LEIMGA           
+cut_547                       1  2.49e-03          . MTEASA           
+cut_431                       1  2.49e-03          . MTEASA           
+cut_386                       1  2.49e-03          . TIETGA           
+cut_381                       1  2.49e-03          . TIETGA           
+cut_493                       1  2.71e-03          . AIETGA           
+cut_421                       1  2.71e-03          . AIETGA           
+cut_415                       1  2.71e-03          . AIETGA           
+cut_380                       1  2.71e-03          . AIETGA           
+cut_336                       1  3.43e-03          . VPATAA           
+cut_335                       1  3.43e-03          . VPATAA           
+cut_332                       1  3.43e-03          . VPATAA           
+cut_331                       1  3.43e-03          . VPATAA           
+cut_330                       1  3.43e-03          . VPATAA           
+cut_556                       1  4.13e-03          . LETMGA           
+cut_554                       1  4.13e-03          . LETMGA           
+cut_553                       1  4.13e-03          . LETMGA           
+cut_141                       1  5.79e-03          . KAILGA           
+cut_353                       1  6.04e-03          . VSSAAA           
+cut_352                       1  6.04e-03          . VSSAAA           
+cut_348                       1  6.04e-03          . VSSAAA           
+cut_314                       1  6.04e-03          . VSSAAA           
+cut_312                       1  6.04e-03          . VSSAAA           
+cut_311                       1  6.04e-03          . VSSAAA           
+cut_487                       1  9.48e-03          . MAENEA           
+cut_367                       1  9.48e-03          . MAENEA           
+cut_483                       1  1.02e-02          . TQVMGA           
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif LPETGA MEME-1 block diagrams
+--------------------------------------------------------------------------------
+SEQUENCE NAME            POSITION P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+cut_362                           6.4e-07  [1]
+cut_152                           6.4e-07  [1]
+cut_151                           6.4e-07  [1]
+cut_150                           6.4e-07  [1]
+cut_149                           6.4e-07  [1]
+cut_104                           6.4e-07  [1]
+cut_100                           6.4e-07  [1]
+cut_99                            6.4e-07  [1]
+cut_97                            6.4e-07  [1]
+cut_96                            6.4e-07  [1]
+cut_95                            6.4e-07  [1]
+cut_94                            6.4e-07  [1]
+cut_93                            6.4e-07  [1]
+cut_91                            6.4e-07  [1]
+cut_89                            6.4e-07  [1]
+cut_88                            6.4e-07  [1]
+cut_87                            6.4e-07  [1]
+cut_85                            6.4e-07  [1]
+cut_82                            6.4e-07  [1]
+cut_80                            6.4e-07  [1]
+cut_72                            6.4e-07  [1]
+cut_59                            6.4e-07  [1]
+cut_58                            6.4e-07  [1]
+cut_27                            6.4e-07  [1]
+cut_559                           5.5e-06  [1]
+cut_558                           5.5e-06  [1]
+cut_557                           5.5e-06  [1]
+cut_471                           5.5e-06  [1]
+cut_158                           5.5e-06  [1]
+cut_156                           5.5e-06  [1]
+cut_153                           5.5e-06  [1]
+cut_115                           5.5e-06  [1]
+cut_114                           5.5e-06  [1]
+cut_113                           5.5e-06  [1]
+cut_107                           5.5e-06  [1]
+cut_103                           5.5e-06  [1]
+cut_92                            5.5e-06  [1]
+cut_90                            5.5e-06  [1]
+cut_86                            5.5e-06  [1]
+cut_81                            5.5e-06  [1]
+cut_78                            5.5e-06  [1]
+cut_76                            5.5e-06  [1]
+cut_75                            5.5e-06  [1]
+cut_71                            5.5e-06  [1]
+cut_70                            5.5e-06  [1]
+cut_43                            5.5e-06  [1]
+cut_39                            5.5e-06  [1]
+cut_14                            5.5e-06  [1]
+cut_13                            5.5e-06  [1]
+cut_12                            5.5e-06  [1]
+cut_11                            5.5e-06  [1]
+cut_7                             5.5e-06  [1]
+cut_6                             5.5e-06  [1]
+cut_527                           8.8e-06  [1]
+cut_526                           8.8e-06  [1]
+cut_310                           8.8e-06  [1]
+cut_231                           8.8e-06  [1]
+cut_230                           8.8e-06  [1]
+cut_229                           8.8e-06  [1]
+cut_228                           8.8e-06  [1]
+cut_227                           8.8e-06  [1]
+cut_226                           8.8e-06  [1]
+cut_225                           8.8e-06  [1]
+cut_224                           8.8e-06  [1]
+cut_223                           8.8e-06  [1]
+cut_222                           8.8e-06  [1]
+cut_221                           8.8e-06  [1]
+cut_220                           8.8e-06  [1]
+cut_217                           8.8e-06  [1]
+cut_216                           8.8e-06  [1]
+cut_215                           8.8e-06  [1]
+cut_213                           8.8e-06  [1]
+cut_212                           8.8e-06  [1]
+cut_211                           8.8e-06  [1]
+cut_209                           8.8e-06  [1]
+cut_208                           8.8e-06  [1]
+cut_207                           8.8e-06  [1]
+cut_205                           8.8e-06  [1]
+cut_204                           8.8e-06  [1]
+cut_203                           8.8e-06  [1]
+cut_202                           8.8e-06  [1]
+cut_200                           8.8e-06  [1]
+cut_199                           8.8e-06  [1]
+cut_196                           8.8e-06  [1]
+cut_195                           8.8e-06  [1]
+cut_192                           8.8e-06  [1]
+cut_190                           8.8e-06  [1]
+cut_189                           8.8e-06  [1]
+cut_188                           8.8e-06  [1]
+cut_185                           8.8e-06  [1]
+cut_184                           8.8e-06  [1]
+cut_182                           8.8e-06  [1]
+cut_181                           8.8e-06  [1]
+cut_179                           8.8e-06  [1]
+cut_178                           8.8e-06  [1]
+cut_175                           8.8e-06  [1]
+cut_148                           8.8e-06  [1]
+cut_147                           8.8e-06  [1]
+cut_146                           8.8e-06  [1]
+cut_145                           8.8e-06  [1]
+cut_144                           8.8e-06  [1]
+cut_143                           8.8e-06  [1]
+cut_140                           8.8e-06  [1]
+cut_138                           8.8e-06  [1]
+cut_137                           8.8e-06  [1]
+cut_134                           8.8e-06  [1]
+cut_133                           8.8e-06  [1]
+cut_132                           8.8e-06  [1]
+cut_131                           8.8e-06  [1]
+cut_130                           8.8e-06  [1]
+cut_129                           8.8e-06  [1]
+cut_127                           8.8e-06  [1]
+cut_125                           8.8e-06  [1]
+cut_124                           8.8e-06  [1]
+cut_123                           8.8e-06  [1]
+cut_122                           8.8e-06  [1]
+cut_121                           8.8e-06  [1]
+cut_120                           8.8e-06  [1]
+cut_119                           8.8e-06  [1]
+cut_118                           8.8e-06  [1]
+cut_40                            8.8e-06  [1]
+cut_34                            8.8e-06  [1]
+cut_29                            8.8e-06  [1]
+cut_26                            8.8e-06  [1]
+cut_25                            8.8e-06  [1]
+cut_24                            8.8e-06  [1]
+cut_23                            8.8e-06  [1]
+cut_10                            8.8e-06  [1]
+cut_9                             8.8e-06  [1]
+cut_8                             8.8e-06  [1]
+cut_551                           1.2e-05  [1]
+cut_550                           1.2e-05  [1]
+cut_514                           1.2e-05  [1]
+cut_511                           1.2e-05  [1]
+cut_507                           1.2e-05  [1]
+cut_505                           1.2e-05  [1]
+cut_504                           1.2e-05  [1]
+cut_135                           1.2e-05  [1]
+cut_128                           1.2e-05  [1]
+cut_126                           1.2e-05  [1]
+cut_38                            1.2e-05  [1]
+cut_36                            1.2e-05  [1]
+cut_525                           1.4e-05  [1]
+cut_478                           1.4e-05  [1]
+cut_174                           1.4e-05  [1]
+cut_136                           1.4e-05  [1]
+cut_117                           1.6e-05  [1]
+cut_116                           1.6e-05  [1]
+cut_543                           2.1e-05  [1]
+cut_538                           2.1e-05  [1]
+cut_522                           2.1e-05  [1]
+cut_521                           2.1e-05  [1]
+cut_479                           2.1e-05  [1]
+cut_430                           2.1e-05  [1]
+cut_423                           2.1e-05  [1]
+cut_358                           2.1e-05  [1]
+cut_357                           2.1e-05  [1]
+cut_334                           2.1e-05  [1]
+cut_329                           2.1e-05  [1]
+cut_328                           2.1e-05  [1]
+cut_327                           2.1e-05  [1]
+cut_326                           2.1e-05  [1]
+cut_325                           2.1e-05  [1]
+cut_324                           2.1e-05  [1]
+cut_323                           2.1e-05  [1]
+cut_322                           2.1e-05  [1]
+cut_321                           2.1e-05  [1]
+cut_320                           2.1e-05  [1]
+cut_319                           2.1e-05  [1]
+cut_318                           2.1e-05  [1]
+cut_307                           2.1e-05  [1]
+cut_306                           2.1e-05  [1]
+cut_305                           2.1e-05  [1]
+cut_298                           2.1e-05  [1]
+cut_297                           2.1e-05  [1]
+cut_296                           2.1e-05  [1]
+cut_295                           2.1e-05  [1]
+cut_294                           2.1e-05  [1]
+cut_293                           2.1e-05  [1]
+cut_291                           2.1e-05  [1]
+cut_290                           2.1e-05  [1]
+cut_289                           2.1e-05  [1]
+cut_288                           2.1e-05  [1]
+cut_287                           2.1e-05  [1]
+cut_286                           2.1e-05  [1]
+cut_285                           2.1e-05  [1]
+cut_284                           2.1e-05  [1]
+cut_283                           2.1e-05  [1]
+cut_382                           2.7e-05  [1]
+cut_369                           2.7e-05  [1]
+cut_368                           2.7e-05  [1]
+cut_366                           2.7e-05  [1]
+cut_365                           2.7e-05  [1]
+cut_364                           2.7e-05  [1]
+cut_180                           2.7e-05  [1]
+cut_177                           2.7e-05  [1]
+cut_176                           2.7e-05  [1]
+cut_173                           2.7e-05  [1]
+cut_172                           2.7e-05  [1]
+cut_171                           2.7e-05  [1]
+cut_170                           2.7e-05  [1]
+cut_169                           2.7e-05  [1]
+cut_168                           2.7e-05  [1]
+cut_167                           2.7e-05  [1]
+cut_166                           2.7e-05  [1]
+cut_165                           2.7e-05  [1]
+cut_164                           2.7e-05  [1]
+cut_163                           2.7e-05  [1]
+cut_162                           2.7e-05  [1]
+cut_161                           2.7e-05  [1]
+cut_160                           2.7e-05  [1]
+cut_159                           2.7e-05  [1]
+cut_154                           2.7e-05  [1]
+cut_5                             2.7e-05  [1]
+cut_2                             2.7e-05  [1]
+cut_467                           2.9e-05  [1]
+cut_463                           2.9e-05  [1]
+cut_462                           2.9e-05  [1]
+cut_457                           2.9e-05  [1]
+cut_456                           2.9e-05  [1]
+cut_455                           2.9e-05  [1]
+cut_454                           2.9e-05  [1]
+cut_446                           2.9e-05  [1]
+cut_439                           2.9e-05  [1]
+cut_437                           2.9e-05  [1]
+cut_372                           2.9e-05  [1]
+cut_292                           2.9e-05  [1]
+cut_157                           3.7e-05  [1]
+cut_155                           3.7e-05  [1]
+cut_110                           3.7e-05  [1]
+cut_109                           3.7e-05  [1]
+cut_108                           3.7e-05  [1]
+cut_106                           3.7e-05  [1]
+cut_105                           3.7e-05  [1]
+cut_83                            3.7e-05  [1]
+cut_77                            3.7e-05  [1]
+cut_64                            3.7e-05  [1]
+cut_61                            3.7e-05  [1]
+cut_57                            3.7e-05  [1]
+cut_1                             3.7e-05  [1]
+cut_363                           5.3e-05  [1]
+cut_361                           5.3e-05  [1]
+cut_360                           5.3e-05  [1]
+cut_60                            5.3e-05  [1]
+cut_474                           6.4e-05  [1]
+cut_101                           6.4e-05  [1]
+cut_98                            6.4e-05  [1]
+cut_84                            6.4e-05  [1]
+cut_74                            6.4e-05  [1]
+cut_73                            6.4e-05  [1]
+cut_68                            6.4e-05  [1]
+cut_67                            6.4e-05  [1]
+cut_66                            6.4e-05  [1]
+cut_65                            6.4e-05  [1]
+cut_63                            6.4e-05  [1]
+cut_62                            6.4e-05  [1]
+cut_56                            6.4e-05  [1]
+cut_55                            6.4e-05  [1]
+cut_54                            6.4e-05  [1]
+cut_53                            6.4e-05  [1]
+cut_52                            6.4e-05  [1]
+cut_51                            6.4e-05  [1]
+cut_48                            6.4e-05  [1]
+cut_47                            6.4e-05  [1]
+cut_45                            6.4e-05  [1]
+cut_44                            6.4e-05  [1]
+cut_42                            6.4e-05  [1]
+cut_41                            6.4e-05  [1]
+cut_33                            6.4e-05  [1]
+cut_32                            6.4e-05  [1]
+cut_31                            6.4e-05  [1]
+cut_30                            6.4e-05  [1]
+cut_28                            6.4e-05  [1]
+cut_22                            6.4e-05  [1]
+cut_21                            6.4e-05  [1]
+cut_20                            6.4e-05  [1]
+cut_19                            6.4e-05  [1]
+cut_18                            6.4e-05  [1]
+cut_17                            6.4e-05  [1]
+cut_16                            6.4e-05  [1]
+cut_15                            6.4e-05  [1]
+cut_139                           7.6e-05  [1]
+cut_549                           8.6e-05  [1]
+cut_532                           8.6e-05  [1]
+cut_531                           8.6e-05  [1]
+cut_530                           8.6e-05  [1]
+cut_529                           8.6e-05  [1]
+cut_523                           8.6e-05  [1]
+cut_486                           8.6e-05  [1]
+cut_485                           8.6e-05  [1]
+cut_477                           8.6e-05  [1]
+cut_476                           8.6e-05  [1]
+cut_460                           8.6e-05  [1]
+cut_458                           8.6e-05  [1]
+cut_350                           8.6e-05  [1]
+cut_349                           8.6e-05  [1]
+cut_347                           8.6e-05  [1]
+cut_276                           8.6e-05  [1]
+cut_219                           8.6e-05  [1]
+cut_201                           8.6e-05  [1]
+cut_183                           8.6e-05  [1]
+cut_112                           8.6e-05  [1]
+cut_111                           8.6e-05  [1]
+cut_491                           9.4e-05  [1]
+cut_470                           9.4e-05  [1]
+cut_340                           9.4e-05  [1]
+cut_339                           9.4e-05  [1]
+cut_338                           9.4e-05  [1]
+cut_337                           9.4e-05  [1]
+cut_317                           9.4e-05  [1]
+cut_316                           9.4e-05  [1]
+cut_315                           9.4e-05  [1]
+cut_313                           9.4e-05  [1]
+cut_304                           9.4e-05  [1]
+cut_303                           9.4e-05  [1]
+cut_302                           9.4e-05  [1]
+cut_301                           9.4e-05  [1]
+cut_300                           9.4e-05  [1]
+cut_299                           9.4e-05  [1]
+cut_282                           9.4e-05  [1]
+cut_281                           9.4e-05  [1]
+cut_280                           9.4e-05  [1]
+cut_279                           9.4e-05  [1]
+cut_278                           9.4e-05  [1]
+cut_277                           9.4e-05  [1]
+cut_275                           9.4e-05  [1]
+cut_274                           9.4e-05  [1]
+cut_273                           9.4e-05  [1]
+cut_272                           9.4e-05  [1]
+cut_271                           9.4e-05  [1]
+cut_270                           9.4e-05  [1]
+cut_267                           9.4e-05  [1]
+cut_266                           9.4e-05  [1]
+cut_264                           9.4e-05  [1]
+cut_263                           9.4e-05  [1]
+cut_262                           9.4e-05  [1]
+cut_261                           9.4e-05  [1]
+cut_260                           9.4e-05  [1]
+cut_259                           9.4e-05  [1]
+cut_258                           9.4e-05  [1]
+cut_257                           9.4e-05  [1]
+cut_256                           9.4e-05  [1]
+cut_255                           9.4e-05  [1]
+cut_254                           9.4e-05  [1]
+cut_253                           9.4e-05  [1]
+cut_252                           9.4e-05  [1]
+cut_251                           9.4e-05  [1]
+cut_250                           9.4e-05  [1]
+cut_248                           9.4e-05  [1]
+cut_247                           9.4e-05  [1]
+cut_246                           9.4e-05  [1]
+cut_245                           9.4e-05  [1]
+cut_244                           9.4e-05  [1]
+cut_243                           9.4e-05  [1]
+cut_242                           9.4e-05  [1]
+cut_241                           9.4e-05  [1]
+cut_240                           9.4e-05  [1]
+cut_234                           9.4e-05  [1]
+cut_233                           9.4e-05  [1]
+cut_232                           9.4e-05  [1]
+cut_309                           0.00011  [1]
+cut_308                           0.00011  [1]
+cut_218                           0.00011  [1]
+cut_214                           0.00011  [1]
+cut_210                           0.00011  [1]
+cut_206                           0.00011  [1]
+cut_198                           0.00011  [1]
+cut_197                           0.00011  [1]
+cut_194                           0.00011  [1]
+cut_193                           0.00011  [1]
+cut_191                           0.00011  [1]
+cut_187                           0.00011  [1]
+cut_186                           0.00011  [1]
+cut_351                           0.00012  [1]
+cut_535                           0.00015  [1]
+cut_533                           0.00015  [1]
+cut_528                           0.00015  [1]
+cut_520                           0.00015  [1]
+cut_461                           0.00015  [1]
+cut_542                           0.00018  [1]
+cut_541                           0.00018  [1]
+cut_540                           0.00018  [1]
+cut_539                           0.00018  [1]
+cut_537                           0.00018  [1]
+cut_536                           0.00018  [1]
+cut_534                           0.00018  [1]
+cut_518                           0.00018  [1]
+cut_517                           0.00018  [1]
+cut_516                           0.00018  [1]
+cut_515                           0.00018  [1]
+cut_482                           0.00018  [1]
+cut_475                           0.00018  [1]
+cut_249                           0.00018  [1]
+cut_142                           0.00018  [1]
+cut_503                           0.00019  [1]
+cut_494                           0.00019  [1]
+cut_492                           0.00019  [1]
+cut_490                           0.00019  [1]
+cut_489                           0.00019  [1]
+cut_468                           0.00019  [1]
+cut_466                           0.00019  [1]
+cut_465                           0.00019  [1]
+cut_464                           0.00019  [1]
+cut_459                           0.00019  [1]
+cut_453                           0.00019  [1]
+cut_435                           0.00019  [1]
+cut_427                           0.00019  [1]
+cut_426                           0.00019  [1]
+cut_425                           0.00019  [1]
+cut_424                           0.00019  [1]
+cut_422                           0.00019  [1]
+cut_409                           0.00019  [1]
+cut_407                           0.00019  [1]
+cut_400                           0.00019  [1]
+cut_395                           0.00019  [1]
+cut_394                           0.00019  [1]
+cut_391                           0.00019  [1]
+cut_390                           0.00019  [1]
+cut_389                           0.00019  [1]
+cut_387                           0.00019  [1]
+cut_385                           0.00019  [1]
+cut_377                           0.00019  [1]
+cut_376                           0.00019  [1]
+cut_375                           0.00019  [1]
+cut_373                           0.00019  [1]
+cut_371                           0.00019  [1]
+cut_356                           0.00019  [1]
+cut_355                           0.00019  [1]
+cut_354                           0.00019  [1]
+cut_37                            0.00019  [1]
+cut_35                            0.00019  [1]
+cut_473                           0.00024  [1]
+cut_472                           0.00024  [1]
+cut_469                           0.00024  [1]
+cut_436                           0.00024  [1]
+cut_359                           0.00024  [1]
+cut_50                            0.00024  [1]
+cut_49                            0.00024  [1]
+cut_46                            0.00024  [1]
+cut_434                           0.00032  [1]
+cut_429                           0.00032  [1]
+cut_384                           0.00032  [1]
+cut_379                           0.00032  [1]
+cut_448                            0.0004  [1]
+cut_447                            0.0004  [1]
+cut_481                           0.00042  [1]
+cut_480                           0.00042  [1]
+cut_445                           0.00042  [1]
+cut_444                           0.00042  [1]
+cut_438                           0.00042  [1]
+cut_417                           0.00042  [1]
+cut_341                           0.00042  [1]
+cut_498                           0.00047  [1]
+cut_497                           0.00047  [1]
+cut_496                           0.00047  [1]
+cut_495                           0.00047  [1]
+cut_452                           0.00047  [1]
+cut_451                           0.00047  [1]
+cut_450                           0.00047  [1]
+cut_449                           0.00047  [1]
+cut_443                           0.00047  [1]
+cut_442                           0.00047  [1]
+cut_441                           0.00047  [1]
+cut_440                           0.00047  [1]
+cut_388                           0.00047  [1]
+cut_378                           0.00047  [1]
+cut_484                           0.00051  [1]
+cut_408                           0.00051  [1]
+cut_402                           0.00051  [1]
+cut_401                           0.00051  [1]
+cut_399                           0.00051  [1]
+cut_397                           0.00051  [1]
+cut_239                           0.00055  [1]
+cut_238                           0.00055  [1]
+cut_237                           0.00055  [1]
+cut_236                           0.00055  [1]
+cut_235                           0.00055  [1]
+cut_4                             0.00055  [1]
+cut_3                             0.00055  [1]
+cut_396                           0.00068  [1]
+cut_392                           0.00068  [1]
+cut_79                            0.00068  [1]
+cut_69                            0.00068  [1]
+cut_546                           0.00077  [1]
+cut_524                           0.00077  [1]
+cut_519                           0.00077  [1]
+cut_374                           0.00077  [1]
+cut_501                           0.00081  [1]
+cut_500                           0.00081  [1]
+cut_499                           0.00081  [1]
+cut_433                           0.00081  [1]
+cut_432                           0.00081  [1]
+cut_428                           0.00081  [1]
+cut_420                           0.00081  [1]
+cut_419                           0.00081  [1]
+cut_418                           0.00081  [1]
+cut_416                           0.00081  [1]
+cut_414                           0.00081  [1]
+cut_413                           0.00081  [1]
+cut_412                           0.00081  [1]
+cut_411                           0.00081  [1]
+cut_406                           0.00081  [1]
+cut_405                           0.00081  [1]
+cut_404                           0.00081  [1]
+cut_403                           0.00081  [1]
+cut_398                           0.00081  [1]
+cut_548                           0.00099  [1]
+cut_513                           0.00099  [1]
+cut_512                           0.00099  [1]
+cut_393                            0.0011  [1]
+cut_544                            0.0012  [1]
+cut_488                            0.0012  [1]
+cut_370                            0.0012  [1]
+cut_345                            0.0012  [1]
+cut_344                            0.0012  [1]
+cut_343                            0.0012  [1]
+cut_342                            0.0012  [1]
+cut_410                            0.0014  [1]
+cut_555                            0.0018  [1]
+cut_510                            0.0022  [1]
+cut_508                            0.0022  [1]
+cut_506                            0.0022  [1]
+cut_502                            0.0022  [1]
+cut_547                            0.0025  [1]
+cut_431                            0.0025  [1]
+cut_386                            0.0025  [1]
+cut_381                            0.0025  [1]
+cut_493                            0.0027  [1]
+cut_421                            0.0027  [1]
+cut_415                            0.0027  [1]
+cut_380                            0.0027  [1]
+cut_336                            0.0034  [1]
+cut_335                            0.0034  [1]
+cut_332                            0.0034  [1]
+cut_331                            0.0034  [1]
+cut_330                            0.0034  [1]
+cut_556                            0.0041  [1]
+cut_554                            0.0041  [1]
+cut_553                            0.0041  [1]
+cut_141                            0.0058  [1]
+cut_353                             0.006  [1]
+cut_352                             0.006  [1]
+cut_348                             0.006  [1]
+cut_314                             0.006  [1]
+cut_312                             0.006  [1]
+cut_311                             0.006  [1]
+cut_487                            0.0095  [1]
+cut_367                            0.0095  [1]
+cut_483                              0.01  [1]
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif LPETGA MEME-1 in BLOCKS format
+--------------------------------------------------------------------------------
+BL   MOTIF LPETGA width=6 seqs=549
+cut_362                  (    1) LPENGA  1 
+cut_152                  (    1) LPENGA  1 
+cut_151                  (    1) LPENGA  1 
+cut_150                  (    1) LPENGA  1 
+cut_149                  (    1) LPENGA  1 
+cut_104                  (    1) LPENGA  1 
+cut_100                  (    1) LPENGA  1 
+cut_99                   (    1) LPENGA  1 
+cut_97                   (    1) LPENGA  1 
+cut_96                   (    1) LPENGA  1 
+cut_95                   (    1) LPENGA  1 
+cut_94                   (    1) LPENGA  1 
+cut_93                   (    1) LPENGA  1 
+cut_91                   (    1) LPENGA  1 
+cut_89                   (    1) LPENGA  1 
+cut_88                   (    1) LPENGA  1 
+cut_87                   (    1) LPENGA  1 
+cut_85                   (    1) LPENGA  1 
+cut_82                   (    1) LPENGA  1 
+cut_80                   (    1) LPENGA  1 
+cut_72                   (    1) LPENGA  1 
+cut_59                   (    1) LPENGA  1 
+cut_58                   (    1) LPENGA  1 
+cut_27                   (    1) LPENGA  1 
+cut_559                  (    1) LPETGA  1 
+cut_558                  (    1) LPETGA  1 
+cut_557                  (    1) LPETGA  1 
+cut_471                  (    1) LPETGA  1 
+cut_158                  (    1) LPETGA  1 
+cut_156                  (    1) LPETGA  1 
+cut_153                  (    1) LPETGA  1 
+cut_115                  (    1) LPETGA  1 
+cut_114                  (    1) LPETGA  1 
+cut_113                  (    1) LPETGA  1 
+cut_107                  (    1) LPETGA  1 
+cut_103                  (    1) LPETGA  1 
+cut_92                   (    1) LPETGA  1 
+cut_90                   (    1) LPETGA  1 
+cut_86                   (    1) LPETGA  1 
+cut_81                   (    1) LPETGA  1 
+cut_78                   (    1) LPETGA  1 
+cut_76                   (    1) LPETGA  1 
+cut_75                   (    1) LPETGA  1 
+cut_71                   (    1) LPETGA  1 
+cut_70                   (    1) LPETGA  1 
+cut_43                   (    1) LPETGA  1 
+cut_39                   (    1) LPETGA  1 
+cut_14                   (    1) LPETGA  1 
+cut_13                   (    1) LPETGA  1 
+cut_12                   (    1) LPETGA  1 
+cut_11                   (    1) LPETGA  1 
+cut_7                    (    1) LPETGA  1 
+cut_6                    (    1) LPETGA  1 
+cut_527                  (    1) LPEMGA  1 
+cut_526                  (    1) LPEMGA  1 
+cut_310                  (    1) LPEMGA  1 
+cut_231                  (    1) LPEMGA  1 
+cut_230                  (    1) LPEMGA  1 
+cut_229                  (    1) LPEMGA  1 
+cut_228                  (    1) LPEMGA  1 
+cut_227                  (    1) LPEMGA  1 
+cut_226                  (    1) LPEMGA  1 
+cut_225                  (    1) LPEMGA  1 
+cut_224                  (    1) LPEMGA  1 
+cut_223                  (    1) LPEMGA  1 
+cut_222                  (    1) LPEMGA  1 
+cut_221                  (    1) LPEMGA  1 
+cut_220                  (    1) LPEMGA  1 
+cut_217                  (    1) LPEMGA  1 
+cut_216                  (    1) LPEMGA  1 
+cut_215                  (    1) LPEMGA  1 
+cut_213                  (    1) LPEMGA  1 
+cut_212                  (    1) LPEMGA  1 
+cut_211                  (    1) LPEMGA  1 
+cut_209                  (    1) LPEMGA  1 
+cut_208                  (    1) LPEMGA  1 
+cut_207                  (    1) LPEMGA  1 
+cut_205                  (    1) LPEMGA  1 
+cut_204                  (    1) LPEMGA  1 
+cut_203                  (    1) LPEMGA  1 
+cut_202                  (    1) LPEMGA  1 
+cut_200                  (    1) LPEMGA  1 
+cut_199                  (    1) LPEMGA  1 
+cut_196                  (    1) LPEMGA  1 
+cut_195                  (    1) LPEMGA  1 
+cut_192                  (    1) LPEMGA  1 
+cut_190                  (    1) LPEMGA  1 
+cut_189                  (    1) LPEMGA  1 
+cut_188                  (    1) LPEMGA  1 
+cut_185                  (    1) LPEMGA  1 
+cut_184                  (    1) LPEMGA  1 
+cut_182                  (    1) LPEMGA  1 
+cut_181                  (    1) LPEMGA  1 
+cut_179                  (    1) LPEMGA  1 
+cut_178                  (    1) LPEMGA  1 
+cut_175                  (    1) LPEMGA  1 
+cut_148                  (    1) LPEMGA  1 
+cut_147                  (    1) LPEMGA  1 
+cut_146                  (    1) LPEMGA  1 
+cut_145                  (    1) LPEMGA  1 
+cut_144                  (    1) LPEMGA  1 
+cut_143                  (    1) LPEMGA  1 
+cut_140                  (    1) LPEMGA  1 
+cut_138                  (    1) LPEMGA  1 
+cut_137                  (    1) LPEMGA  1 
+cut_134                  (    1) LPEMGA  1 
+cut_133                  (    1) LPEMGA  1 
+cut_132                  (    1) LPEMGA  1 
+cut_131                  (    1) LPEMGA  1 
+cut_130                  (    1) LPEMGA  1 
+cut_129                  (    1) LPEMGA  1 
+cut_127                  (    1) LPEMGA  1 
+cut_125                  (    1) LPEMGA  1 
+cut_124                  (    1) LPEMGA  1 
+cut_123                  (    1) LPEMGA  1 
+cut_122                  (    1) LPEMGA  1 
+cut_121                  (    1) LPEMGA  1 
+cut_120                  (    1) LPEMGA  1 
+cut_119                  (    1) LPEMGA  1 
+cut_118                  (    1) LPEMGA  1 
+cut_40                   (    1) LPEMGA  1 
+cut_34                   (    1) LPEMGA  1 
+cut_29                   (    1) LPEMGA  1 
+cut_26                   (    1) LPEMGA  1 
+cut_25                   (    1) LPEMGA  1 
+cut_24                   (    1) LPEMGA  1 
+cut_23                   (    1) LPEMGA  1 
+cut_10                   (    1) LPEMGA  1 
+cut_9                    (    1) LPEMGA  1 
+cut_8                    (    1) LPEMGA  1 
+cut_551                  (    1) IPETGA  1 
+cut_550                  (    1) IPETGA  1 
+cut_514                  (    1) IPETGA  1 
+cut_511                  (    1) IPETGA  1 
+cut_507                  (    1) IPETGA  1 
+cut_505                  (    1) IPETGA  1 
+cut_504                  (    1) IPETGA  1 
+cut_135                  (    1) LPEVGA  1 
+cut_128                  (    1) LPEVGA  1 
+cut_126                  (    1) LPEVGA  1 
+cut_38                   (    1) LPDTGA  1 
+cut_36                   (    1) LPDTGA  1 
+cut_525                  (    1) LPDMGA  1 
+cut_478                  (    1) LPDMGA  1 
+cut_174                  (    1) LPDMGA  1 
+cut_136                  (    1) LPDMGA  1 
+cut_117                  (    1) QPEMGA  1 
+cut_116                  (    1) QPEMGA  1 
+cut_543                  (    1) LSETGA  1 
+cut_538                  (    1) LSETGA  1 
+cut_522                  (    1) MPETGA  1 
+cut_521                  (    1) MPETGA  1 
+cut_479                  (    1) MPEHGA  1 
+cut_430                  (    1) MPETGA  1 
+cut_423                  (    1) MPETGA  1 
+cut_358                  (    1) MPEHGA  1 
+cut_357                  (    1) MPEHGA  1 
+cut_334                  (    1) LSETGA  1 
+cut_329                  (    1) LSETGA  1 
+cut_328                  (    1) LSETGA  1 
+cut_327                  (    1) LSETGA  1 
+cut_326                  (    1) LSETGA  1 
+cut_325                  (    1) LSETGA  1 
+cut_324                  (    1) LSETGA  1 
+cut_323                  (    1) LSETGA  1 
+cut_322                  (    1) LSETGA  1 
+cut_321                  (    1) LSETGA  1 
+cut_320                  (    1) LSETGA  1 
+cut_319                  (    1) LSETGA  1 
+cut_318                  (    1) LSETGA  1 
+cut_307                  (    1) LSETGA  1 
+cut_306                  (    1) LSETGA  1 
+cut_305                  (    1) LSETGA  1 
+cut_298                  (    1) LSETGA  1 
+cut_297                  (    1) LSETGA  1 
+cut_296                  (    1) LSETGA  1 
+cut_295                  (    1) LSETGA  1 
+cut_294                  (    1) LSETGA  1 
+cut_293                  (    1) LSETGA  1 
+cut_291                  (    1) LSETGA  1 
+cut_290                  (    1) LSETGA  1 
+cut_289                  (    1) LSETGA  1 
+cut_288                  (    1) LSETGA  1 
+cut_287                  (    1) LSETGA  1 
+cut_286                  (    1) LSETGA  1 
+cut_285                  (    1) LSETGA  1 
+cut_284                  (    1) LSETGA  1 
+cut_283                  (    1) LSETGA  1 
+cut_382                  (    1) LVENGA  1 
+cut_369                  (    1) LVENGA  1 
+cut_368                  (    1) LVENGA  1 
+cut_366                  (    1) LVENGA  1 
+cut_365                  (    1) LVENGA  1 
+cut_364                  (    1) LVENGA  1 
+cut_180                  (    1) VPETGA  1 
+cut_177                  (    1) VPETGA  1 
+cut_176                  (    1) VPETGA  1 
+cut_173                  (    1) VPETGA  1 
+cut_172                  (    1) VPETGA  1 
+cut_171                  (    1) VPETGA  1 
+cut_170                  (    1) VPETGA  1 
+cut_169                  (    1) VPETGA  1 
+cut_168                  (    1) VPETGA  1 
+cut_167                  (    1) VPETGA  1 
+cut_166                  (    1) VPETGA  1 
+cut_165                  (    1) VPETGA  1 
+cut_164                  (    1) VPETGA  1 
+cut_163                  (    1) VPETGA  1 
+cut_162                  (    1) VPETGA  1 
+cut_161                  (    1) VPETGA  1 
+cut_160                  (    1) VPETGA  1 
+cut_159                  (    1) VPETGA  1 
+cut_154                  (    1) VPETGA  1 
+cut_5                    (    1) VPETGA  1 
+cut_2                    (    1) VPETGA  1 
+cut_467                  (    1) MPEVGA  1 
+cut_463                  (    1) MPEVGA  1 
+cut_462                  (    1) MPEVGA  1 
+cut_457                  (    1) MPEVGA  1 
+cut_456                  (    1) MPEVGA  1 
+cut_455                  (    1) MPEVGA  1 
+cut_454                  (    1) MPEVGA  1 
+cut_446                  (    1) MPEVGA  1 
+cut_439                  (    1) MPEVGA  1 
+cut_437                  (    1) MPEVGA  1 
+cut_372                  (    1) MPEVGA  1 
+cut_292                  (    1) MPEVGA  1 
+cut_157                  (    1) LPESGA  1 
+cut_155                  (    1) LPESGA  1 
+cut_110                  (    1) LPESGA  1 
+cut_109                  (    1) LPESGA  1 
+cut_108                  (    1) LPESGA  1 
+cut_106                  (    1) LPESGA  1 
+cut_105                  (    1) LPESGA  1 
+cut_83                   (    1) LPESGA  1 
+cut_77                   (    1) LPESGA  1 
+cut_64                   (    1) LPESGA  1 
+cut_61                   (    1) LPESGA  1 
+cut_57                   (    1) LPESGA  1 
+cut_1                    (    1) LPESGA  1 
+cut_363                  (    1) LTETGA  1 
+cut_361                  (    1) LTETGA  1 
+cut_360                  (    1) LTETGA  1 
+cut_60                   (    1) LPENAA  1 
+cut_474                  (    1) LPEGGA  1 
+cut_101                  (    1) LPEGGA  1 
+cut_98                   (    1) LPEGGA  1 
+cut_84                   (    1) LPEGGA  1 
+cut_74                   (    1) LPEGGA  1 
+cut_73                   (    1) LPEGGA  1 
+cut_68                   (    1) LPEGGA  1 
+cut_67                   (    1) LPEGGA  1 
+cut_66                   (    1) LPEGGA  1 
+cut_65                   (    1) LPEGGA  1 
+cut_63                   (    1) LPEGGA  1 
+cut_62                   (    1) LPEGGA  1 
+cut_56                   (    1) LPEGGA  1 
+cut_55                   (    1) LPEGGA  1 
+cut_54                   (    1) LPEGGA  1 
+cut_53                   (    1) LPEGGA  1 
+cut_52                   (    1) LPEGGA  1 
+cut_51                   (    1) LPEGGA  1 
+cut_48                   (    1) LPEGGA  1 
+cut_47                   (    1) LPEGGA  1 
+cut_45                   (    1) LPEGGA  1 
+cut_44                   (    1) LPEGGA  1 
+cut_42                   (    1) LPEGGA  1 
+cut_41                   (    1) LPEGGA  1 
+cut_33                   (    1) LPEGGA  1 
+cut_32                   (    1) LPEGGA  1 
+cut_31                   (    1) LPEGGA  1 
+cut_30                   (    1) LPEGGA  1 
+cut_28                   (    1) LPEGGA  1 
+cut_22                   (    1) LPEGGA  1 
+cut_21                   (    1) LPEGGA  1 
+cut_20                   (    1) LPEGGA  1 
+cut_19                   (    1) LPEGGA  1 
+cut_18                   (    1) LPEGGA  1 
+cut_17                   (    1) LPEGGA  1 
+cut_16                   (    1) LPEGGA  1 
+cut_15                   (    1) LPEGGA  1 
+cut_139                  (    1) LPELGA  1 
+cut_549                  (    1) LPETAA  1 
+cut_532                  (    1) LPETAA  1 
+cut_531                  (    1) LPETAA  1 
+cut_530                  (    1) LPETAA  1 
+cut_529                  (    1) LPETAA  1 
+cut_523                  (    1) LPETAA  1 
+cut_486                  (    1) LPETAA  1 
+cut_485                  (    1) LPETAA  1 
+cut_477                  (    1) LPETAA  1 
+cut_476                  (    1) LPETAA  1 
+cut_460                  (    1) LPETAA  1 
+cut_458                  (    1) LPETAA  1 
+cut_350                  (    1) LPETAA  1 
+cut_349                  (    1) LPETAA  1 
+cut_347                  (    1) LPETAA  1 
+cut_276                  (    1) LPETAA  1 
+cut_219                  (    1) LPETAA  1 
+cut_201                  (    1) LPETAA  1 
+cut_183                  (    1) LPETAA  1 
+cut_112                  (    1) LPETAA  1 
+cut_111                  (    1) LPETAA  1 
+cut_491                  (    1) LTEVGA  1 
+cut_470                  (    1) LTEVGA  1 
+cut_340                  (    1) IPETTA  1 
+cut_339                  (    1) IPETTA  1 
+cut_338                  (    1) IPETTA  1 
+cut_337                  (    1) IPETTA  1 
+cut_317                  (    1) IPETTA  1 
+cut_316                  (    1) IPETTA  1 
+cut_315                  (    1) IPETTA  1 
+cut_313                  (    1) IPETTA  1 
+cut_304                  (    1) IPETTA  1 
+cut_303                  (    1) IPETTA  1 
+cut_302                  (    1) IPETTA  1 
+cut_301                  (    1) IPETTA  1 
+cut_300                  (    1) IPETTA  1 
+cut_299                  (    1) IPETTA  1 
+cut_282                  (    1) IPETTA  1 
+cut_281                  (    1) IPETTA  1 
+cut_280                  (    1) IPETTA  1 
+cut_279                  (    1) IPETTA  1 
+cut_278                  (    1) IPETTA  1 
+cut_277                  (    1) IPETTA  1 
+cut_275                  (    1) IPETTA  1 
+cut_274                  (    1) IPETTA  1 
+cut_273                  (    1) IPETTA  1 
+cut_272                  (    1) IPETTA  1 
+cut_271                  (    1) IPETTA  1 
+cut_270                  (    1) IPETTA  1 
+cut_267                  (    1) IPETTA  1 
+cut_266                  (    1) IPETTA  1 
+cut_264                  (    1) IPETTA  1 
+cut_263                  (    1) IPETTA  1 
+cut_262                  (    1) IPETTA  1 
+cut_261                  (    1) IPETTA  1 
+cut_260                  (    1) IPETTA  1 
+cut_259                  (    1) IPETTA  1 
+cut_258                  (    1) IPETTA  1 
+cut_257                  (    1) IPETTA  1 
+cut_256                  (    1) IPETTA  1 
+cut_255                  (    1) IPETTA  1 
+cut_254                  (    1) IPETTA  1 
+cut_253                  (    1) IPETTA  1 
+cut_252                  (    1) IPETTA  1 
+cut_251                  (    1) IPETTA  1 
+cut_250                  (    1) IPETTA  1 
+cut_248                  (    1) IPETTA  1 
+cut_247                  (    1) IPETTA  1 
+cut_246                  (    1) IPETTA  1 
+cut_245                  (    1) IPETTA  1 
+cut_244                  (    1) IPETTA  1 
+cut_243                  (    1) IPETTA  1 
+cut_242                  (    1) IPETTA  1 
+cut_241                  (    1) IPETTA  1 
+cut_240                  (    1) IPETTA  1 
+cut_234                  (    1) IPETTA  1 
+cut_233                  (    1) IPETTA  1 
+cut_232                  (    1) IPETTA  1 
+cut_309                  (    1) LPEMAA  1 
+cut_308                  (    1) LPEMAA  1 
+cut_218                  (    1) LPEMAA  1 
+cut_214                  (    1) LPEMAA  1 
+cut_210                  (    1) LPEMAA  1 
+cut_206                  (    1) LPEMAA  1 
+cut_198                  (    1) LPEMAA  1 
+cut_197                  (    1) LPEMAA  1 
+cut_194                  (    1) LPEMAA  1 
+cut_193                  (    1) LPEMAA  1 
+cut_191                  (    1) LPEMAA  1 
+cut_187                  (    1) LPEMAA  1 
+cut_186                  (    1) LPEMAA  1 
+cut_351                  (    1) IPDMSA  1 
+cut_535                  (    1) MPEFAA  1 
+cut_533                  (    1) MPEFAA  1 
+cut_528                  (    1) MPEGGA  1 
+cut_520                  (    1) MDEVGA  1 
+cut_461                  (    1) LPDMAA  1 
+cut_542                  (    1) LSETAA  1 
+cut_541                  (    1) LSETAA  1 
+cut_540                  (    1) LSETAA  1 
+cut_539                  (    1) LSETAA  1 
+cut_537                  (    1) LSETAA  1 
+cut_536                  (    1) LSETAA  1 
+cut_534                  (    1) LSETAA  1 
+cut_518                  (    1) LSETAA  1 
+cut_517                  (    1) LSETAA  1 
+cut_516                  (    1) LSETAA  1 
+cut_515                  (    1) LSETAA  1 
+cut_482                  (    1) LSETAA  1 
+cut_475                  (    1) LSETAA  1 
+cut_249                  (    1) LSETAA  1 
+cut_142                  (    1) LSETAA  1 
+cut_503                  (    1) MTEVGA  1 
+cut_494                  (    1) MVEIGA  1 
+cut_492                  (    1) MTEVGA  1 
+cut_490                  (    1) MVEIGA  1 
+cut_489                  (    1) MTEVGA  1 
+cut_468                  (    1) MTEVGA  1 
+cut_466                  (    1) MTEVGA  1 
+cut_465                  (    1) MTEVGA  1 
+cut_464                  (    1) MTEVGA  1 
+cut_459                  (    1) MTEVGA  1 
+cut_453                  (    1) MTEVGA  1 
+cut_435                  (    1) HSEIGA  1 
+cut_427                  (    1) MVEIGA  1 
+cut_426                  (    1) MVEIGA  1 
+cut_425                  (    1) MVEIGA  1 
+cut_424                  (    1) MVEIGA  1 
+cut_422                  (    1) MVEIGA  1 
+cut_409                  (    1) MTEVGA  1 
+cut_407                  (    1) MTEVGA  1 
+cut_400                  (    1) MVEIGA  1 
+cut_395                  (    1) MTEVGA  1 
+cut_394                  (    1) MVEIGA  1 
+cut_391                  (    1) MVEIGA  1 
+cut_390                  (    1) MVEIGA  1 
+cut_389                  (    1) MVEIGA  1 
+cut_387                  (    1) MVEIGA  1 
+cut_385                  (    1) MVEIGA  1 
+cut_377                  (    1) MVEIGA  1 
+cut_376                  (    1) MVEIGA  1 
+cut_375                  (    1) MTEVGA  1 
+cut_373                  (    1) MVEIGA  1 
+cut_371                  (    1) MVEIGA  1 
+cut_356                  (    1) MTEVGA  1 
+cut_355                  (    1) MTEVGA  1 
+cut_354                  (    1) MTEVGA  1 
+cut_37                   (    1) VPEGGA  1 
+cut_35                   (    1) VPEGGA  1 
+cut_473                  (    1) LPEAGA  1 
+cut_472                  (    1) LPEAGA  1 
+cut_469                  (    1) LPEAGA  1 
+cut_436                  (    1) MTEIGA  1 
+cut_359                  (    1) LVEGGA  1 
+cut_50                   (    1) LPEAGA  1 
+cut_49                   (    1) LPEAGA  1 
+cut_46                   (    1) LPEAGA  1 
+cut_434                  (    1) LTELGA  1 
+cut_429                  (    1) LTELGA  1 
+cut_384                  (    1) LTELGA  1 
+cut_379                  (    1) LTELGA  1 
+cut_448                  (    1) MMEVGA  1 
+cut_447                  (    1) MMEVGA  1 
+cut_481                  (    1) NTEVGA  1 
+cut_480                  (    1) NTEVGA  1 
+cut_445                  (    1) NTEVGA  1 
+cut_444                  (    1) NTEVGA  1 
+cut_438                  (    1) NTEVGA  1 
+cut_417                  (    1) NTEVGA  1 
+cut_341                  (    1) LPSTAA  1 
+cut_498                  (    1) MMEIGA  1 
+cut_497                  (    1) MMEIGA  1 
+cut_496                  (    1) MMEIGA  1 
+cut_495                  (    1) MMEIGA  1 
+cut_452                  (    1) MMEIGA  1 
+cut_451                  (    1) MMEIGA  1 
+cut_450                  (    1) MMEIGA  1 
+cut_449                  (    1) MMEIGA  1 
+cut_443                  (    1) MMEIGA  1 
+cut_442                  (    1) MMEIGA  1 
+cut_441                  (    1) MMEIGA  1 
+cut_440                  (    1) MMEIGA  1 
+cut_388                  (    1) MIEIGA  1 
+cut_378                  (    1) MIEIGA  1 
+cut_484                  (    1) MTEVSA  1 
+cut_408                  (    1) MTEVSA  1 
+cut_402                  (    1) MTEVSA  1 
+cut_401                  (    1) MTEVSA  1 
+cut_399                  (    1) MTEVSA  1 
+cut_397                  (    1) MTEVSA  1 
+cut_239                  (    1) IPSTAA  1 
+cut_238                  (    1) IPSTAA  1 
+cut_237                  (    1) IPSTAA  1 
+cut_236                  (    1) IPSTAA  1 
+cut_235                  (    1) IPSTAA  1 
+cut_4                    (    1) LAETGA  1 
+cut_3                    (    1) LAETGA  1 
+cut_396                  (    1) VTELGA  1 
+cut_392                  (    1) VTELGA  1 
+cut_79                   (    1) LPENGG  1 
+cut_69                   (    1) LPENGG  1 
+cut_546                  (    1) MEEMGA  1 
+cut_524                  (    1) MEEMGA  1 
+cut_519                  (    1) MAENGA  1 
+cut_374                  (    1) MAENGA  1 
+cut_501                  (    1) LTELSA  1 
+cut_500                  (    1) LTELSA  1 
+cut_499                  (    1) LTELSA  1 
+cut_433                  (    1) LTELSA  1 
+cut_432                  (    1) LTELSA  1 
+cut_428                  (    1) LTELSA  1 
+cut_420                  (    1) LTELSA  1 
+cut_419                  (    1) LTELSA  1 
+cut_418                  (    1) LTELSA  1 
+cut_416                  (    1) LTELSA  1 
+cut_414                  (    1) LTELSA  1 
+cut_413                  (    1) LTELSA  1 
+cut_412                  (    1) LTELSA  1 
+cut_411                  (    1) LTELSA  1 
+cut_406                  (    1) LTELSA  1 
+cut_405                  (    1) LTELSA  1 
+cut_404                  (    1) LTELSA  1 
+cut_403                  (    1) LTELSA  1 
+cut_398                  (    1) LTELSA  1 
+cut_548                  (    1) KSILGA  1 
+cut_513                  (    1) KSILGA  1 
+cut_512                  (    1) KSILGA  1 
+cut_393                  (    1) MTEIDA  1 
+cut_544                  (    1) LDTMGA  1 
+cut_488                  (    1) LVENGT  1 
+cut_370                  (    1) LVENGT  1 
+cut_345                  (    1) IPSSAA  1 
+cut_344                  (    1) IPSSAA  1 
+cut_343                  (    1) IPSSAA  1 
+cut_342                  (    1) IPSSAA  1 
+cut_410                  (    1) AVETGA  1 
+cut_555                  (    1) MDTMGA  1 
+cut_510                  (    1) KEIMGA  1 
+cut_508                  (    1) KEIMGA  1 
+cut_506                  (    1) KEIMGA  1 
+cut_502                  (    1) LEIMGA  1 
+cut_547                  (    1) MTEASA  1 
+cut_431                  (    1) MTEASA  1 
+cut_386                  (    1) TIETGA  1 
+cut_381                  (    1) TIETGA  1 
+cut_493                  (    1) AIETGA  1 
+cut_421                  (    1) AIETGA  1 
+cut_415                  (    1) AIETGA  1 
+cut_380                  (    1) AIETGA  1 
+cut_336                  (    1) VPATAA  1 
+cut_335                  (    1) VPATAA  1 
+cut_332                  (    1) VPATAA  1 
+cut_331                  (    1) VPATAA  1 
+cut_330                  (    1) VPATAA  1 
+cut_556                  (    1) LETMGA  1 
+cut_554                  (    1) LETMGA  1 
+cut_553                  (    1) LETMGA  1 
+cut_141                  (    1) KAILGA  1 
+cut_353                  (    1) VSSAAA  1 
+cut_352                  (    1) VSSAAA  1 
+cut_348                  (    1) VSSAAA  1 
+cut_314                  (    1) VSSAAA  1 
+cut_312                  (    1) VSSAAA  1 
+cut_311                  (    1) VSSAAA  1 
+cut_487                  (    1) MAENEA  1 
+cut_367                  (    1) MAENEA  1 
+cut_483                  (    1) TQVMGA  1 
+//
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif LPETGA MEME-1 position-specific scoring matrix
+--------------------------------------------------------------------------------
+log-odds matrix: alength= 20 w= 6 n= 559 bayes= 1.93005 E= 1.3e-1319 
+  -441    -50   -475   -910     -8   -916     38    180    241    250    131    -35   -884    170     26   -641   -411     86   -129     10 
+  -389   -161     55   -324   -255   -861   -318   -135   -242   -788   -136   -579    261     84     19    145     12     49   -310   -164 
+  -442   -450    200    257   -524   -970   -420   -135   -264   -977  -1023   -618   -974   -119   -105    -39   -347   -420   -511   -310 
+  -294    -40   -509   -951    221    -81    191     81   -323    -93    164    237   -931   -240    -26    -28    190    131   -152      7 
+   -57   -153   -103   -539   -469    244   -555   -960   -544  -1059  -1083   -691  -1024   -437   -228     43     -2   -788   -459   -350 
+   230   -173   -708  -1226   -507   -507   -633   -999   -647  -1092  -1121   -799  -1054   -492   -298   -647   -472   -814   -509   -407 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif LPETGA MEME-1 position-specific probability matrix
+--------------------------------------------------------------------------------
+letter-probability matrix: alength= 20 w= 6 nsites= 549 E= 1.3e-1319 
+ 0.009107  0.000000  0.000000  0.000000  0.000000  0.000000  0.001821  0.131148  0.012750  0.595628  0.163934  0.010929  0.000000  0.003643  0.000000  0.000000  0.005464  0.065574  0.000000  0.000000 
+ 0.012750  0.000000  0.005464  0.016393  0.000000  0.000000  0.000000  0.014572  0.000000  0.000000  0.025501  0.000000  0.653916  0.001821  0.000000  0.105647  0.112933  0.051002  0.000000  0.000000 
+ 0.009107  0.000000  0.014572  0.921676  0.000000  0.000000  0.000000  0.014572  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.029144  0.009107  0.001821  0.000000  0.000000 
+ 0.025501  0.000000  0.000000  0.000000  0.003643  0.074681  0.005464  0.063752  0.000000  0.054645  0.200364  0.071038  0.000000  0.000000  0.000000  0.030965  0.382514  0.087432  0.000000  0.000000 
+ 0.134791  0.000000  0.001821  0.003643  0.000000  0.708561  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.051002  0.100182  0.000000  0.000000  0.000000 
+ 0.992714  0.000000  0.000000  0.000000  0.000000  0.003643  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.003643  0.000000  0.000000  0.000000 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif LPETGA MEME-1 regular expression
+--------------------------------------------------------------------------------
+LPE[TM]GA
+--------------------------------------------------------------------------------
+
+
+
+
+Time 401.48 secs.
+
+********************************************************************************
+
+
+********************************************************************************
+SUMMARY OF MOTIFS
+********************************************************************************
+
+--------------------------------------------------------------------------------
+	Combined block diagrams: non-overlapping sites with p-value < 0.0001
+--------------------------------------------------------------------------------
+SEQUENCE NAME            COMBINED P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+cut_1                            3.71e-05  [1(3.71e-05)]
+cut_2                            2.69e-05  [1(2.69e-05)]
+cut_3                            5.47e-04  6
+cut_4                            5.47e-04  6
+cut_5                            2.69e-05  [1(2.69e-05)]
+cut_6                            5.54e-06  [1(5.54e-06)]
+cut_7                            5.54e-06  [1(5.54e-06)]
+cut_8                            8.80e-06  [1(8.80e-06)]
+cut_9                            8.80e-06  [1(8.80e-06)]
+cut_10                           8.80e-06  [1(8.80e-06)]
+cut_11                           5.54e-06  [1(5.54e-06)]
+cut_12                           5.54e-06  [1(5.54e-06)]
+cut_13                           5.54e-06  [1(5.54e-06)]
+cut_14                           5.54e-06  [1(5.54e-06)]
+cut_15                           6.36e-05  [1(6.36e-05)]
+cut_16                           6.36e-05  [1(6.36e-05)]
+cut_17                           6.36e-05  [1(6.36e-05)]
+cut_18                           6.36e-05  [1(6.36e-05)]
+cut_19                           6.36e-05  [1(6.36e-05)]
+cut_20                           6.36e-05  [1(6.36e-05)]
+cut_21                           6.36e-05  [1(6.36e-05)]
+cut_22                           6.36e-05  [1(6.36e-05)]
+cut_23                           8.80e-06  [1(8.80e-06)]
+cut_24                           8.80e-06  [1(8.80e-06)]
+cut_25                           8.80e-06  [1(8.80e-06)]
+cut_26                           8.80e-06  [1(8.80e-06)]
+cut_27                           6.39e-07  [1(6.39e-07)]
+cut_28                           6.36e-05  [1(6.36e-05)]
+cut_29                           8.80e-06  [1(8.80e-06)]
+cut_30                           6.36e-05  [1(6.36e-05)]
+cut_31                           6.36e-05  [1(6.36e-05)]
+cut_32                           6.36e-05  [1(6.36e-05)]
+cut_33                           6.36e-05  [1(6.36e-05)]
+cut_34                           8.80e-06  [1(8.80e-06)]
+cut_35                           1.90e-04  6
+cut_36                           1.22e-05  [1(1.22e-05)]
+cut_37                           1.90e-04  6
+cut_38                           1.22e-05  [1(1.22e-05)]
+cut_39                           5.54e-06  [1(5.54e-06)]
+cut_40                           8.80e-06  [1(8.80e-06)]
+cut_41                           6.36e-05  [1(6.36e-05)]
+cut_42                           6.36e-05  [1(6.36e-05)]
+cut_43                           5.54e-06  [1(5.54e-06)]
+cut_44                           6.36e-05  [1(6.36e-05)]
+cut_45                           6.36e-05  [1(6.36e-05)]
+cut_46                           2.41e-04  6
+cut_47                           6.36e-05  [1(6.36e-05)]
+cut_48                           6.36e-05  [1(6.36e-05)]
+cut_49                           2.41e-04  6
+cut_50                           2.41e-04  6
+cut_51                           6.36e-05  [1(6.36e-05)]
+cut_52                           6.36e-05  [1(6.36e-05)]
+cut_53                           6.36e-05  [1(6.36e-05)]
+cut_54                           6.36e-05  [1(6.36e-05)]
+cut_55                           6.36e-05  [1(6.36e-05)]
+cut_56                           6.36e-05  [1(6.36e-05)]
+cut_57                           3.71e-05  [1(3.71e-05)]
+cut_58                           6.39e-07  [1(6.39e-07)]
+cut_59                           6.39e-07  [1(6.39e-07)]
+cut_60                           5.29e-05  [1(5.29e-05)]
+cut_61                           3.71e-05  [1(3.71e-05)]
+cut_62                           6.36e-05  [1(6.36e-05)]
+cut_63                           6.36e-05  [1(6.36e-05)]
+cut_64                           3.71e-05  [1(3.71e-05)]
+cut_65                           6.36e-05  [1(6.36e-05)]
+cut_66                           6.36e-05  [1(6.36e-05)]
+cut_67                           6.36e-05  [1(6.36e-05)]
+cut_68                           6.36e-05  [1(6.36e-05)]
+cut_69                           6.82e-04  6
+cut_70                           5.54e-06  [1(5.54e-06)]
+cut_71                           5.54e-06  [1(5.54e-06)]
+cut_72                           6.39e-07  [1(6.39e-07)]
+cut_73                           6.36e-05  [1(6.36e-05)]
+cut_74                           6.36e-05  [1(6.36e-05)]
+cut_75                           5.54e-06  [1(5.54e-06)]
+cut_76                           5.54e-06  [1(5.54e-06)]
+cut_77                           3.71e-05  [1(3.71e-05)]
+cut_78                           5.54e-06  [1(5.54e-06)]
+cut_79                           6.82e-04  6
+cut_80                           6.39e-07  [1(6.39e-07)]
+cut_81                           5.54e-06  [1(5.54e-06)]
+cut_82                           6.39e-07  [1(6.39e-07)]
+cut_83                           3.71e-05  [1(3.71e-05)]
+cut_84                           6.36e-05  [1(6.36e-05)]
+cut_85                           6.39e-07  [1(6.39e-07)]
+cut_86                           5.54e-06  [1(5.54e-06)]
+cut_87                           6.39e-07  [1(6.39e-07)]
+cut_88                           6.39e-07  [1(6.39e-07)]
+cut_89                           6.39e-07  [1(6.39e-07)]
+cut_90                           5.54e-06  [1(5.54e-06)]
+cut_91                           6.39e-07  [1(6.39e-07)]
+cut_92                           5.54e-06  [1(5.54e-06)]
+cut_93                           6.39e-07  [1(6.39e-07)]
+cut_94                           6.39e-07  [1(6.39e-07)]
+cut_95                           6.39e-07  [1(6.39e-07)]
+cut_96                           6.39e-07  [1(6.39e-07)]
+cut_97                           6.39e-07  [1(6.39e-07)]
+cut_98                           6.36e-05  [1(6.36e-05)]
+cut_99                           6.39e-07  [1(6.39e-07)]
+cut_100                          6.39e-07  [1(6.39e-07)]
+cut_101                          6.36e-05  [1(6.36e-05)]
+cut_102                          5.94e-01  6
+cut_103                          5.54e-06  [1(5.54e-06)]
+cut_104                          6.39e-07  [1(6.39e-07)]
+cut_105                          3.71e-05  [1(3.71e-05)]
+cut_106                          3.71e-05  [1(3.71e-05)]
+cut_107                          5.54e-06  [1(5.54e-06)]
+cut_108                          3.71e-05  [1(3.71e-05)]
+cut_109                          3.71e-05  [1(3.71e-05)]
+cut_110                          3.71e-05  [1(3.71e-05)]
+cut_111                          8.57e-05  [1(8.57e-05)]
+cut_112                          8.57e-05  [1(8.57e-05)]
+cut_113                          5.54e-06  [1(5.54e-06)]
+cut_114                          5.54e-06  [1(5.54e-06)]
+cut_115                          5.54e-06  [1(5.54e-06)]
+cut_116                          1.58e-05  [1(1.58e-05)]
+cut_117                          1.58e-05  [1(1.58e-05)]
+cut_118                          8.80e-06  [1(8.80e-06)]
+cut_119                          8.80e-06  [1(8.80e-06)]
+cut_120                          8.80e-06  [1(8.80e-06)]
+cut_121                          8.80e-06  [1(8.80e-06)]
+cut_122                          8.80e-06  [1(8.80e-06)]
+cut_123                          8.80e-06  [1(8.80e-06)]
+cut_124                          8.80e-06  [1(8.80e-06)]
+cut_125                          8.80e-06  [1(8.80e-06)]
+cut_126                          1.22e-05  [1(1.22e-05)]
+cut_127                          8.80e-06  [1(8.80e-06)]
+cut_128                          1.22e-05  [1(1.22e-05)]
+cut_129                          8.80e-06  [1(8.80e-06)]
+cut_130                          8.80e-06  [1(8.80e-06)]
+cut_131                          8.80e-06  [1(8.80e-06)]
+cut_132                          8.80e-06  [1(8.80e-06)]
+cut_133                          8.80e-06  [1(8.80e-06)]
+cut_134                          8.80e-06  [1(8.80e-06)]
+cut_135                          1.22e-05  [1(1.22e-05)]
+cut_136                          1.40e-05  [1(1.40e-05)]
+cut_137                          8.80e-06  [1(8.80e-06)]
+cut_138                          8.80e-06  [1(8.80e-06)]
+cut_139                          7.57e-05  [1(7.57e-05)]
+cut_140                          8.80e-06  [1(8.80e-06)]
+cut_141                          5.79e-03  6
+cut_142                          1.80e-04  6
+cut_143                          8.80e-06  [1(8.80e-06)]
+cut_144                          8.80e-06  [1(8.80e-06)]
+cut_145                          8.80e-06  [1(8.80e-06)]
+cut_146                          8.80e-06  [1(8.80e-06)]
+cut_147                          8.80e-06  [1(8.80e-06)]
+cut_148                          8.80e-06  [1(8.80e-06)]
+cut_149                          6.39e-07  [1(6.39e-07)]
+cut_150                          6.39e-07  [1(6.39e-07)]
+cut_151                          6.39e-07  [1(6.39e-07)]
+cut_152                          6.39e-07  [1(6.39e-07)]
+cut_153                          5.54e-06  [1(5.54e-06)]
+cut_154                          2.69e-05  [1(2.69e-05)]
+cut_155                          3.71e-05  [1(3.71e-05)]
+cut_156                          5.54e-06  [1(5.54e-06)]
+cut_157                          3.71e-05  [1(3.71e-05)]
+cut_158                          5.54e-06  [1(5.54e-06)]
+cut_159                          2.69e-05  [1(2.69e-05)]
+cut_160                          2.69e-05  [1(2.69e-05)]
+cut_161                          2.69e-05  [1(2.69e-05)]
+cut_162                          2.69e-05  [1(2.69e-05)]
+cut_163                          2.69e-05  [1(2.69e-05)]
+cut_164                          2.69e-05  [1(2.69e-05)]
+cut_165                          2.69e-05  [1(2.69e-05)]
+cut_166                          2.69e-05  [1(2.69e-05)]
+cut_167                          2.69e-05  [1(2.69e-05)]
+cut_168                          2.69e-05  [1(2.69e-05)]
+cut_169                          2.69e-05  [1(2.69e-05)]
+cut_170                          2.69e-05  [1(2.69e-05)]
+cut_171                          2.69e-05  [1(2.69e-05)]
+cut_172                          2.69e-05  [1(2.69e-05)]
+cut_173                          2.69e-05  [1(2.69e-05)]
+cut_174                          1.40e-05  [1(1.40e-05)]
+cut_175                          8.80e-06  [1(8.80e-06)]
+cut_176                          2.69e-05  [1(2.69e-05)]
+cut_177                          2.69e-05  [1(2.69e-05)]
+cut_178                          8.80e-06  [1(8.80e-06)]
+cut_179                          8.80e-06  [1(8.80e-06)]
+cut_180                          2.69e-05  [1(2.69e-05)]
+cut_181                          8.80e-06  [1(8.80e-06)]
+cut_182                          8.80e-06  [1(8.80e-06)]
+cut_183                          8.57e-05  [1(8.57e-05)]
+cut_184                          8.80e-06  [1(8.80e-06)]
+cut_185                          8.80e-06  [1(8.80e-06)]
+cut_186                          1.07e-04  6
+cut_187                          1.07e-04  6
+cut_188                          8.80e-06  [1(8.80e-06)]
+cut_189                          8.80e-06  [1(8.80e-06)]
+cut_190                          8.80e-06  [1(8.80e-06)]
+cut_191                          1.07e-04  6
+cut_192                          8.80e-06  [1(8.80e-06)]
+cut_193                          1.07e-04  6
+cut_194                          1.07e-04  6
+cut_195                          8.80e-06  [1(8.80e-06)]
+cut_196                          8.80e-06  [1(8.80e-06)]
+cut_197                          1.07e-04  6
+cut_198                          1.07e-04  6
+cut_199                          8.80e-06  [1(8.80e-06)]
+cut_200                          8.80e-06  [1(8.80e-06)]
+cut_201                          8.57e-05  [1(8.57e-05)]
+cut_202                          8.80e-06  [1(8.80e-06)]
+cut_203                          8.80e-06  [1(8.80e-06)]
+cut_204                          8.80e-06  [1(8.80e-06)]
+cut_205                          8.80e-06  [1(8.80e-06)]
+cut_206                          1.07e-04  6
+cut_207                          8.80e-06  [1(8.80e-06)]
+cut_208                          8.80e-06  [1(8.80e-06)]
+cut_209                          8.80e-06  [1(8.80e-06)]
+cut_210                          1.07e-04  6
+cut_211                          8.80e-06  [1(8.80e-06)]
+cut_212                          8.80e-06  [1(8.80e-06)]
+cut_213                          8.80e-06  [1(8.80e-06)]
+cut_214                          1.07e-04  6
+cut_215                          8.80e-06  [1(8.80e-06)]
+cut_216                          8.80e-06  [1(8.80e-06)]
+cut_217                          8.80e-06  [1(8.80e-06)]
+cut_218                          1.07e-04  6
+cut_219                          8.57e-05  [1(8.57e-05)]
+cut_220                          8.80e-06  [1(8.80e-06)]
+cut_221                          8.80e-06  [1(8.80e-06)]
+cut_222                          8.80e-06  [1(8.80e-06)]
+cut_223                          8.80e-06  [1(8.80e-06)]
+cut_224                          8.80e-06  [1(8.80e-06)]
+cut_225                          8.80e-06  [1(8.80e-06)]
+cut_226                          8.80e-06  [1(8.80e-06)]
+cut_227                          8.80e-06  [1(8.80e-06)]
+cut_228                          8.80e-06  [1(8.80e-06)]
+cut_229                          8.80e-06  [1(8.80e-06)]
+cut_230                          8.80e-06  [1(8.80e-06)]
+cut_231                          8.80e-06  [1(8.80e-06)]
+cut_232                          9.40e-05  [1(9.40e-05)]
+cut_233                          9.40e-05  [1(9.40e-05)]
+cut_234                          9.40e-05  [1(9.40e-05)]
+cut_235                          5.47e-04  6
+cut_236                          5.47e-04  6
+cut_237                          5.47e-04  6
+cut_238                          5.47e-04  6
+cut_239                          5.47e-04  6
+cut_240                          9.40e-05  [1(9.40e-05)]
+cut_241                          9.40e-05  [1(9.40e-05)]
+cut_242                          9.40e-05  [1(9.40e-05)]
+cut_243                          9.40e-05  [1(9.40e-05)]
+cut_244                          9.40e-05  [1(9.40e-05)]
+cut_245                          9.40e-05  [1(9.40e-05)]
+cut_246                          9.40e-05  [1(9.40e-05)]
+cut_247                          9.40e-05  [1(9.40e-05)]
+cut_248                          9.40e-05  [1(9.40e-05)]
+cut_249                          1.80e-04  6
+cut_250                          9.40e-05  [1(9.40e-05)]
+cut_251                          9.40e-05  [1(9.40e-05)]
+cut_252                          9.40e-05  [1(9.40e-05)]
+cut_253                          9.40e-05  [1(9.40e-05)]
+cut_254                          9.40e-05  [1(9.40e-05)]
+cut_255                          9.40e-05  [1(9.40e-05)]
+cut_256                          9.40e-05  [1(9.40e-05)]
+cut_257                          9.40e-05  [1(9.40e-05)]
+cut_258                          9.40e-05  [1(9.40e-05)]
+cut_259                          9.40e-05  [1(9.40e-05)]
+cut_260                          9.40e-05  [1(9.40e-05)]
+cut_261                          9.40e-05  [1(9.40e-05)]
+cut_262                          9.40e-05  [1(9.40e-05)]
+cut_263                          9.40e-05  [1(9.40e-05)]
+cut_264                          9.40e-05  [1(9.40e-05)]
+cut_265                          1.72e-02  6
+cut_266                          9.40e-05  [1(9.40e-05)]
+cut_267                          9.40e-05  [1(9.40e-05)]
+cut_268                          1.72e-02  6
+cut_269                          1.72e-02  6
+cut_270                          9.40e-05  [1(9.40e-05)]
+cut_271                          9.40e-05  [1(9.40e-05)]
+cut_272                          9.40e-05  [1(9.40e-05)]
+cut_273                          9.40e-05  [1(9.40e-05)]
+cut_274                          9.40e-05  [1(9.40e-05)]
+cut_275                          9.40e-05  [1(9.40e-05)]
+cut_276                          8.57e-05  [1(8.57e-05)]
+cut_277                          9.40e-05  [1(9.40e-05)]
+cut_278                          9.40e-05  [1(9.40e-05)]
+cut_279                          9.40e-05  [1(9.40e-05)]
+cut_280                          9.40e-05  [1(9.40e-05)]
+cut_281                          9.40e-05  [1(9.40e-05)]
+cut_282                          9.40e-05  [1(9.40e-05)]
+cut_283                          2.13e-05  [1(2.13e-05)]
+cut_284                          2.13e-05  [1(2.13e-05)]
+cut_285                          2.13e-05  [1(2.13e-05)]
+cut_286                          2.13e-05  [1(2.13e-05)]
+cut_287                          2.13e-05  [1(2.13e-05)]
+cut_288                          2.13e-05  [1(2.13e-05)]
+cut_289                          2.13e-05  [1(2.13e-05)]
+cut_290                          2.13e-05  [1(2.13e-05)]
+cut_291                          2.13e-05  [1(2.13e-05)]
+cut_292                          2.93e-05  [1(2.93e-05)]
+cut_293                          2.13e-05  [1(2.13e-05)]
+cut_294                          2.13e-05  [1(2.13e-05)]
+cut_295                          2.13e-05  [1(2.13e-05)]
+cut_296                          2.13e-05  [1(2.13e-05)]
+cut_297                          2.13e-05  [1(2.13e-05)]
+cut_298                          2.13e-05  [1(2.13e-05)]
+cut_299                          9.40e-05  [1(9.40e-05)]
+cut_300                          9.40e-05  [1(9.40e-05)]
+cut_301                          9.40e-05  [1(9.40e-05)]
+cut_302                          9.40e-05  [1(9.40e-05)]
+cut_303                          9.40e-05  [1(9.40e-05)]
+cut_304                          9.40e-05  [1(9.40e-05)]
+cut_305                          2.13e-05  [1(2.13e-05)]
+cut_306                          2.13e-05  [1(2.13e-05)]
+cut_307                          2.13e-05  [1(2.13e-05)]
+cut_308                          1.07e-04  6
+cut_309                          1.07e-04  6
+cut_310                          8.80e-06  [1(8.80e-06)]
+cut_311                          6.04e-03  6
+cut_312                          6.04e-03  6
+cut_313                          9.40e-05  [1(9.40e-05)]
+cut_314                          6.04e-03  6
+cut_315                          9.40e-05  [1(9.40e-05)]
+cut_316                          9.40e-05  [1(9.40e-05)]
+cut_317                          9.40e-05  [1(9.40e-05)]
+cut_318                          2.13e-05  [1(2.13e-05)]
+cut_319                          2.13e-05  [1(2.13e-05)]
+cut_320                          2.13e-05  [1(2.13e-05)]
+cut_321                          2.13e-05  [1(2.13e-05)]
+cut_322                          2.13e-05  [1(2.13e-05)]
+cut_323                          2.13e-05  [1(2.13e-05)]
+cut_324                          2.13e-05  [1(2.13e-05)]
+cut_325                          2.13e-05  [1(2.13e-05)]
+cut_326                          2.13e-05  [1(2.13e-05)]
+cut_327                          2.13e-05  [1(2.13e-05)]
+cut_328                          2.13e-05  [1(2.13e-05)]
+cut_329                          2.13e-05  [1(2.13e-05)]
+cut_330                          3.43e-03  6
+cut_331                          3.43e-03  6
+cut_332                          3.43e-03  6
+cut_333                          1.45e-02  6
+cut_334                          2.13e-05  [1(2.13e-05)]
+cut_335                          3.43e-03  6
+cut_336                          3.43e-03  6
+cut_337                          9.40e-05  [1(9.40e-05)]
+cut_338                          9.40e-05  [1(9.40e-05)]
+cut_339                          9.40e-05  [1(9.40e-05)]
+cut_340                          9.40e-05  [1(9.40e-05)]
+cut_341                          4.24e-04  6
+cut_342                          1.23e-03  6
+cut_343                          1.23e-03  6
+cut_344                          1.23e-03  6
+cut_345                          1.23e-03  6
+cut_346                          1.72e-02  6
+cut_347                          8.57e-05  [1(8.57e-05)]
+cut_348                          6.04e-03  6
+cut_349                          8.57e-05  [1(8.57e-05)]
+cut_350                          8.57e-05  [1(8.57e-05)]
+cut_351                          1.24e-04  6
+cut_352                          6.04e-03  6
+cut_353                          6.04e-03  6
+cut_354                          1.90e-04  6
+cut_355                          1.90e-04  6
+cut_356                          1.90e-04  6
+cut_357                          2.13e-05  [1(2.13e-05)]
+cut_358                          2.13e-05  [1(2.13e-05)]
+cut_359                          2.41e-04  6
+cut_360                          5.29e-05  [1(5.29e-05)]
+cut_361                          5.29e-05  [1(5.29e-05)]
+cut_362                          6.39e-07  [1(6.39e-07)]
+cut_363                          5.29e-05  [1(5.29e-05)]
+cut_364                          2.69e-05  [1(2.69e-05)]
+cut_365                          2.69e-05  [1(2.69e-05)]
+cut_366                          2.69e-05  [1(2.69e-05)]
+cut_367                          9.48e-03  6
+cut_368                          2.69e-05  [1(2.69e-05)]
+cut_369                          2.69e-05  [1(2.69e-05)]
+cut_370                          1.23e-03  6
+cut_371                          1.90e-04  6
+cut_372                          2.93e-05  [1(2.93e-05)]
+cut_373                          1.90e-04  6
+cut_374                          7.73e-04  6
+cut_375                          1.90e-04  6
+cut_376                          1.90e-04  6
+cut_377                          1.90e-04  6
+cut_378                          4.74e-04  6
+cut_379                          3.21e-04  6
+cut_380                          2.71e-03  6
+cut_381                          2.49e-03  6
+cut_382                          2.69e-05  [1(2.69e-05)]
+cut_383                          5.16e-01  6
+cut_384                          3.21e-04  6
+cut_385                          1.90e-04  6
+cut_386                          2.49e-03  6
+cut_387                          1.90e-04  6
+cut_388                          4.74e-04  6
+cut_389                          1.90e-04  6
+cut_390                          1.90e-04  6
+cut_391                          1.90e-04  6
+cut_392                          6.82e-04  6
+cut_393                          1.05e-03  6
+cut_394                          1.90e-04  6
+cut_395                          1.90e-04  6
+cut_396                          6.82e-04  6
+cut_397                          5.06e-04  6
+cut_398                          8.07e-04  6
+cut_399                          5.06e-04  6
+cut_400                          1.90e-04  6
+cut_401                          5.06e-04  6
+cut_402                          5.06e-04  6
+cut_403                          8.07e-04  6
+cut_404                          8.07e-04  6
+cut_405                          8.07e-04  6
+cut_406                          8.07e-04  6
+cut_407                          1.90e-04  6
+cut_408                          5.06e-04  6
+cut_409                          1.90e-04  6
+cut_410                          1.37e-03  6
+cut_411                          8.07e-04  6
+cut_412                          8.07e-04  6
+cut_413                          8.07e-04  6
+cut_414                          8.07e-04  6
+cut_415                          2.71e-03  6
+cut_416                          8.07e-04  6
+cut_417                          4.24e-04  6
+cut_418                          8.07e-04  6
+cut_419                          8.07e-04  6
+cut_420                          8.07e-04  6
+cut_421                          2.71e-03  6
+cut_422                          1.90e-04  6
+cut_423                          2.13e-05  [1(2.13e-05)]
+cut_424                          1.90e-04  6
+cut_425                          1.90e-04  6
+cut_426                          1.90e-04  6
+cut_427                          1.90e-04  6
+cut_428                          8.07e-04  6
+cut_429                          3.21e-04  6
+cut_430                          2.13e-05  [1(2.13e-05)]
+cut_431                          2.49e-03  6
+cut_432                          8.07e-04  6
+cut_433                          8.07e-04  6
+cut_434                          3.21e-04  6
+cut_435                          1.90e-04  6
+cut_436                          2.41e-04  6
+cut_437                          2.93e-05  [1(2.93e-05)]
+cut_438                          4.24e-04  6
+cut_439                          2.93e-05  [1(2.93e-05)]
+cut_440                          4.74e-04  6
+cut_441                          4.74e-04  6
+cut_442                          4.74e-04  6
+cut_443                          4.74e-04  6
+cut_444                          4.24e-04  6
+cut_445                          4.24e-04  6
+cut_446                          2.93e-05  [1(2.93e-05)]
+cut_447                          4.01e-04  6
+cut_448                          4.01e-04  6
+cut_449                          4.74e-04  6
+cut_450                          4.74e-04  6
+cut_451                          4.74e-04  6
+cut_452                          4.74e-04  6
+cut_453                          1.90e-04  6
+cut_454                          2.93e-05  [1(2.93e-05)]
+cut_455                          2.93e-05  [1(2.93e-05)]
+cut_456                          2.93e-05  [1(2.93e-05)]
+cut_457                          2.93e-05  [1(2.93e-05)]
+cut_458                          8.57e-05  [1(8.57e-05)]
+cut_459                          1.90e-04  6
+cut_460                          8.57e-05  [1(8.57e-05)]
+cut_461                          1.45e-04  6
+cut_462                          2.93e-05  [1(2.93e-05)]
+cut_463                          2.93e-05  [1(2.93e-05)]
+cut_464                          1.90e-04  6
+cut_465                          1.90e-04  6
+cut_466                          1.90e-04  6
+cut_467                          2.93e-05  [1(2.93e-05)]
+cut_468                          1.90e-04  6
+cut_469                          2.41e-04  6
+cut_470                          9.40e-05  [1(9.40e-05)]
+cut_471                          5.54e-06  [1(5.54e-06)]
+cut_472                          2.41e-04  6
+cut_473                          2.41e-04  6
+cut_474                          6.36e-05  [1(6.36e-05)]
+cut_475                          1.80e-04  6
+cut_476                          8.57e-05  [1(8.57e-05)]
+cut_477                          8.57e-05  [1(8.57e-05)]
+cut_478                          1.40e-05  [1(1.40e-05)]
+cut_479                          2.13e-05  [1(2.13e-05)]
+cut_480                          4.24e-04  6
+cut_481                          4.24e-04  6
+cut_482                          1.80e-04  6
+cut_483                          1.02e-02  6
+cut_484                          5.06e-04  6
+cut_485                          8.57e-05  [1(8.57e-05)]
+cut_486                          8.57e-05  [1(8.57e-05)]
+cut_487                          9.48e-03  6
+cut_488                          1.23e-03  6
+cut_489                          1.90e-04  6
+cut_490                          1.90e-04  6
+cut_491                          9.40e-05  [1(9.40e-05)]
+cut_492                          1.90e-04  6
+cut_493                          2.71e-03  6
+cut_494                          1.90e-04  6
+cut_495                          4.74e-04  6
+cut_496                          4.74e-04  6
+cut_497                          4.74e-04  6
+cut_498                          4.74e-04  6
+cut_499                          8.07e-04  6
+cut_500                          8.07e-04  6
+cut_501                          8.07e-04  6
+cut_502                          2.16e-03  6
+cut_503                          1.90e-04  6
+cut_504                          1.22e-05  [1(1.22e-05)]
+cut_505                          1.22e-05  [1(1.22e-05)]
+cut_506                          2.16e-03  6
+cut_507                          1.22e-05  [1(1.22e-05)]
+cut_508                          2.16e-03  6
+cut_509                          3.14e-01  6
+cut_510                          2.16e-03  6
+cut_511                          1.22e-05  [1(1.22e-05)]
+cut_512                          9.95e-04  6
+cut_513                          9.95e-04  6
+cut_514                          1.22e-05  [1(1.22e-05)]
+cut_515                          1.80e-04  6
+cut_516                          1.80e-04  6
+cut_517                          1.80e-04  6
+cut_518                          1.80e-04  6
+cut_519                          7.73e-04  6
+cut_520                          1.45e-04  6
+cut_521                          2.13e-05  [1(2.13e-05)]
+cut_522                          2.13e-05  [1(2.13e-05)]
+cut_523                          8.57e-05  [1(8.57e-05)]
+cut_524                          7.73e-04  6
+cut_525                          1.40e-05  [1(1.40e-05)]
+cut_526                          8.80e-06  [1(8.80e-06)]
+cut_527                          8.80e-06  [1(8.80e-06)]
+cut_528                          1.45e-04  6
+cut_529                          8.57e-05  [1(8.57e-05)]
+cut_530                          8.57e-05  [1(8.57e-05)]
+cut_531                          8.57e-05  [1(8.57e-05)]
+cut_532                          8.57e-05  [1(8.57e-05)]
+cut_533                          1.45e-04  6
+cut_534                          1.80e-04  6
+cut_535                          1.45e-04  6
+cut_536                          1.80e-04  6
+cut_537                          1.80e-04  6
+cut_538                          2.13e-05  [1(2.13e-05)]
+cut_539                          1.80e-04  6
+cut_540                          1.80e-04  6
+cut_541                          1.80e-04  6
+cut_542                          1.80e-04  6
+cut_543                          2.13e-05  [1(2.13e-05)]
+cut_544                          1.16e-03  6
+cut_545                          1.22e-01  6
+cut_546                          7.73e-04  6
+cut_547                          2.49e-03  6
+cut_548                          9.95e-04  6
+cut_549                          8.57e-05  [1(8.57e-05)]
+cut_550                          1.22e-05  [1(1.22e-05)]
+cut_551                          1.22e-05  [1(1.22e-05)]
+cut_552                          1.22e-01  6
+cut_553                          4.13e-03  6
+cut_554                          4.13e-03  6
+cut_555                          1.84e-03  6
+cut_556                          4.13e-03  6
+cut_557                          5.54e-06  [1(5.54e-06)]
+cut_558                          5.54e-06  [1(5.54e-06)]
+cut_559                          5.54e-06  [1(5.54e-06)]
+--------------------------------------------------------------------------------
+
+********************************************************************************
+
+
+********************************************************************************
+Stopped because requested number of motifs (1) found.
+********************************************************************************
+
+CPU: ubuntu
+
+********************************************************************************
