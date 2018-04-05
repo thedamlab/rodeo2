@@ -291,14 +291,16 @@ class My_Record(object):
         logger.debug("Setting %s ripps for %s" % (module.peptide_type, self.query_accession_id))
         self.ripps[module.peptide_type] = []
         for orf in self.intergenic_orfs:
-            if len(orf.sequence) < master_conf[module.peptide_type]['variables']['precursor_min']:
+#            if len(orf.sequence) < master_conf[module.peptide_type]['variables']['precursor_min']:
+#                continue
+#            elif len(orf.sequence)  > master_conf[module.peptide_type]['variables']['precursor_max']:
+#                if "M" in orf.sequence[2:]:
+#                    logger.debug("{} contains multiple start sites, but the first does not fit the length cutoffs. Using the full sequence for scoring".format(orf.sequence))
+#                else:
+#                    continue
+
+            if master_conf[module.peptide_type]['variables']['precursor_min'] <= len(orf.sequence) <=  master_conf[module.peptide_type]['variables']['precursor_max']:
                 continue
-            elif len(orf.sequence)  > master_conf[module.peptide_type]['variables']['precursor_max']:
-                if not "M" in orf.sequence[2:]:
-                    logger.warning("{} contains multiple start sites, but the first does not fit the length cutoffs. Using the full sequence for scoring".format(orf.sequence))
-                else:
-                    continue
-                
             ripp = module.Ripp(orf.start, orf.end, str(orf.sequence), orf.upstream_sequence, self.pfam_2_coords)
             if ripp.valid_split or master_conf[module.peptide_type]['variables']['exhaustive']:
                 self.ripps[module.peptide_type].append(ripp)
@@ -364,6 +366,8 @@ def update_score_w_svm(output_dir, records):
                         except KeyboardInterrupt:
                             raise KeyboardInterrupt
                         except Exception as e:
+                            import traceback as tb
+                            tb.print_exc()
                             print(e)
                             score_reader_done = True
                             logger.warning("Mismatch in RiPP count and length of CSV. Score results are most likely invalid")
