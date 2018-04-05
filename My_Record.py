@@ -299,7 +299,7 @@ class My_Record(object):
 #                else:
 #                    continue
 
-            if master_conf[module.peptide_type]['variables']['precursor_min'] <= len(orf.sequence) <=  master_conf[module.peptide_type]['variables']['precursor_max']:
+            if not master_conf[module.peptide_type]['variables']['precursor_min'] <= len(orf.sequence) <=  master_conf[module.peptide_type]['variables']['precursor_max']:
                 continue
             ripp = module.Ripp(orf.start, orf.end, str(orf.sequence), orf.upstream_sequence, self.pfam_2_coords)
             if ripp.valid_split or master_conf[module.peptide_type]['variables']['exhaustive']:

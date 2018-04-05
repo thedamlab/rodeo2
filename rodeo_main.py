@@ -317,7 +317,7 @@ def __main__():
 #                    elif len(orf.sequence)  > master_conf[peptide_type]['variables']['precursor_max']:
 #                        if not "M" in orf.sequence[2:]:
 #                            continue
-                    if master_conf[peptide_type]['variables']['precursor_min'] <= len(ripp.sequence) <= master_conf[peptide_type]['variables']['precursor_max']:
+                    if not master_conf[peptide_type]['variables']['precursor_min'] <= len(ripp.sequence) <= master_conf[peptide_type]['variables']['precursor_max']:
                         continue
                     list_of_rows.append(ripp.csv_columns)
                 module.ripp_write_rows(args.output_dir, record.cluster_accession, #cluster acc or query acc?
