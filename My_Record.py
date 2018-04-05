@@ -291,9 +291,14 @@ class My_Record(object):
         logger.debug("Setting %s ripps for %s" % (module.peptide_type, self.query_accession_id))
         self.ripps[module.peptide_type] = []
         for orf in self.intergenic_orfs:
-            if len(orf.sequence) < master_conf[module.peptide_type]['variables']['precursor_min'] or \
-                len(orf.sequence)  > master_conf[module.peptide_type]['variables']['precursor_max']:
+            if len(orf.sequence) < master_conf[module.peptide_type]['variables']['precursor_min']:
+                continue
+            elif len(orf.sequence)  > master_conf[module.peptide_type]['variables']['precursor_max']:
+                if not "M" in orf.sequence[2:]:
+                    logger.warning("{} contains multiple start sites, but the first does not fit the length cutoffs. Using the full sequence for scoring".format(orf.sequence))
+                else:
                     continue
+                
             ripp = module.Ripp(orf.start, orf.end, str(orf.sequence), orf.upstream_sequence, self.pfam_2_coords)
             if ripp.valid_split or master_conf[module.peptide_type]['variables']['exhaustive']:
                 self.ripps[module.peptide_type].append(ripp)
@@ -358,7 +363,8 @@ def update_score_w_svm(output_dir, records):
                             line = score_reader.next()
                         except KeyboardInterrupt:
                             raise KeyboardInterrupt
-                        except:
+                        except Exception as e:
+                            print(e)
                             score_reader_done = True
                             logger.warning("Mismatch in RiPP count and length of CSV. Score results are most likely invalid")
                             return

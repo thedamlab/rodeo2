@@ -118,35 +118,73 @@ class Ripp(Virtual_Ripp):
     def set_split(self):
         """Try to identify cleavage site using regular expressions"""
         #Regular expressions; try 1 first, then 2, etc.
-        rex1 = re.compile('([I|V]AS)')
-        rex2 = re.compile('([G|A|S]AS)')
-        rex3 = re.compile('([S|A|T][Q|K|T][V|A|I|M]M[A|S]A)')
-        rex4 = re.compile('([L|M|I|V][P|S|T|V|M][E|D][T|M|V|G|N|I|L|A|S][G|A|T|S]A)')
-        rex5 = re.compile('(DL[T|S][V|E]T[M|L])')
-        end = 0
-        #For each regular expression, check if there is a match that is <10 AA from the end
-
-        if re.search(rex3,self.sequence) and len(re.split(rex3,self.sequence)[-1]) > 10:
-            start, end = [m.span() for m in rex3.finditer(self.sequence)][-1]
-        elif re.search(rex4,self.sequence) and len(re.split(rex4,self.sequence)[-1]) > 10:
-            start, end = [m.span() for m in rex4.finditer(self.sequence)][-1]
-            print(self.sequence)
-        elif re.search(rex5,self.sequence) and len(re.split(rex5,self.sequence)[-1]) > 10:
-            start, end = [m.span() for m in rex5.finditer(self.sequence)][-1]
-        elif re.search(rex1,self.sequence) and len(re.split(rex1,self.sequence)[-1]) > 10:
-            start, end = [m.span() for m in rex1.finditer(self.sequence)][-1]
-            end -= 5
-        elif re.search(rex2,self.sequence) and len(re.split(rex2,self.sequence)[-1]) > 10:
-            start, end = [m.span() for m in rex2.finditer(self.sequence)][-1]
-            end -= 5 
-        self.split_index = end
-        self.leader = self.sequence[:end]
-        self.core = self.sequence[end:]
-        if len(self.leader) < 5 or len(self.core) < 5: #TAG CHRIS
-            self.valid_split = False
+#        rex1 = re.compile('([I|V]AS)')
+#        rex2 = re.compile('([G|A|S]AS)')
+#        rex3 = re.compile('([S|A|T][Q|K|T][V|A|I|M]M[A|S]A)')
+#        rex4 = re.compile('([L|M|I|V][P|S|T|V|M][E|D][T|M|V|G|N|I|L|A|S][G|A|T|S]A)')
+#        rex5 = re.compile('(DL[T|S][V|E]T[M|L])')
+#        end = 0
+#        #For each regular expression, check if there is a match that is <10 AA from the end
+#
+#        if re.search(rex3,self.sequence) and len(re.split(rex3,self.sequence)[-1]) > 10:
+#            start, end = [m.span() for m in rex3.finditer(self.sequence)][-1]
+#        elif re.search(rex4,self.sequence) and len(re.split(rex4,self.sequence)[-1]) > 10:
+#            start, end = [m.span() for m in rex4.finditer(self.sequence)][-1]
+#        elif re.search(rex5,self.sequence) and len(re.split(rex5,self.sequence)[-1]) > 10:
+#            start, end = [m.span() for m in rex5.finditer(self.sequence)][-1]
+#        elif re.search(rex1,self.sequence) and len(re.split(rex1,self.sequence)[-1]) > 10:
+#            start, end = [m.span() for m in rex1.finditer(self.sequence)][-1]
+#            end -= 5
+#        elif re.search(rex2,self.sequence) and len(re.split(rex2,self.sequence)[-1]) > 10:
+#            start, end = [m.span() for m in rex2.finditer(self.sequence)][-1]
+#            end -= 5 
+#        self.split_index = end
+#        self.leader = self.sequence[:end]
+#        self.core = self.sequence[end:]
+#        if len(self.leader) < 5 or len(self.core) < 5: #TAG CHRIS
+#            self.valid_split = False
+#            self.split = int(.25*len(self.sequence))
+#            self.leader = self.sequence[:self.split]
+#            self.core = self.sequence[self.split:]
+        scores = [(1,int(.25*len(self.sequence)))]*3
+        fimo_output = self.run_fimo_simple("ripp_modules/thio/beminamycin_fimo.txt")
+        fimo_output = fimo_output.split('\n')
+        valid_split = False
+        if len(fimo_output) > 1:
+            for line in fimo_output[1:]:
+                line = line.split('\t')
+                if len(line) <= 1:
+                    continue
+                if float(line[7]) < scores[0][0]:
+                    scores[0] = (float(line[7]), int(line[4]))
+            valid_split = True    
+        fimo_output = self.run_fimo_simple("ripp_modules/thio/thio_fimo.txt").split('\n')
+        if len(fimo_output) > 1:
+            for line in fimo_output[1:]:
+                line = line.split('\t')
+                if len(line) <= 1:
+                    continue
+                if float(line[7]) < scores[1][0]:
+                    scores[1] = (float(line[7]), int(line[4]))
+            valid_split = True    
+        fimo_output = self.run_fimo_simple("ripp_modules/thio/dhpip_fimo.txt").split('\n')
+        if len(fimo_output) > 1:
+            for line in fimo_output[1:]:
+                line = line.split('\t')
+                if len(line) <= 1:
+                    continue
+                if float(line[7]) < scores[2][0]:
+                    scores[2] = (float(line[7]), int(line[4]))
+            valid_split = True            
+        scores = sorted(scores)
+        self.valid_split = valid_split
+        self.split = scores[0][1]
+        if self.split < 4 or self.split > len(self.sequence) - 4:
             self.split = int(.25*len(self.sequence))
-            self.leader = self.sequence[:self.split]
-            self.core = self.sequence[self.split:]
+            self.valid_split = False
+        self.leader = self.sequence[:self.split]
+        self.core = self.sequence[self.split:]
+            
         
         
     def set_score(self, pfam_hmm, cust_hmm):
@@ -264,11 +302,16 @@ class Ripp(Virtual_Ripp):
         else:
             tabs.append(0)
         #Peptide terminates Cys/Ser/Thr
-        if self.core[-1] in ["C", "S", "T"]:
-            score += 1
-            tabs.append(1)
-        else:
-            tabs.append(0)
+        try:
+            if self.core[-1] in ["C", "S", "T"]:
+                score += 1
+                tabs.append(1)
+            else:
+                tabs.append(0)
+        except:
+            print(self.core)
+            print(self.leader)
+            print(self.sequence)
         #Core contains >= 2 positive residues
         if sum([self.core.count(aa) for aa in "RK"]) >= 2:
             score -= 1
