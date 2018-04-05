@@ -113,12 +113,17 @@ class Virtual_Ripp(object):
     def run_svm(self, output_dir):
         if self.peptide_type == 'lasso':
             from ripp_modules.lasso.svm import svm_classify as svm
+            from ripp_modules.lasso import CUTOFF as cutoff
         elif self.peptide_type == 'sacti':
             from ripp_modules.sacti.svm import svm_classify as svm
+            from ripp_modules.sacti import CUTOFF as cutoff
         elif self.peptide_type == 'thio':
             from ripp_modules.thio.svm import svm_classify as svm
+            from ripp_modules.thio import CUTOFF as cutoff
         elif self.peptide_type == 'lanthi':
             from ripp_modules.lanthi.svm import svm_classify as svm
+            from ripp_modules.lanthi import CUTOFF as cutoff
+            
         svm.run_svm()
         svm_output_reader = csv.reader(open("ripp_modules/" + self.peptide_type + "/svm/fitting_results.csv"))
         final_output_writer = csv.writer(open(output_dir + "/" + self.peptide_type + '/'\
@@ -134,23 +139,24 @@ class Virtual_Ripp(object):
             row.append(svm_output)
             if int(svm_output) == 1:
                 row[-2] = int(row[-2]) + 10
-            if int(row[-2]) > 17: #CUTOFF
+            if int(row[-2]) > cutoff: #CUTOFF
                 row[7] = 'Y'
             else:
                 row[7] = 'N'
             final_output_writer.writerow(row)
         
-    def run_fimo_simple(self):
+    def run_fimo_simple(self, query_motif_file=None):
     #TODO change to temp file
+        if not query_motif_file:
+            query_motif_file = "ripp_modules/" + self.peptide_type + '/' + self.peptide_type + "_fimo.txt"
         pid = str(os.getpid())
         try:
             with open("tmp_files/" + pid + "FIMO.seq", 'w+') as tfile:
                 tfile.write(">query\n%s" % (self.sequence))
-            query_motif_file = "ripp_modules/" + self.peptide_type + '/' + self.peptide_type + "_fimo.txt"
             if WEB_TOOL:
                 command = ["/home/ubuntu/meme/bin/fimo --text --verbosity 1 " + query_motif_file + ' ' + "tmp_files/" + pid + "FIMO.seq"]
             else:
-                command = ["$HOME/meme/bin/fimo --text --verbosity 1 " + query_motif_file + ' ' + "tmp_files/" + pid + "FIMO.seq"]
+                command = ["$HOME/meme/bin/fimo --text --thresh 0.01 --verbosity 1 " + query_motif_file + ' ' + "tmp_files/" + pid + "FIMO.seq"]
             try:
                 out, err, retcode = execute(command)
             except OSError:
