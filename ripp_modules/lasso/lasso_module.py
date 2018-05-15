@@ -161,7 +161,10 @@ class Ripp(Virtual_Ripp):
         # dehydration indicative of cyclization     
         bond = 18.02
 #        print(self.core)
-        monoisotopic_mass = ProteinAnalysis(self.core.replace('X', ''), monoisotopic=True).molecular_weight()
+        if "B" in self.core:
+            print(self.core)
+            print("AA sequence contains Asx. Currently reviewing how to assign weights to such translations.")
+        monoisotopic_mass = ProteinAnalysis(self.core.replace('X', '').replace('B', ''), monoisotopic=True).molecular_weight()
         self._monoisotopic_weight = monoisotopic_mass + CC_mass - bond
         
     def _set_number_bridges(self):
