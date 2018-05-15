@@ -125,29 +125,19 @@ def fill_request_queue(queries, processed_records_q, unprocessed_records_q, args
     try:
         for query in queries:
             logger.debug("Fetching %s data" % query)
-            if '.gbk' != query[-4:] and '.gb' != query[-3:]: #accession_id
-                gb_handles = get_gb_handles(query)
-                nuccore_accession = query
-                if gb_handles < 0:
-                    if gb_handles == -1:
-                        error_message = "No results in protein db for Esearch on %s" % (query)
-                    elif gb_handles == -2:
-                        error_message = "No results in nuccore db for value obtained from protein db"
-                    elif gb_handles == -3:
-                        error_message = "Any response failure from Entrez database (error on database side)"
-                    else:
-                        error_message = "Unknown Entrez error."
-                    unprocessed_records_q.put(Error_report(query, error_message))
-                    continue
-            else:#gbk file
-                nuccore_accession = query.split('\t')[0]
-                try:
-                    gb_handles = [open(query.split('\t')[1])]
-                except OSError as e:
-                    error_message = "Error opening %s" % (query)
-                    logger.error(e)
-                    unprocessed_records_q.put(Error_report(query, error_message))
-                    continue
+            gb_handles = get_gb_handles(query)
+            nuccore_accession = query
+            if gb_handles < 0:
+                if gb_handles == -1:
+                    error_message = "No results in protein db for Esearch on %s" % (query)
+                elif gb_handles == -2:
+                    error_message = "No results in nuccore db for value obtained from protein db"
+                elif gb_handles == -3:
+                    error_message = "Any response failure from Entrez database (error on database side)"
+                else:
+                    error_message = "Unknown Entrez error."
+                unprocessed_records_q.put(Error_report(query, error_message))
+                continue
             for handle in gb_handles:
                 record = get_record_from_gb_handle(handle, nuccore_accession)
                 if record < 0:

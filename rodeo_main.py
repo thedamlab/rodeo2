@@ -70,7 +70,7 @@ def __main__():
 #==============================================================================
     parser = argparse.ArgumentParser("Main RODEO app.")
     parser.add_argument('query', type=str,
-                        help='Accession number, genbank file or .txt file with an accession or .gbk query on each line') #accession # or gi
+                        help='Accession number or .txt file with a list of accessions on each line') #accession # or gi
     parser.add_argument('-out', '--output_dir', type=str,
                         help='Name of output folder')
     parser.add_argument('-c', '--conf_file', nargs='*', default=[], 
