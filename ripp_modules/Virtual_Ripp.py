@@ -156,7 +156,7 @@ class Virtual_Ripp(object):
             if WEB_TOOL:
                 command = ["/home/ubuntu/meme/bin/fimo --text --verbosity 1 " + query_motif_file + ' ' + "tmp_files/" + pid + "FIMO.seq"]
             else:
-                command = ["$HOME/meme/bin/fimo --text --thresh 0.01 --verbosity 1 " + query_motif_file + ' ' + "tmp_files/" + pid + "FIMO.seq"]
+                command = ["fimo --text --thresh 0.01 --verbosity 1 " + query_motif_file + ' ' + "tmp_files/" + pid + "FIMO.seq"]
             try:
                 out, err, retcode = execute(command)
             except OSError:
