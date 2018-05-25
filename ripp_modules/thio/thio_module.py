@@ -147,7 +147,7 @@ class Ripp(Virtual_Ripp):
 #            self.leader = self.sequence[:self.split]
 #            self.core = self.sequence[self.split:]
         scores = [(1,int(.25*len(self.sequence)))]*3
-        fimo_output = self.run_fimo_simple("ripp_modules/thio/beminamycin_fimo.txt")
+        fimo_output = self.run_fimo_simple("ripp_modules/thio/berninamycin_fimo.txt")
         fimo_output = fimo_output.split('\n')
         valid_split = False
         if len(fimo_output) > 1:
