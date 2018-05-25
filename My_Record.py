@@ -157,6 +157,9 @@ class My_Record(object):
                 self.intergenic_orfs.append(CDS)
                 continue
             for annot in CDS.pfam_descr_list:
+                if any(fam in annot[0] for fam in ["PF14404", "PF14406", "PF14407", "PF14408", "PF14409", "PF12559" ,"TIGR04186"]):
+                    self.intergenic_orfs.append(CDS)
+                    continue
                 if annot[0] not in self.pfam_2_coords.keys(): #annot[0] is the PF* key
                     self.pfam_2_coords[annot[0]] = []
                 self.pfam_2_coords[annot[0]].append((CDS.start, CDS.end))

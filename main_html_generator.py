@@ -42,6 +42,8 @@ import My_Record
 from decimal import Decimal
 from rodeo_main import VERSION
 
+index = 0
+
 def write_header(html_file, master_conf):
     html_file.write("""
     <html>
@@ -289,6 +291,8 @@ def draw_orf_table(main_html, record, print_all):
         
 
 def write_table_of_contents(main_html, queries):
+    global index
+    index = 0
     main_html.write("<h3> Input Queries (click to navigate)</h3>")
     main_html.write('<ul style="list-style-type:none">')
     for query in queries:
@@ -296,8 +300,11 @@ def write_table_of_contents(main_html, queries):
     main_html.write("</ul>\n")
 
 def write_failed_query(main_html, query, message):
+    global index
     main_html.write('<h2 id="%s"> Results for %s\n' % (query, query))
     main_html.write('<a href="#header"><small><small>back to top</small></small></a></h2>') #TODO keep for single?
+    main_html.write('<h2 id="num{}"><a href="#num{}"><small><small>previous</small></small></a><small><small>\t\t\t\t\t-\t\t\t\t\t</small></small><a href="#num{}"><small><small>next</small></small></a></h2>'.format(index, index-1, index+1)) 
+    index += 1
     main_html.write('<p></p>') # TODO why
     main_html.write(message)
     main_html.write('<p></p>')
@@ -309,9 +316,12 @@ def write_record(main_html, master_conf, record):
     #PUT LINK TO nuc SEQUENCE
     #TABLE of CDS
     #TABLE of ORFs
+    global index
     print_all = master_conf['general']['variables']['print_precursors']
     main_html.write('<h2 id="%s"> Results for %s [%s]\n' % (record.query_accession_id, record.query_accession_id, record.cluster_genus_species))
     main_html.write('<a href="#header"><small><small>back to top</small></small></a></h2>') #TODO keep for single?
+    main_html.write('<h2 id="num{}"><a href="#num{}"><small><small>previous</small></small></a><small><small>\t\t\t\t\t-\t\t\t\t\t</small></small><a href="#num{}"><small><small>next</small></small></a></h2>'.format(index, index-1, index+1)) 
+    index += 1
     main_html.write('<p></p>') # TODO why
     draw_orf_diagram(main_html, record, master_conf['general'])
     main_html.write('<p></p>') 

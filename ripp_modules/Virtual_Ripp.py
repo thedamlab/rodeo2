@@ -177,6 +177,7 @@ class Virtual_Ripp(object):
         except KeyboardInterrupt:
             try:
                 os.remove("tmp_files/" + pid + "FIMO.seq")
+                return
             except OSError:
                 pass
         return out

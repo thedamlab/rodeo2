@@ -151,7 +151,7 @@ def draw_CDS_arrow(main_html, cds, peptide_conf, sub_by, scale_factor):
     main_html.write(')" onMouseOut="return nd()"/>')
 
 def draw_orf_arrow(main_html, orf, sub_by, scale_factor, index):
-    fill_color = "rgba(0, 0, 0, {}) ".format((orf.confidence**2))
+    fill_color = "rgba(0, 0, 0, {}) ".format((min(orf.confidence**2,1))
     start = orf.start
     end = orf.end
     arrow_wid = int((start - sub_by) * scale_factor)
@@ -282,7 +282,7 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
               <tbody>
                 <tr>
                 <th scope="col">index</th>""")
-    if peptide_type in ["lasso", "lanthi", "sacti", "thio"]:
+    if peptide_type in ["lasso", "lanthi", "sacti", "thio", "grasp"]:
         main_html.write("""
               <th scope="col">leader</th>
               <th scope="col">core</th>""")
@@ -303,7 +303,7 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
         main_html.write("<tr>\n")
         main_html.write("<td>%d</td>" % (index))
         if print_precursors:
-            if peptide_type in ["lasso", "lanthi", "sacti", "thio"]:
+            if peptide_type in ["lasso", "lanthi", "sacti", "thio", "grasp"]:
                 main_html.write("<td>%s</td>" % (ripp.leader))
                 main_html.write("<td>%s</td>" % (ripp.core))
             else:

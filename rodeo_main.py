@@ -52,7 +52,7 @@ if WEB_TOOL:
     os.chdir(RODEO_DIR)
 VERSION = "2.1.2"
 #VERBOSITY = logging.DEBUG
-VERBOSITY = logging.INFO
+VERBOSITY = logging.DEBUG
 QUEUE_CAP = "END_OF_QUEUE"
 processes = []
 
@@ -237,6 +237,8 @@ def __main__():
             import ripp_modules.sacti.sacti_module as module
         elif peptide_type == "thio":
             import ripp_modules.thio.thio_module as module
+        elif peptide_type == "grasp":
+            import ripp_modules.grasp.grasp_module as module
         else:
             logger.error("%s not in supported RiPP types" % (peptide_type))
             continue
@@ -252,8 +254,8 @@ def __main__():
 #==============================================================================
     query_no = 0
     m = multiprocessing.Manager()
-    processed_records_q = m.Queue(max(args.num_cores, 6))
-    unprocessed_records_q = m.Queue(max(args.num_cores, 6))
+    processed_records_q = m.Queue(max(args.num_cores, 60))
+    unprocessed_records_q = m.Queue(max(args.num_cores, 60))
     
     #Nest all in try in case of KeyboardInterrupt
     try:
@@ -341,6 +343,8 @@ def __main__():
             logger.error("No valid results. Input may be invalid or Genbank may not be responding")
         except ValueError as e:
             logger.critical("Value error when finalizing results. This most likely means that no results were obtained and that all queries failed.")
+            logger.error(e)
+            traceback.print_exc(file=sys.stdout)
         except Exception as e:
             logger.error("Error running SVM")
             logger.error(e)
@@ -350,7 +354,7 @@ def __main__():
             for record in records:
                 ripp_html_generator.write_record(ripp_htmls[peptide_type], master_conf, record, peptide_type)
             try:
-                os.remove(output_dir + "/" + peptide_type + "/" + "temp_features.csv")
+#                os.remove(output_dir + "/" + peptide_type + "/" + "temp_features.csv")
                 pass
             except OSError:
                 logger.debug("Temp feature file appears to be missing...")
