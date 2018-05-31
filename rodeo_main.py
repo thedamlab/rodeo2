@@ -354,7 +354,7 @@ def __main__():
             for record in records:
                 ripp_html_generator.write_record(ripp_htmls[peptide_type], master_conf, record, peptide_type)
             try:
-#                os.remove(output_dir + "/" + peptide_type + "/" + "temp_features.csv")
+                os.remove(output_dir + "/" + peptide_type + "/" + "temp_features.csv")
                 pass
             except OSError:
                 logger.debug("Temp feature file appears to be missing...")
