@@ -44,9 +44,12 @@ import argparse
 import config_parser
 import traceback
 import sys
+import socket
 from shutil import copyfile
 
 WEB_TOOL = False
+if socket.gethostname() == "rodeo.scs.illinois.edu":
+    WEB_TOOL = True
 if WEB_TOOL:
     RODEO_DIR = "/home/ubuntu/website/go/rodeo2/"
     os.chdir(RODEO_DIR)

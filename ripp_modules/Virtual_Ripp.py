@@ -42,10 +42,13 @@ import re
 import tempfile
 import subprocess
 import logging
+import socket
 from rodeo_main import VERBOSITY
 VERBOSITY = logging.DEBUG
 
 WEB_TOOL = False
+if socket.gethostname() == "rodeo.scs.illinois.edu":
+    WEB_TOOL = True
 
 
 logger = logging.getLogger(__name__)
