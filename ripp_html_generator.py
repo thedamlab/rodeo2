@@ -42,6 +42,8 @@ import My_Record
 from decimal import Decimal
 from rodeo_main import VERSION
 
+index = 0
+
 def write_header(html_file, master_conf, peptide_type):
     html_file.write("""
     <html>
@@ -151,7 +153,7 @@ def draw_CDS_arrow(main_html, cds, peptide_conf, sub_by, scale_factor):
     main_html.write(')" onMouseOut="return nd()"/>')
 
 def draw_orf_arrow(main_html, orf, sub_by, scale_factor, index):
-    fill_color = "rgba(0, 0, 0, {}) ".format((orf.confidence**2))
+    fill_color = "rgba(0, 0, 0, {}) ".format((min(orf.confidence**2,1)))
     start = orf.start
     end = orf.end
     arrow_wid = int((start - sub_by) * scale_factor)
@@ -282,7 +284,7 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
               <tbody>
                 <tr>
                 <th scope="col">index</th>""")
-    if peptide_type in ["lasso", "lanthi", "sacti", "thio"]:
+    if peptide_type in ["lasso", "lanthi", "sacti", "thio", "grasp"]:
         main_html.write("""
               <th scope="col">leader</th>
               <th scope="col">core</th>""")
@@ -303,7 +305,7 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
         main_html.write("<tr>\n")
         main_html.write("<td>%d</td>" % (index))
         if print_precursors:
-            if peptide_type in ["lasso", "lanthi", "sacti", "thio"]:
+            if peptide_type in ["lasso", "lanthi", "sacti", "thio", "grasp"]:
                 main_html.write("<td>%s</td>" % (ripp.leader))
                 main_html.write("<td>%s</td>" % (ripp.core))
             else:
@@ -326,11 +328,14 @@ def write_table_of_contents(main_html, queries):
     main_html.write("</ul>\n")
 
 def write_failed_query(main_html, query, message):
+    global index
     main_html.write('<h2 id="%s"> Results for %s\n' % (query, query))
     main_html.write('<a href="#header"><small><small>back to top</small></small></a></h2>') #TODO keep for single?
+    main_html.write('<h2 id="num{}"><a href="#num{}"><small><small>previous</small></small></a><small><small>\t\t\t\t\t-\t\t\t\t\t</small></small><a href="#num{}"><small><small>next</small></small></a></h2>'.format(index, index-1, index+1))
     main_html.write('<p></p>') # TODO why
     main_html.write(message)
     main_html.write('<p></p>')
+    index += 1
     
 def write_record(main_html, master_conf, record, peptide_type):
     #RESULTS FOR xxxx
@@ -339,12 +344,15 @@ def write_record(main_html, master_conf, record, peptide_type):
     #PUT LINK TO nuc SEQUENCE
     #TABLE of CDS
     #TABLE of ORFs
+    global index
     main_html.write('<h2 id="%s"> Results for %s [%s]\n' % (record.query_accession_id, record.query_accession_id, record.cluster_genus_species))
     main_html.write('<a href="#header"><small><small>back to top</small></small></a></h2>') #TODO keep for single?
+    main_html.write('<h2 id="num{}"><a href="#num{}"><small><small>previous</small></small></a><small><small>\t\t\t\t\t-\t\t\t\t\t</small></small><a href="#num{}"><small><small>next</small></small></a></h2>'.format(index, index-1, index+1))
     main_html.write('<p></p>') # TODO why
     draw_orf_diagram(main_html, master_conf[peptide_type], record, peptide_type)
     main_html.write('<p></p>') 
     main_html.write('<a href="https://www.ncbi.nlm.nih.gov/nuccore/%s">Link to nucleotide sequence</a>' % (record.cluster_accession))
     draw_cds_table(main_html, record)
     draw_orf_table(main_html, record, peptide_type, master_conf)
+    index += 1
     
