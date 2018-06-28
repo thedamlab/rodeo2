@@ -227,11 +227,17 @@ def draw_cds_table(main_html, record):
     </tr>""")
     for cds in record.CDSs:
         main_html.write("<tr>\n")
-        main_html.write("""\t<td><a href='https://www.ncbi.nlm.nih.gov/protein/%s'>%s</a></td>
+        if cds.inferred:
+            prot_or_nucc = "nuccore"
+            acc = record.cluster_accession
+        else:
+            prot_or_nucc = "protein"
+            acc = cds.accession_id
+        main_html.write("""\t<td><a href='https://www.ncbi.nlm.nih.gov/%s/%s'>%s</a></td>
             <td>%s</td> 
             <td>%d</td>
             <td>%s</td>
-            <td>%d</td>""" % (cds.accession_id, cds.accession_id, cds.start, cds.end, cds.direction, len(cds.sequence)))
+            <td>%d</td>""" % (prot_or_nucc, acc, cds.accession_id, cds.start, cds.end, cds.direction, len(cds.sequence)))
         if len(cds.pfam_descr_list) == 0:
             if cds.inferred:
                 main_html.write("<td>INFERRED GENE</td>")
