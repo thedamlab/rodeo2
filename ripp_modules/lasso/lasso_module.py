@@ -93,7 +93,7 @@ def run_svm(output_dir):
         row[9] = svm_output
         if int(svm_output) == 1:
             row[6] = int(row[6]) + 10
-        if int(row[6]) > CUTOFF: #CUTOFF
+        if int(row[6]) >= CUTOFF: #CUTOFF
             row[7] = 'Y'
         else:
             row[7] = 'N'
@@ -174,7 +174,17 @@ class Ripp(Virtual_Ripp):
         if "B" in self.core:
             print(self.core)
             print("AA sequence contains Asx. Currently reviewing how to assign weights to such translations.")
-        monoisotopic_mass = ProteinAnalysis(self.core.replace('X', '').replace('B', ''), monoisotopic=True).molecular_weight()
+        if "J" in self.core:
+            print(self.core)
+            print("AA sequence contains 'J'. Currently reviewing how to assign weights to such translations.")
+        if "Z" in self.core:
+            print(self.core)
+            print("AA sequence contains 'Z'. Currently reviewing how to assign weights to such translations.")
+        try:
+            monoisotopic_mass = ProteinAnalysis(self.core.replace('X', '').replace('B', '').replace('J', '').replace('Z', ''), monoisotopic=True).molecular_weight()
+        except ValueError:
+            print("ERROR assigning molecular mass to\n {} \n Assigning a mass of 0.".format(self.sequence)) 
+            
         self._monoisotopic_weight = monoisotopic_mass + CC_mass - bond
         
     def _set_number_bridges(self):
