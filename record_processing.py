@@ -103,7 +103,7 @@ def process_record_worker(unprocessed_records_q, processed_records_q, args, mast
             except Exception as e:
                 logger.error("ERROR FOR %s" % (record.query_accession_id))
                 logger.error(e)
-                processed_records_q.put(ErrorReport(record.query_accession_id, e))
+                processed_records_q.put(ErrorReport(record.query_accession_id, str(e)))
                 traceback.print_exc(file=sys.stdout)
                 logger.error("Worker process %s is moving on" % (my_id))
 #                processed_records_q.put(QUEUE_CAP)
