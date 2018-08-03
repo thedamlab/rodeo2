@@ -123,8 +123,8 @@ def process_record_worker(unprocessed_records_q, processed_records_q, args, mast
     
     
 def fill_request_queue(queries, processed_records_q, unprocessed_records_q, args, master_conf, ripp_modules):
-    try:
-        for query in queries:
+    for query in queries:
+        try:
             logger.debug("Fetching %s data" % query)
             gb_handles = get_gb_handles(query)
             nuccore_accession = query
@@ -156,11 +156,11 @@ def fill_request_queue(queries, processed_records_q, unprocessed_records_q, args
                 unprocessed_records_q.put(record)
                 if not master_conf['general']['variables']['evaluate_all']:
                     break
-        unprocessed_records_q.put(QUEUE_CAP)
-    except KeyboardInterrupt:
-        logger.critical("KeyboardInterrupt recieved during record fetching")
-        return
-    except EOFError:
-        logger.critical("EOFError recieved during record fetching")
-        return
-        
+        except KeyboardInterrupt:
+            logger.critical("KeyboardInterrupt recieved during record fetching")
+            return
+        except EOFError:
+            logger.critical("EOFError recieved during record fetching")
+            unprocessed_records_q.put(ErrorReport(query, "EOFError recieved during record fetching"))
+            continue
+    unprocessed_records_q.put(QUEUE_CAP)
