@@ -95,7 +95,7 @@ def __main__():
                         '\'cds\' will make the window +/- n CDSs from the query.\n' +
                         '\'nucs\' will make the window +/- n nucleotides from the query')
     parser.add_argument('-fn', '--fetch_n', type=int, 
-                        help='The \'n\' variable for the -ft=orfs')
+                        help='The \'n\' variable for the -ft=orfs,cds')
     parser.add_argument('-fd', '--fetch_distance', type=int, 
                         help='Number of nucleotides to fetch outside of window')
     parser.add_argument('-pt', '--peptide_types', nargs='*', default = [],
