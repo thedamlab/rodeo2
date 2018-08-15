@@ -183,7 +183,7 @@ def __main__():
         logger.warning("Overwriting %s folder." % (args.output_dir))
     
     try: 
-        os.mkdir("tmp_files")
+    	os.mkdir("tmp_files")
     except OSError:
 	pass
 #==============================================================================
