@@ -290,10 +290,14 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
               <tbody>
                 <tr>
                 <th scope="col">index</th>""")
-    if peptide_type in ["lasso", "lanthi", "sacti", "thio", "grasp"]:
+    if peptide_type in ["lasso", "lanthi", "sacti", "thio"]:
         main_html.write("""
               <th scope="col">leader</th>
               <th scope="col">core</th>""")
+    elif peptide_type == "grasp":
+        main_html.write("""
+              <th scope="col">first half</th>
+              <th scope="col">second half</th>""")
     else:
         main_html.write("""
           <th scope="col">peptide</th>""")
