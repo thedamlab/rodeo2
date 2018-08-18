@@ -44,13 +44,16 @@ import argparse
 import config_parser
 import traceback
 import sys
+import socket
 from shutil import copyfile
 
 WEB_TOOL = False
+if socket.gethostname() == "rodeo.scs.illinois.edu":
+    WEB_TOOL = True
 if WEB_TOOL:
     RODEO_DIR = "/home/ubuntu/website/go/rodeo2/"
     os.chdir(RODEO_DIR)
-VERSION = "2.1.2"
+VERSION = "2.1.3"
 #VERBOSITY = logging.DEBUG
 VERBOSITY = logging.DEBUG
 QUEUE_CAP = "END_OF_QUEUE"
@@ -60,7 +63,7 @@ def __main__():
     import nulltype_module
     import main_html_generator
     import ripp_html_generator
-    from record_processing import fill_request_queue, Error_report
+    from record_processing import fill_request_queue, ErrorReport
     import My_Record
     import record_processing
     
@@ -92,7 +95,7 @@ def __main__():
                         '\'cds\' will make the window +/- n CDSs from the query.\n' +
                         '\'nucs\' will make the window +/- n nucleotides from the query')
     parser.add_argument('-fn', '--fetch_n', type=int, 
-                        help='The \'n\' variable for the -ft=orfs')
+                        help='The \'n\' variable for the -ft=orfs,cds')
     parser.add_argument('-fd', '--fetch_distance', type=int, 
                         help='Number of nucleotides to fetch outside of window')
     parser.add_argument('-pt', '--peptide_types', nargs='*', default = [],
@@ -280,7 +283,7 @@ def __main__():
             query = record.query_accession_id
             query_no += 1
             logger.info("Writing output for query #%d.\t%s" % (query_no, query))
-            if type(record) == Error_report:
+            if type(record) == ErrorReport:
                 logger.error(("For %s:\t" + record.error_message) % (record.query))
                 main_html_generator.write_failed_query(main_html, record.query, record.error_message)
                 for peptide_type in peptide_types:
