@@ -59,7 +59,7 @@ ch.setFormatter(formatter)
 # add ch to logger
 logger.addHandler(ch)
 
-class Error_report(object):
+class ErrorReport(object):
     
     def __init__(self, query, error_message):
         self.query = query
@@ -73,7 +73,7 @@ def process_record_worker(unprocessed_records_q, processed_records_q, args, mast
         logger.debug("Worker process %s started" % (my_id))
         record = unprocessed_records_q.get()
         while record != QUEUE_CAP:
-            if type(record) == Error_report:
+            if type(record) == ErrorReport:
                 processed_records_q.put(record)
                 record = unprocessed_records_q.get()
                 continue
@@ -104,9 +104,9 @@ def process_record_worker(unprocessed_records_q, processed_records_q, args, mast
                 logger.error("ERROR FOR %s" % (record.query_accession_id))
                 logger.error(e)
                 traceback.print_exc(file=sys.stdout)
-                logger.error("Worker process %s is shutting down" % (my_id))
-                processed_records_q.put(QUEUE_CAP)
-                return
+                processed_records_q.put(ErrorReport(record.query_accession_id, str(e)))
+                logger.error("Worker process %s is moving on" % (my_id))
+
             record = unprocessed_records_q.get()
         
         logger.debug("Worker process %s pulled queue cap" % (my_id))
@@ -137,7 +137,7 @@ def fill_request_queue(queries, processed_records_q, unprocessed_records_q, args
                         error_message = "Any response failure from Entrez database (error on database side)"
                     else:
                         error_message = "Unknown Entrez error."
-                    unprocessed_records_q.put(Error_report(query, error_message))
+                    unprocessed_records_q.put(ErrorReport(query, error_message))
                     continue
             else:#gbk file
                 nuccore_accession = query.split('\t')[0]
@@ -146,7 +146,7 @@ def fill_request_queue(queries, processed_records_q, unprocessed_records_q, args
                 except OSError as e:
                     error_message = "Error opening %s" % (query)
                     logger.error(e)
-                    unprocessed_records_q.put(Error_report(query, error_message))
+                    unprocessed_records_q.put(ErrorReport(query, error_message))
                     continue
             for handle in gb_handles:
                 record = get_record_from_gb_handle(handle, nuccore_accession)
@@ -156,7 +156,7 @@ def fill_request_queue(queries, processed_records_q, unprocessed_records_q, args
                           % (query)
                     else:
                         error_message = "Unknown error"
-                    unprocessed_records_q.put(Error_report(query, error_message))
+                    unprocessed_records_q.put(ErrorReport(query, error_message))
                     if not master_conf['general']['variables']['evaluate_all']:
                         break
                     else:
