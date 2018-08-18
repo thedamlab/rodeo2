@@ -53,13 +53,13 @@ import csv
 
 from sklearn import svm
 from sklearn import preprocessing
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_score
 from sklearn import metrics
 
 # CONFIGURATION OPTIONS
 ''' change these as desired '''
 
-input_training_file = 'data_set.csv'         # the CSV containing the training set
+input_training_file = 'grasp_training_set.csv'         # the CSV containing the training set
 output_filename = 'optimization_results.csv'     # output filename; this will be a CSV with the parameters and accuracy
 
 primary_key_column = 0;            # the column of the CSV that contains the primary key (identifier) for each record
@@ -79,7 +79,7 @@ gamma_base = 10
 gamma_steps = 9
 gamma_options = np.logspace(gamma_min,gamma_max,num=gamma_steps,base=gamma_base,dtype=float)
 class_weight_option = 'balanced'
-folds_validation = [2]
+folds_validation = [3, 5]
 
 def parse_CSV_to_dataset(csv_filename, dataset_type):
     '''Parse an input CSV into a data set
@@ -152,13 +152,14 @@ def main():
     
     for fold in folds_validation:
         for C_option in C_options:
+            print(C_option)
             for gamma_option in gamma_options:
                 clf = svm.SVC(kernel=kernel_option,class_weight=class_weight_option,C=C_option,gamma=gamma_option)
-                prec = train_test_split.cross_val_score(clf, training_data_refined, training_data_classifications, cv=fold, scoring='precision')
-                recd = train_test_split.cross_val_score(clf, training_data_refined, training_data_classifications, cv=fold, scoring='recall')
-                f1we = train_test_split.cross_val_score(clf, training_data_refined, training_data_classifications, cv=fold, scoring='f1')
+                prec = cross_val_score(clf, training_data_refined, training_data_classifications, cv=fold, scoring='precision')
+                recd = cross_val_score(clf, training_data_refined, training_data_classifications, cv=fold, scoring='recall')
+                f1we = cross_val_score(clf, training_data_refined, training_data_classifications, cv=fold, scoring='f1')
                 scor = prec.mean() * recd.mean()
-                print('Using %d fold, %.2E C, %.2E gamma: %0.2f precision, %0.2f recall, %0.2f f1, %0.2f score' % (fold, C_option, gamma_option, prec.mean(), recd.mean(), f1we.mean(), scor))
+                print('Using %d fold, %.4E C, %.4E gamma: %0.4f precision, %0.4f recall, %0.4f f1, %0.4f score' % (fold, C_option, gamma_option, prec.mean(), recd.mean(), f1we.mean(), scor))
                 test_results.append([kernel_option,fold,C_option,gamma_option,class_weight_option,prec.mean(),recd.mean(),f1we.mean(),scor])
     
     # Output results to file

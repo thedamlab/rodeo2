@@ -70,8 +70,8 @@ csv_has_header = True;             # set to true if CSVs have header rows to ign
 
 # default kernel values
 kernel_option = 'rbf'
-C_option = 25
-gamma_option = 2.75E-06
+C_option = 2.8E10
+gamma_option = 1E-10
 class_weight_option = 'balanced'
 
 def parse_CSV_to_dataset(csv_filename, dataset_type):
