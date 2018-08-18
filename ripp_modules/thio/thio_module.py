@@ -91,7 +91,7 @@ def run_svm(output_dir):
         row[9] = svm_output
         if int(svm_output) == 1:
             row[6] = int(row[6]) + 10
-        if int(row[6]) > CUTOFF: #CUTOFF
+        if int(row[6]) >= CUTOFF: #CUTOFF
             row[7] = 'Y'
         else:
             row[7] = 'N'
