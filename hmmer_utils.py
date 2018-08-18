@@ -40,9 +40,13 @@ import os
 import csv
 import subprocess
 import logging 
+import socket
 from rodeo_main import VERBOSITY
 
 WEB_TOOL = False
+if socket.gethostname() == "rodeo.scs.illinois.edu":
+    WEB_TOOL = True
+    
 
 logger = logging.getLogger(__name__)
 logger.setLevel(VERBOSITY)
