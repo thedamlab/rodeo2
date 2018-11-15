@@ -178,7 +178,8 @@ class Ripp(Virtual_Ripp):
             within_2000 = True
             if min_distance < 600:
                 within_600 = True
-                if min_distance < 300:
+                if min_distance 
+                00:
                     within_300 = True
                     self.score += 2
                 else:
@@ -234,7 +235,7 @@ class Ripp(Virtual_Ripp):
         else:
             scoring_csv_columns.append(0)
             
-        acceptor_core_count = self.core.count('G') + self.core.count('D')
+        acceptor_core_count = self.core.count('E') + self.core.count('D')
         if acceptor_core_count < 3:
             self.score += -1
             scoring_csv_columns.append(1)
@@ -254,7 +255,7 @@ class Ripp(Virtual_Ripp):
         else:
             scoring_csv_columns.append(0)
             
-        acceptor_leader_count = self.leader.count('G') + self.leader.count('D')
+        acceptor_leader_count = self.leader.count('E') + self.leader.count('D')
         if acceptor_core_count/float(len(self.core)) > acceptor_leader_count/float(len(self.leader)):
             self.score += 1
             scoring_csv_columns.append(1)
