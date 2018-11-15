@@ -381,7 +381,7 @@ class Ripp(Virtual_Ripp):
             scoring_csv_columns.append(0) 
         
         fimo_motifs, motif_score, fimo_scores = self.get_fimo_score()
-        match = re.search('(PFF[A-Z]{2}FL)', self.sequence)
+        match = re.search('(PFFA[A-Z]{2}L)', self.sequence)
         if match is not None:
             scoring_csv_columns.append(1)
             self.score += 1
