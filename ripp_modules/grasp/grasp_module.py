@@ -51,7 +51,7 @@ from ripp_modules.Virtual_Ripp import Virtual_Ripp
 import hmmer_utils
 
 peptide_type = "grasp"
-CUTOFF = 18
+CUTOFF = 12
 index = 0
 
 
@@ -178,8 +178,7 @@ class Ripp(Virtual_Ripp):
             within_2000 = True
             if min_distance < 600:
                 within_600 = True
-                if min_distance 
-                00:
+                if min_distance < 300:
                     within_300 = True
                     self.score += 2
                 else:
@@ -388,12 +387,9 @@ class Ripp(Virtual_Ripp):
         else:
             scoring_csv_columns.append(0) 
         
-        match = re.search('(T[A-Z]K[A-Z]PSD)', self.sequence)
-        if match is not None:
-            scoring_csv_columns.append(1)
-            self.score += 1
-        else:
-            scoring_csv_columns.append(0) 
+        match = re.findall('(T[A-Z]K[A-Z]PSD)', self.sequence)
+        scoring_csv_columns.append(len(match))
+        self.score += len(match)
             
         ##SVM SCORING SECTION
         scoring_csv_columns.append(min_distance)
