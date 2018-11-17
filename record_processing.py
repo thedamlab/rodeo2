@@ -128,7 +128,7 @@ def fill_request_queue(queries, processed_records_q, unprocessed_records_q, args
             if '.gbk' != query[-4:] and '.gb' != query[-3:]: #accession_id
                 gb_handles = get_gb_handles(query)
                 nuccore_accession = query
-                if gb_handles < 0:
+                if type(gb_handles) is int:
                     if gb_handles == -1:
                         error_message = "No results in protein db for Esearch on %s" % (query)
                     elif gb_handles == -2:
@@ -150,7 +150,7 @@ def fill_request_queue(queries, processed_records_q, unprocessed_records_q, args
                     continue
             for handle in gb_handles:
                 record = get_record_from_gb_handle(handle, nuccore_accession)
-                if record < 0:
+                if type(record) is int:
                     if record == -1:
                         error_message = "Couldn't process %s Genbank filestream. May be corrupt."\
                           % (query)

@@ -186,7 +186,7 @@ def draw_orf_diagram(main_html, peptide_conf, record, peptide_type):
     main_html.write('<svg width="1060" height="53">')
     index = 0
     for ripp in record.ripps[peptide_type]:
-	index += 1
+        index += 1
         if ripp.score <= ripp.CUTOFF/4.0:
             continue
         if peptide_conf['variables']['precursor_min'] <= len(ripp.sequence) <= peptide_conf['variables']['precursor_max'] or \

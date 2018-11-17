@@ -82,7 +82,7 @@ def execute(commands, input=None):
         out, err = proc.communicate(input=input)
         retcode = proc.returncode
         return out, err, retcode
-    except OSError, e:
+    except OSError as e:
         logger.error(e)
         raise e
         
@@ -107,7 +107,7 @@ class Virtual_Ripp(object):
             self.direction = '+'
         else:
             self.direction = '-'
-	self.valid_split = True #set to false if no valid split
+        self.valid_split = True #set to false if no valid split
 
 #        self.set_leader_core()
 #        self.set_monoisotopic_mass()

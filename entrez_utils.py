@@ -152,7 +152,7 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
                     inferred = False
                     start = int(feature.location.start)
                     end = int(feature.location.end)
-                    seq = "X" * (abs(start-end)/3)
+                    seq = "X" * int((abs(start-end)/3))
                     direction = 1
                     if end < start:
                         direction = -1
