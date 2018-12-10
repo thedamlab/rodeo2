@@ -40,6 +40,7 @@ Created on Mon Aug  7 20:58:10 2017
 #==============================================================================
 
 import socket
+import time
 import traceback
 from Bio import Entrez, SeqIO
 from Bio.Seq import Seq
@@ -86,6 +87,7 @@ def get_gb_handles(prot_accession_id):
                 return -1
                 
             IdList = record["IdList"]
+            time.sleep(.5)
             link_records = Entrez.read(Entrez.elink(dbfrom="protein",db="nuccore",id=IdList))
             nuccore_ids=[]
             if len(link_records[0]['LinkSetDb']) == 0:
@@ -102,6 +104,7 @@ def get_gb_handles(prot_accession_id):
             
             handles = []
             for start in range(len(nuccore_ids)):
+                time.sleep(.5)
                 orig_handle = Entrez.efetch(db="nuccore", dbfrom="protein", rettype="gbwithparts", 
                                                retmode="text", retstart=start, retmax=batchSize, 
                                                webenv=webenv, query_key=query_key)
@@ -113,6 +116,7 @@ def get_gb_handles(prot_accession_id):
             logger.error("Timeout while reaching genbank for %s." % (prot_accession_id))
             return -3
         except Exception as e:
+            time.sleep(.5)
             logger.error("Failed to fetch record for %s." % (prot_accession_id))
             logger.error(e)
             pass
