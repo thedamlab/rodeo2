@@ -359,14 +359,14 @@ def update_score_w_svm(output_dir, records):
         for peptide_type in records[0].ripps.keys():
             score_reader = csv.reader(open(output_dir + '/' + peptide_type + '/' +\
                                            peptide_type + '_features.csv')) 
-            score_reader.next()
+            next(score_reader)
             
             score_reader_done = False
             for record in records:
                 for ripp in record.ripps[peptide_type]:
                     if not score_reader_done:
                         try:
-                            line = score_reader.next()
+                            line = next(score_reader)
                         except KeyboardInterrupt:
                             raise KeyboardInterrupt
                         except Exception as e:
