@@ -47,6 +47,8 @@ from Bio.Alphabet import generic_dna
 from My_Record import My_Record, Sub_Seq
 import logging
 from rodeo_main import VERBOSITY
+import time
+import random
 from timeout_decorator import timeout, TimeoutError
 
 logger = logging.getLogger(__name__)
@@ -86,6 +88,7 @@ def get_gb_handles(prot_accession_id):
                 return -1
                 
             IdList = record["IdList"]
+            time.sleep(0.5)
             link_records = Entrez.read(Entrez.elink(dbfrom="protein",db="nuccore",id=IdList))
             nuccore_ids=[]
             if len(link_records[0]['LinkSetDb']) == 0:
@@ -102,6 +105,7 @@ def get_gb_handles(prot_accession_id):
             
             handles = []
             for start in range(len(nuccore_ids)):
+                time.sleep(0.5)
                 orig_handle = Entrez.efetch(db="nuccore", dbfrom="protein", rettype="gbwithparts", 
                                                retmode="text", retstart=start, retmax=batchSize, 
                                                webenv=webenv, query_key=query_key)
@@ -113,9 +117,11 @@ def get_gb_handles(prot_accession_id):
             logger.error("Timeout while reaching genbank for %s." % (prot_accession_id))
             return -3
         except Exception as e:
+            time.sleep(0.5)
             logger.error("Failed to fetch record for %s." % (prot_accession_id))
             logger.error(e)
             pass
+        time.sleep(2)
     return -3
 
 #gb_handle should only be a handle to ONE query 
