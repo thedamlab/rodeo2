@@ -68,37 +68,6 @@ def write_csv_headers(output_dir):
     svm_writer.writerow(svm_headers)#Don't include accession_id, genus/species,
                                         #leader, core sequence, score, or svm classification
 
-
-def ripp_write_rows(output_dir, accession_id, genus_species, list_of_rows):
-    dir_prefix = output_dir + '/lasso/'
-    global index
-    features_csv_file = open(dir_prefix + "temp_features.csv", 'a')
-    svm_csv_file = open("ripp_modules/lasso/svm/fitting_set.csv", 'a')
-    features_writer = csv.writer(features_csv_file)
-    svm_writer = csv.writer(svm_csv_file)
-    for row in list_of_rows:
-        features_writer.writerow([accession_id, genus_species] + row[0:5] + ["valid_precursor_placeholder", index, ''] + row[5:])
-        svm_writer.writerow([index, ''] + row[5:]) #Don't include accession_id, leader, core sequence, start, end, or score
-        index += 1
-        
-def run_svm(output_dir):
-    svm.run_svm()
-    svm_output_reader = csv.reader(open("ripp_modules/lasso/svm/fitting_results.csv"))
-    final_output_writer = csv.writer(open(output_dir + "/lasso/lasso_features.csv", 'w'))
-    features_reader = csv.reader(open(output_dir + "/lasso/temp_features.csv"))
-    header_row = features_reader.next() #skip header
-    final_output_writer.writerow(header_row)
-    for row in features_reader:
-        svm_output = svm_output_reader.next()[1]
-        row[9] = svm_output
-        if int(svm_output) == 1:
-            row[6] = int(row[6]) + 10
-        if int(row[6]) >= CUTOFF: #CUTOFF
-            row[7] = 'Y'
-        else:
-            row[7] = 'N'
-        final_output_writer.writerow(row)   
-    
 class Ripp(Virtual_Ripp):
     def __init__(self, 
                  start, 
@@ -152,7 +121,8 @@ class Ripp(Virtual_Ripp):
         self.core = self.sequence[self.split_index:]
                 
     def get_fimo_score(self):
-        fimo_output = self.run_fimo_simple()
+        fimo_output = str(self.run_fimo_simple())
+        fimo_motifs = []
         fimo_motifs = [int(line.partition("\t")[0]) for line in fimo_output.split("\n") if "\t" in line and line.partition("\t")[0].isdigit()]
         fimo_scores = {int(line.split("\t")[0]): float(line.split("\t")[6]) for line in fimo_output.split("\n") if "\t" in line and line.partition("\t")[0].isdigit()}
         #Calculate score

@@ -45,7 +45,7 @@ import csv
 import os
 import re
 import numpy as np
-from ripp_modules.grasp.svm import svm_classify as svm
+from ripp_modules.svm_classify import SVMRunner
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from ripp_modules.Virtual_Ripp import Virtual_Ripp
 import hmmer_utils
@@ -88,10 +88,11 @@ def run_svm(output_dir):
     svm_output_reader = csv.reader(open("ripp_modules/grasp/svm/fitting_results.csv"))
     final_output_writer = csv.writer(open(output_dir + "/grasp/grasp_features.csv", 'w'))
     features_reader = csv.reader(open(output_dir + "/grasp/temp_features.csv"))
-    header_row = features_reader.next() #skip header
+    header_row = next(features_reader) #skip header
     final_output_writer.writerow(header_row)
-    for row in features_reader:
-        svm_output = svm_output_reader.next()[1]
+    for row, svm_output in zip(features_reader, svm_output_reader):
+#        svm_output = svm_output_reader.next()[1]
+        svm_output = svm_output[1]
         row[9] = svm_output
         if int(svm_output) == 1:
             row[6] = int(row[6]) + 10
@@ -128,6 +129,7 @@ class Ripp(Virtual_Ripp):
                 
     def get_fimo_score(self):
         fimo_output = self.run_fimo_simple()
+        fimo_motifs = []
         fimo_motifs = [int(line.partition("\t")[0]) for line in fimo_output.split("\n") if "\t" in line and line.partition("\t")[0].isdigit()]
         fimo_scores = {int(line.split("\t")[0]): float(line.split("\t")[6]) for line in fimo_output.split("\n") if "\t" in line and line.partition("\t")[0].isdigit()}
         #Calculate score
