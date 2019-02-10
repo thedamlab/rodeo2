@@ -44,7 +44,7 @@ import subprocess
 import importlib
 import logging
 import socket
-import ripp_modules.svm_classify as svmc
+import ripp_modules.SvmClassify as svmc
 from rodeo_main import VERBOSITY
 VERBOSITY = logging.DEBUG
 
@@ -215,7 +215,7 @@ class VirtualRipp(object):
     
     def get_min_dist(self, coords_list):
         if coords_list == []:
-            return None
+            return 9999999999
         min_dist = abs(self.start-coords_list[0][0])
         for coord in coords_list:
             min_dist = min(abs(self.start-coord[0]), abs(self.end-coord[0]),

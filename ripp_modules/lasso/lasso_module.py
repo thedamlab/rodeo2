@@ -44,9 +44,8 @@ Created on Mon Aug  7 20:40:56 2017
 import csv
 import os
 import re
-from ripp_modules.lasso.svm import svm_classify as svm
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
-from ripp_modules.Virtual_Ripp import Virtual_Ripp
+from ripp_modules.VirtualRipp import VirtualRipp
 
 peptide_type = "lasso"
 CUTOFF = 15
@@ -68,7 +67,7 @@ def write_csv_headers(output_dir):
     svm_writer.writerow(svm_headers)#Don't include accession_id, genus/species,
                                         #leader, core sequence, score, or svm classification
 
-class Ripp(Virtual_Ripp):
+class Ripp(VirtualRipp):
     def __init__(self, 
                  start, 
                  end, 

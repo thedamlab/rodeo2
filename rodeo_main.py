@@ -45,7 +45,7 @@ import config_parser
 import traceback
 import sys
 import socket
-from ripp_modules import Virtual_Ripp
+from ripp_modules import VirtualRipp
 from shutil import copyfile
 
 WEB_TOOL = False
@@ -327,7 +327,7 @@ def __main__():
                         not ("M" in ripp.sequence[-master_conf[peptide_type]['variables']['precursor_max']:]):
                         continue
                     list_of_rows.append(ripp.csv_columns)
-                Virtual_Ripp.ripp_write_rows(args.output_dir, peptide_type, record.cluster_accession, #cluster acc or query acc?
+                VirtualRipp.ripp_write_rows(args.output_dir, peptide_type, record.cluster_accession, #cluster acc or query acc?
                                        record.cluster_genus_species, list_of_rows)
             records.append(record)
             record = processed_records_q.get()    
@@ -339,7 +339,7 @@ def __main__():
         try:
             for peptide_type in peptide_types:
                 module = ripp_modules[peptide_type]
-                Virtual_Ripp.run_svm(output_dir, peptide_type, module.CUTOFF)
+                VirtualRipp.run_svm(output_dir, peptide_type, module.CUTOFF)
             My_Record.update_score_w_svm(output_dir, records)
         except KeyboardInterrupt:
             raise KeyboardInterrupt

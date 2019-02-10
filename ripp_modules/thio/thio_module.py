@@ -45,9 +45,8 @@ import csv
 import os
 import re
 import numpy as np
-from ripp_modules.thio.svm import svm_classify as svm
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
-from ripp_modules.Virtual_Ripp import Virtual_Ripp
+from ripp_modules.VirtualRipp import VirtualRipp
 
 peptide_type = "thio"
 CUTOFF = 20
@@ -67,37 +66,7 @@ def write_csv_headers(output_dir):
     features_writer.writerow(features_headers)
     svm_writer.writerow(svm_headers)
 
-def ripp_write_rows(output_dir, accession_id, genus_species, list_of_rows):
-    dir_prefix = output_dir + '/thio/'
-    global index
-    features_csv_file = open(dir_prefix + "temp_features.csv", 'a')
-    svm_csv_file = open("ripp_modules/thio/svm/fitting_set.csv", 'a')
-    features_writer = csv.writer(features_csv_file)
-    svm_writer = csv.writer(svm_csv_file)
-    for row in list_of_rows:
-        features_writer.writerow([accession_id, genus_species] + row[0:5] + ["valid_precursor_placeholder", index, ''] + row[5:])
-        svm_writer.writerow([index, ''] + row[5:]) #Don't include accession_id, leader, core sequence, start, end, or score
-        index += 1
-        
-def run_svm(output_dir):
-    svm.run_svm()
-    svm_output_reader = csv.reader(open("ripp_modules/thio/svm/fitting_results.csv"))
-    final_output_writer = csv.writer(open(output_dir + "/thio/thio_features.csv", 'w'))
-    features_reader = csv.reader(open(output_dir + "/thio/temp_features.csv"))
-    header_row = features_reader.next() #skip header
-    final_output_writer.writerow(header_row)
-    for row in features_reader:
-        svm_output = svm_output_reader.next()[1]
-        row[9] = svm_output
-        if int(svm_output) == 1:
-            row[6] = int(row[6]) + 10
-        if int(row[6]) >= CUTOFF: #CUTOFF
-            row[7] = 'Y'
-        else:
-            row[7] = 'N'
-        final_output_writer.writerow(row) 
-
-class Ripp(Virtual_Ripp):
+class Ripp(VirtualRipp):
     def __init__(self, 
                  start, 
                  end, 
@@ -276,7 +245,7 @@ class Ripp(Virtual_Ripp):
         else:
             tabs.append(0)
         #Avg heterocycle block length > 3
-        if avg_heteroblock_length != "nan" and avg_heteroblock_length > 3:
+        if type(avg_heteroblock_length) == float and avg_heteroblock_length > 3:
             score += 2
             tabs.append(1)
         else:
