@@ -1,11 +1,3 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Sep 16 23:19:54 2017
-
-@author: bryce
-"""
-
 #==============================================================================
 # Copyright (C) 2017 Bryce L. Kille
 # University of Illinois
@@ -36,15 +28,13 @@ Created on Sat Sep 16 23:19:54 2017
 # GNU Affero General Public License for more details.
 #==============================================================================
 
-import csv
 import datetime
-import My_Record
 from decimal import Decimal
 from rodeo_main import VERSION
 
 index = 0
 
-def write_header(html_file, master_conf):
+def write_header(html_file, master_conf, peptide_type):
     html_file.write("""
     <html>
     <head>
@@ -71,7 +61,7 @@ def write_header(html_file, master_conf):
      
     <script src='https://img.jgi.doe.gov//js/overlib.js'></script>
     <div class="container">
-    <h1 align="center" id="header">RODEO</h1>
+    <h1 align="center" id="header">RODEO2</h1>
     <div class="row">
          <div class="col-md-5">
             <h3>Parameters</h3>
@@ -149,24 +139,6 @@ def draw_CDS_arrow(main_html, cds, main_conf, sub_by, scale_factor):
     main_html.write("'" + cds.accession_id + " - " + pfamID + " : " + pfam_desc + "'")
     main_html.write(')" onMouseOut="return nd()"/>')
 
-#def draw_orf_arrow(main_html, orf, sub_by, scale_factor, index):
-#    fill_color = "white"
-#    start = orf.start
-#    end = orf.end
-#    arrow_wid = int((start - sub_by) * scale_factor)
-#    arrow_wid3 = int((end - sub_by) * scale_factor)
-#    if arrow_wid3 - arrow_wid < 40:
-#        arrow_wid2 = (arrow_wid + arrow_wid3) /2
-#    else:
-#        arrow_wid2 = arrow_wid3 - 20
-#    letter_x = (arrow_wid + arrow_wid3) / 2
-#    main_html.write('<polygon points="')
-#    main_html.write("%d,10 %d,40 %d,40 %d,50 %d,25 %d,0 %d,10 %d,10" % (arrow_wid, arrow_wid, arrow_wid2, arrow_wid2, arrow_wid3, arrow_wid2, arrow_wid2, arrow_wid))
-#    main_html.write('" style="fill:' + fill_color + ';stroke:black;stroke-width:.5" />' )
-#    main_html.write('<text x="%d"y="32" font-family="sans-serif" font-size="12px" text-anchor="middle" fill="grey">' % (letter_x))
-#    main_html.write(str(index))
-#    main_html.write("</text>")
-
 def draw_orf_diagram(main_html, record, main_conf):
     main_html.write('<h3>Architecture</h3>\n')
     main_html.write('<svg width="1060" height="53">')
@@ -177,12 +149,6 @@ def draw_orf_diagram(main_html, record, main_conf):
     for cds in record.CDSs:
         draw_CDS_arrow(main_html, cds, main_conf, sub_by, scale_factor)
     main_html.write('</svg>')
-#    main_html.write('<svg width="1060" height="53">')
-#    index = 0
-#    for orf in record.intergenic_orfs:
-#        index += 1
-#        draw_orf_arrow(main_html, orf, sub_by, scale_factor, index)
-#    main_html.write('</svg>')
     bar_length = scale_factor * 1000
     bar_legx = bar_length + 5
     main_html.write('<svg width="500" height="23">')
@@ -243,7 +209,6 @@ def draw_cds_table(main_html, record):
                 main_html.write("<td><a href='http://www.jcvi.org/cgi-bin/tigrfams/HmmReportPage.cgi?acc=%s'>%s</a>" % (cds.pfam_descr_list[0][0], cds.pfam_descr_list[0][0]))
             else:
                 main_html.write("<td>%s" % (cds.pfam_descr_list[0][0]))
-#            main_html.write("-%s"%(cds.pfam_descr_list[0][3]))
             n = 5
             for pfamid, _, _, _, in cds.pfam_descr_list[1:n]:
                 if pfamid[:2] == "PF":
@@ -328,7 +293,7 @@ def write_record(main_html, master_conf, record):
     main_html.write('<a href="#header"><small><small>back to top</small></small></a></h2>') #TODO keep for single?
     main_html.write('<h2 id="num{}"><a href="#num{}"><small><small>previous</small></small></a><small><small>\t\t\t\t\t-\t\t\t\t\t</small></small><a href="#num{}"><small><small>next</small></small></a></h2>'.format(index, index-1, index+1)) 
     index += 1
-    main_html.write('<p></p>') # TODO why
+    main_html.write('<p></p>') 
     draw_orf_diagram(main_html, record, master_conf['general'])
     main_html.write('<p></p>') 
     main_html.write('<a href="https://www.ncbi.nlm.nih.gov/nuccore/%s">Link to nucleotide sequence</a>' % (record.cluster_accession))

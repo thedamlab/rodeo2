@@ -62,7 +62,6 @@ processes = []
 
 def __main__():
     import nulltype_module
-    import main_html_generator
     import ripp_html_generator
     from record_processing import fill_request_queue, ErrorReport
     import My_Record
@@ -225,8 +224,8 @@ def __main__():
     module.main_write_headers(output_dir)
     module.co_occur_write_headers(output_dir)
     main_html = open(output_dir + "/main_results.html", 'w')
-    main_html_generator.write_header(main_html, master_conf)
-    main_html_generator.write_table_of_contents(main_html, queries)
+    ripp_html_generator.write_header(main_html, master_conf, 'general')
+    ripp_html_generator.write_table_of_contents(main_html, queries)
     ripp_modules = {}
     ripp_htmls = {}
     records = []
@@ -286,7 +285,7 @@ def __main__():
             logger.info("Writing output for query #%d.\t%s" % (query_no, query))
             if type(record) == ErrorReport:
                 logger.error(("For %s:\t" + record.error_message) % (record.query))
-                main_html_generator.write_failed_query(main_html, record.query, record.error_message)
+                ripp_html_generator.write_failed_query(main_html, record.query, record.error_message)
                 for peptide_type in peptide_types:
                     ripp_html_generator.write_failed_query(ripp_htmls[peptide_type], record.query, record.error_message)
                 record = processed_records_q.get()
@@ -312,7 +311,7 @@ def __main__():
                     row += [pfam_acc, name, desc, e_val]
                 module.co_occur_write_row(output_dir, row)
                 
-            main_html_generator.write_record(main_html, master_conf, record)
+            ripp_html_generator.write_record(main_html, master_conf, record, 'general')
             
             for peptide_type in args.peptide_types:
                 list_of_rows = []
