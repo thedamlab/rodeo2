@@ -50,17 +50,18 @@
 
 import numpy as np
 import csv
+import sys
 
 from sklearn import svm
 from sklearn import preprocessing
 from sklearn.model_selection import cross_val_score
 from sklearn import metrics
 
+from SvmClassify import SVMRunner
+
 # CONFIGURATION OPTIONS
 ''' change these as desired '''
 
-input_training_file = 'grasp_training_set.csv'         # the CSV containing the training set
-output_filename = 'optimization_results.csv'     # output filename; this will be a CSV with the parameters and accuracy
 
 primary_key_column = 0;            # the column of the CSV that contains the primary key (identifier) for each record
 classification_column = 1;         # the column of the CSV that contains the classification for each record
@@ -81,55 +82,16 @@ gamma_options = np.logspace(gamma_min,gamma_max,num=gamma_steps,base=gamma_base,
 class_weight_option = 'balanced'
 folds_validation = [3, 5]
 
-def parse_CSV_to_dataset(csv_filename, dataset_type):
-    '''Parse an input CSV into a data set
+
     
-       Inputs:
-            csv_filename            name of CSV file to be parsed
-            dataset_type            either 'training' or 'fitting'
-    '''
-    dataset = []
-    with open(csv_filename, 'rb') as csvfile:
-      csv_read = csv.reader(csvfile, delimiter=',', quotechar='"')
-      if csv_has_header == True:
-        next(csv_read,None)
-        
-      if classification_column < primary_key_column:
-        class_first = 1
-        pk_first = 0
-      else:
-        pk_first = 1
-        class_first = 0 
-        
-      for row in csv_read:
-        temp_entry = []
-        temp_entry.append(row.pop(primary_key_column))
-        temp_entry.append(row.pop(classification_column - pk_first))
-        for c in row:
-          temp_entry.append(float(c))
-        # remove all unclassified features if training
-        if dataset_type == 'training':
-          if int(temp_entry[1]) == 1 or int(temp_entry[1]) == 0:
-            temp_entry[1] = int(temp_entry[1])
-            dataset.append(temp_entry)
-        if dataset_type == 'fitting':
-          dataset.append(temp_entry)
-    return dataset
-    
-def write_to_csv(result_list, output_file):
-    with open(output_filename, 'wb') as csvfile:
-      csv_write = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-      csv_write.writerow(['kernel','fold cross-validation','C value','gamma value','class_weight','precision','recall','f1','score'])
-      for row in result_list:
-        csv_write.writerow(row)
-    return
     
 def main():
-
+    input_training_file = sys.argv[1]         # the CSV containing the training set
     # parse data
     
-    print "Importing training and fitting data ..."
-    training_data_unrefined = parse_CSV_to_dataset(input_training_file, 'training')
+    print("Importing training and fitting data ...")
+    runner = SVMRunner("default")
+    training_data_unrefined = runner.parse_CSV_to_dataset(input_training_file, 'training')
     
     primary_key_list = []
 
@@ -140,8 +102,8 @@ def main():
         training_data_classifications.append(entry.pop(1))
         entry.pop(0)
         training_data_just_features.append(entry)  
-    print "  (done)"
-    print "Initiating learning and fitting"
+    print("(done)")
+    print("Initiating learning and fitting")
     
     # Scaling -- this ensures standardization of model and target data
     training_data_refined = preprocessing.scale(training_data_just_features)
@@ -162,9 +124,8 @@ def main():
                 print('Using %d fold, %.4E C, %.4E gamma: %0.4f precision, %0.4f recall, %0.4f f1, %0.4f score' % (fold, C_option, gamma_option, prec.mean(), recd.mean(), f1we.mean(), scor))
                 test_results.append([kernel_option,fold,C_option,gamma_option,class_weight_option,prec.mean(),recd.mean(),f1we.mean(),scor])
     
-    # Output results to file
-    write_to_csv(test_results, output_filename)
-    print " ... Done"
+    best = max(test_results, key=lambda x: x[-2])
+    print("C: {}, G: {}, f1: {}".format(best[2], best[3], best[-2]))
     
     return
 
