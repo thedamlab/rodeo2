@@ -17,6 +17,8 @@ Lastly, I have one important note. IF YOU WANT TO KILL RODEO/END THE PROCESS, US
     * You can just copy the hmm files from RODEO 1.0 (Perl version) into the folder instead if you'd like.
     * If you are worried about space, you can edit the PFAM_DIR variable in the general section of the `confs/default.conf` file.
 
+Note: If you are a MacOS user, if you are getting a "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed..." when running RODEO, please go to your applications folder and go to your Python 3 folder and run the "Install_Certificates.command" to fix this issue.
+
 There may be things missing. Please let me know.
 
 ## Usage
