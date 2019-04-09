@@ -1,11 +1,3 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Aug  7 20:34:38 2017
-
-@author: bryce
-"""
-
 #==============================================================================
 # Copyright (C) 2017 Bryce L. Kille
 # University of Illinois
@@ -47,6 +39,7 @@ import sys
 import socket
 from ripp_modules import VirtualRipp
 from shutil import copyfile
+import urllib
 
 WEB_TOOL = False
 if socket.gethostname() == "rodeo.scs.illinois.edu":
@@ -54,7 +47,7 @@ if socket.gethostname() == "rodeo.scs.illinois.edu":
 if WEB_TOOL:
     RODEO_DIR = "/home/ubuntu/website/go/rodeo2/"
     os.chdir(RODEO_DIR)
-VERSION = "2.1.3"
+VERSION = "2.1.4"
 #VERBOSITY = logging.DEBUG
 VERBOSITY = logging.DEBUG
 QUEUE_CAP = "END_OF_QUEUE"
@@ -110,10 +103,10 @@ def __main__():
                         help="Only to use when running as a web tool")
     
     args, _ = parser.parse_known_args()
-#==============================================================================
-#     Set up logger
-#==============================================================================
     
+#==============================================================================
+#   Set up logger
+#==============================================================================
     logger = logging.getLogger("rodeo_main")
     logger.setLevel(VERBOSITY)
     # create console handler and set level to debug
@@ -128,7 +121,24 @@ def __main__():
     
     # add ch to logger
     logger.addHandler(ch)
-    
+
+# =============================================================================
+#   Check for updates
+# =============================================================================
+    req = urllib.request.Request('http://update.ripprodeo.org')
+    req.add_header('user-agent', VERSION)
+    mostRecentVersion = urllib.request.urlopen(req, timeout=2.5).read()
+    if mostRecentVersion.decode().strip() != VERSION:
+        logger.info("""
+                    
+        
+                    You are currently running RODEO2 version {}.
+                    The most recent stable version is {}. 
+                    To update your repository, simply run `git pull`
+                    
+                    
+                    """.format(VERSION, mostRecentVersion.decode().strip())) 
+        
 #==============================================================================
 #   Handle configureations
 #==============================================================================
