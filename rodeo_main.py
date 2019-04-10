@@ -37,7 +37,6 @@ import config_parser
 import traceback
 import sys
 import socket
-from ripp_modules import VirtualRipp
 from shutil import copyfile
 import urllib
 
@@ -55,6 +54,7 @@ processes = []
 
 def __main__():
     import nulltype_module
+    from ripp_modules import VirtualRipp
     import ripp_html_generator
     from record_processing import fill_request_queue, ErrorReport
     import My_Record
