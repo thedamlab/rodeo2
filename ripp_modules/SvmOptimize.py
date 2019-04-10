@@ -1,4 +1,7 @@
-#! /usr/bin/env python
+#==============================================================================
+# Copyright (C) 2017 Bryce L. Kille
+# University of Illinois
+# Department of Chemistry
 #
 # Copyright (C) 2015 Jonathan I. Tietz
 # University of Illinois

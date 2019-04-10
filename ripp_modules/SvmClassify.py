@@ -1,4 +1,7 @@
-#! /usr/bin/env python
+#==============================================================================
+# Copyright (C) 2017 Bryce L. Kille
+# University of Illinois
+# Department of Chemistry
 #
 # Copyright (C) 2015 Jonathan I. Tietz
 # University of Illinois
@@ -84,11 +87,11 @@ class SVMRunner(object):
             self.C_option = 283117
             self.gamma_option = 1E-9
         elif peptide_type == 'lanthi':
-            self.C_option = 25
-            self.gamma_option = 2.75E-06
+            self.C_option = 48205.77
+            self.gamma_option = 1E-9
         elif peptide_type == 'sacti':
-            self.C_option = 25
-            self.gamma_option = 2.75E-06
+            self.C_option = 9765625
+            self.gamma_option = 1E-9
         else:
             # default kernel values
             self.C_option = 2.8E10
