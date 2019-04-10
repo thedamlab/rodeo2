@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #==============================================================================
 # Copyright (C) 2017 Bryce L. Kille
 # University of Illinois
