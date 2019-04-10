@@ -38,7 +38,10 @@ import traceback
 import sys
 import socket
 from shutil import copyfile
-import urllib
+try:
+    from urllib.request import Request, urlopen  # Python 3
+except ImportError:
+    from urllib2 import Request, urlopen  # Python 2
 
 WEB_TOOL = False
 if socket.gethostname() == "rodeo.scs.illinois.edu":
@@ -125,9 +128,9 @@ def __main__():
 # =============================================================================
 #   Check for updates
 # =============================================================================
-    req = urllib.request.Request('http://update.ripprodeo.org')
+    req = Request('http://update.ripprodeo.org')
     req.add_header('user-agent', VERSION)
-    mostRecentVersion = urllib.request.urlopen(req, timeout=2.5).read()
+    mostRecentVersion = urlopen(req, timeout=2.5).read()
     if mostRecentVersion.decode().strip() != VERSION:
         logger.info("""
                     
