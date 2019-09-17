@@ -1,11 +1,4 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Aug  7 20:34:38 2017
-
-@author: bryce
-"""
-
 #==============================================================================
 # Copyright (C) 2017 Bryce L. Kille
 # University of Illinois
@@ -46,6 +39,10 @@ import traceback
 import sys
 import socket
 from shutil import copyfile
+try:
+    from urllib.request import Request, urlopen  # Python 3
+except ImportError:
+    from urllib2 import Request, urlopen  # Python 2
 
 WEB_TOOL = False
 if socket.gethostname() == "rodeo.scs.illinois.edu":
@@ -53,15 +50,14 @@ if socket.gethostname() == "rodeo.scs.illinois.edu":
 if WEB_TOOL:
     RODEO_DIR = "/home/ubuntu/website/go/rodeo2/"
     os.chdir(RODEO_DIR)
-VERSION = "2.1.3"
-#VERBOSITY = logging.DEBUG
+VERSION = "2.1.4"
 VERBOSITY = logging.INFO
 QUEUE_CAP = "END_OF_QUEUE"
 processes = []
 
 def __main__():
     import nulltype_module
-    import main_html_generator
+    from ripp_modules import VirtualRipp
     import ripp_html_generator
     from record_processing import fill_request_queue, ErrorReport
     import My_Record
@@ -73,7 +69,7 @@ def __main__():
 #==============================================================================
     parser = argparse.ArgumentParser("Main RODEO app.")
     parser.add_argument('query', type=str,
-                        help='Accession number or .txt file with a list of accessions on each line') #accession # or gi
+                        help='Accession number, genbank file or .txt file with an accession or .gbk query on each line') #accession # or gi
     parser.add_argument('-out', '--output_dir', type=str,
                         help='Name of output folder')
     parser.add_argument('-c', '--conf_file', nargs='*', default=[], 
@@ -110,10 +106,10 @@ def __main__():
                         help="Only to use when running as a web tool")
     
     args, _ = parser.parse_known_args()
-#==============================================================================
-#     Set up logger
-#==============================================================================
     
+#==============================================================================
+#   Set up logger
+#==============================================================================
     logger = logging.getLogger("rodeo_main")
     logger.setLevel(VERBOSITY)
     # create console handler and set level to debug
@@ -128,7 +124,24 @@ def __main__():
     
     # add ch to logger
     logger.addHandler(ch)
-    
+
+# =============================================================================
+#   Check for updates
+# =============================================================================
+    req = Request('http://update.ripprodeo.org')
+    req.add_header('user-agent', VERSION)
+    mostRecentVersion = urlopen(req, timeout=2.5).read()
+    if mostRecentVersion.decode().strip() != VERSION:
+        logger.info("""
+                    
+        
+                    You are currently running RODEO2 version {}.
+                    The most recent stable version is {}. 
+                    To update your repository, simply run `git pull`
+                    
+                    
+                    """.format(VERSION, mostRecentVersion.decode().strip())) 
+        
 #==============================================================================
 #   Handle configureations
 #==============================================================================
@@ -148,14 +161,6 @@ def __main__():
     if WEB_TOOL:
         general_conf['variables']['pfam_dir'] = "/home/ubuntu/website/go/rodeo2/hmm_dir/Pfam-A.hmm"
         
-    def pretty(d, indent=0):
-        for key, value in d.items():
-            print('\t' * indent + str(key))
-            if isinstance(value, dict):
-                pretty(value, indent+1)
-            else:
-                print('\t' * (indent+1) + str(value))
-#    pretty(general_conf)
 #==============================================================================
 #   Set up output directory
 #==============================================================================
@@ -186,6 +191,7 @@ def __main__():
         os.mkdir("tmp_files")
     except OSError:
         pass
+    
 #==============================================================================
 #   Check arguments        
 #==============================================================================
@@ -196,6 +202,7 @@ def __main__():
     if 'sacti' in args.peptide_types or 'lanthi' in args.peptide_types:
         if not any ("tigr" in hmm_name.lower() for hmm_name in args.custom_hmm):
             logger.warn("Lanthi and/or sacti heuristics require TIGRFAM hmm. Make sure its location is specified with the -hmm or --custom_hmm flag.")
+            
 #==============================================================================
 #   Set up queries/read query files   
 #==============================================================================
@@ -224,8 +231,8 @@ def __main__():
     module.main_write_headers(output_dir)
     module.co_occur_write_headers(output_dir)
     main_html = open(output_dir + "/main_results.html", 'w')
-    main_html_generator.write_header(main_html, master_conf)
-    main_html_generator.write_table_of_contents(main_html, queries)
+    ripp_html_generator.write_header(main_html, master_conf, 'general')
+    ripp_html_generator.write_table_of_contents(main_html, queries)
     ripp_modules = {}
     ripp_htmls = {}
     records = []
@@ -255,8 +262,8 @@ def __main__():
 #==============================================================================
     query_no = 0
     m = multiprocessing.Manager()
-    processed_records_q = m.Queue(max(args.num_cores, 6))
-    unprocessed_records_q = m.Queue(max(args.num_cores, 6))
+    processed_records_q = m.Queue(max(args.num_cores, 60))
+    unprocessed_records_q = m.Queue(max(args.num_cores, 60))
     
     #Nest all in try in case of KeyboardInterrupt
     try:
@@ -267,6 +274,7 @@ def __main__():
         request_proc.start()
         record = processed_records_q.get()
         queue_cap_count = 0
+        
 #==============================================================================
 #       Main logic loop. Pull until you've pulled as many queue caps as there 
 #       are worker processes.
@@ -283,12 +291,13 @@ def __main__():
             logger.info("Writing output for query #%d.\t%s" % (query_no, query))
             if type(record) == ErrorReport:
                 logger.error(("For %s:\t" + record.error_message) % (record.query))
-                main_html_generator.write_failed_query(main_html, record.query, record.error_message)
+                ripp_html_generator.write_failed_query(main_html, record.query, record.error_message)
                 for peptide_type in peptide_types:
                     ripp_html_generator.write_failed_query(ripp_htmls[peptide_type], record.query, record.error_message)
                 record = processed_records_q.get()
                 continue
-    
+            
+            # Write unclassified ripps
             module = nulltype_module
             for orf in record.intergenic_orfs:
                 if orf.start < orf.end:
@@ -298,6 +307,8 @@ def __main__():
                 row = [query, record.cluster_genus_species, record.cluster_accession, 
                        orf.start, orf.end, direction, orf.sequence]
                 module.main_write_row(output_dir, row)
+                
+            # Write unclassified CDSs
             for cds in record.CDSs:
                 if cds.start < cds.end:
                     direction = "+"
@@ -309,34 +320,29 @@ def __main__():
                     row += [pfam_acc, name, desc, e_val]
                 module.co_occur_write_row(output_dir, row)
                 
-            main_html_generator.write_record(main_html, master_conf, record)
+            ripp_html_generator.write_record(main_html, master_conf, record, 'general')
             
+            # Write type-specific ripps
             for peptide_type in args.peptide_types:
                 list_of_rows = []
                 module = ripp_modules[peptide_type]
                 for ripp in record.ripps[peptide_type]:
-#                    if len(ripp.sequence) < master_conf[peptide_type]['variables']['precursor_min']:
-#                        continue
-#                    elif len(orf.sequence)  > master_conf[peptide_type]['variables']['precursor_max']:
-#                        if not "M" in orf.sequence[2:]:
-#                            continue
-                    if not master_conf[peptide_type]['variables']['precursor_min'] <= len(ripp.sequence) <= master_conf[peptide_type]['variables']['precursor_max'] and \
-                        not ("M" in ripp.sequence[-master_conf[peptide_type]['variables']['precursor_max']:]):
-                        continue
-                    list_of_rows.append(ripp.csv_columns)
-                module.ripp_write_rows(args.output_dir, record.cluster_accession, #cluster acc or query acc?
+                    if master_conf[peptide_type]['variables']['precursor_min'] <= len(ripp.sequence) <= master_conf[peptide_type]['variables']['precursor_max'] \
+                        or ("M" in ripp.sequence[-master_conf[peptide_type]['variables']['precursor_max']:]):
+                            
+                        list_of_rows.append(ripp.csv_columns)
+                VirtualRipp.ripp_write_rows(args.output_dir, peptide_type, record.query_accession_id, #cluster acc or query acc?
                                        record.cluster_genus_species, list_of_rows)
             records.append(record)
             record = processed_records_q.get()    
-            #END MAIN LOOP
+        # END MAIN LOOP
         main_html.write("</html>")
         
-        #Update score w SVM.
-        
+        # Update score w SVM.
         try:
             for peptide_type in peptide_types:
                 module = ripp_modules[peptide_type]
-                module.run_svm(output_dir)
+                VirtualRipp.run_svm(output_dir, peptide_type, module.CUTOFF)
             My_Record.update_score_w_svm(output_dir, records)
         except KeyboardInterrupt:
             raise KeyboardInterrupt
@@ -344,6 +350,8 @@ def __main__():
             logger.error("No valid results. Input may be invalid or Genbank may not be responding")
         except ValueError as e:
             logger.critical("Value error when finalizing results. This most likely means that no results were obtained and that all queries failed.")
+            logger.error(e)
+            traceback.print_exc(file=sys.stdout)
         except Exception as e:
             logger.error("Error running SVM")
             logger.error(e)
@@ -359,7 +367,7 @@ def __main__():
                 logger.debug("Temp feature file appears to be missing...")
          
         
-    except KeyboardInterrupt as e:
+    except KeyboardInterrupt:
         logger.critical("Keyboard interrupt recieved. Shutting down RODEO.")
         request_proc.join(5)
         for process in processes:
