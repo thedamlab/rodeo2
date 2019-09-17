@@ -44,9 +44,7 @@ try:
 except ImportError:
     from urllib2 import Request, urlopen  # Python 2
 
-WEB_TOOL = False
-if socket.gethostname() == "rodeo.scs.illinois.edu":
-    WEB_TOOL = True
+WEB_TOOL = (socket.gethostname() == "rodeo.scs.illinois.edu")
 if WEB_TOOL:
     RODEO_DIR = "/home/ubuntu/website/go/rodeo2/"
     os.chdir(RODEO_DIR)
@@ -300,22 +298,14 @@ def __main__():
             # Write unclassified ripps
             module = nulltype_module
             for orf in record.intergenic_orfs:
-                if orf.start < orf.end:
-                    direction = "+"
-                else:
-                    direction = "-"
                 row = [query, record.cluster_genus_species, record.cluster_accession, 
-                       orf.start, orf.end, direction, orf.sequence]
+                       orf.start, orf.end, orf.direction, orf.sequence]
                 module.main_write_row(output_dir, row)
                 
             # Write unclassified CDSs
             for cds in record.CDSs:
-                if cds.start < cds.end:
-                    direction = "+"
-                else:
-                    direction = "-"
                 row = [query, record.cluster_genus_species, record.cluster_accession,
-                       cds.accession_id, cds.start, cds.end, direction]
+                       cds.accession_id, cds.start, cds.end, cds.direction]
                 for pfam_acc, desc, e_val, name in cds.pfam_descr_list:
                     row += [pfam_acc, name, desc, e_val]
                 module.co_occur_write_row(output_dir, row)
