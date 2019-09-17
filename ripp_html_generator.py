@@ -1,11 +1,3 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Sep 16 23:19:54 2017
-
-@author: bryce
-"""
-
 #==============================================================================
 # Copyright (C) 2017 Bryce L. Kille
 # University of Illinois
@@ -35,10 +27,7 @@ Created on Sat Sep 16 23:19:54 2017
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #==============================================================================
-
-import csv
 import datetime
-import My_Record
 from decimal import Decimal
 from rodeo_main import VERSION
 
@@ -101,9 +90,10 @@ def write_legend(main_html, conf, peptide_type):
         main_html.write("<td><div class='square' style='outline-color:black;background-color:{}; color:grey;'>{}</div></td>\n".format(conf[peptide_type]['pfam_colors'][pfam], ""))
         main_html.write("<td>{}</td>\n".format(pfam))
         main_html.write('</tr>\n')
-    main_html.write("<td><div class='square' style='outline-color:black;background-color:{}; color:grey;'>{}</div></td>\n".format("black", ""))
-    main_html.write("<td>{}</td>\n".format("predicted " + peptide_type +" peptide"))
-    main_html.write('</tr>\n')
+    if peptide_type != 'general':
+        main_html.write("<td><div class='square' style='outline-color:black;background-color:{}; color:grey;'>{}</div></td>\n".format("black", ""))
+        main_html.write("<td>{}</td>\n".format("predicted " + peptide_type +" peptide"))
+        main_html.write('</tr>\n')
     main_html.write("""</table>
                         </div></div>
                         </div>""")
@@ -185,13 +175,17 @@ def draw_orf_diagram(main_html, peptide_conf, record, peptide_type):
     main_html.write('</svg>')
     main_html.write('<svg width="1060" height="53">')
     index = 0
-    for ripp in record.ripps[peptide_type]:
-	index += 1
-        if ripp.score <= ripp.CUTOFF/4.0:
-            continue
-        if peptide_conf['variables']['precursor_min'] <= len(ripp.sequence) <= peptide_conf['variables']['precursor_max'] or \
-                        ("M" in ripp.sequence[-peptide_conf['variables']['precursor_max']:]):
-                        draw_orf_arrow(main_html, ripp, sub_by, scale_factor, index)
+    if peptide_type != 'general':
+        for ripp in record.ripps[peptide_type]:
+            if ripp.score <= 0:
+                continue
+            index += 1
+            if ripp.score <= ripp.CUTOFF/4.0:
+                continue
+            if peptide_conf['variables']['precursor_min'] <= len(ripp.sequence) <= peptide_conf['variables']['precursor_max'] or \
+                            ("M" in ripp.sequence[-peptide_conf['variables']['precursor_max']:]):
+                            draw_orf_arrow(main_html, ripp, sub_by, scale_factor, index)
+    
     main_html.write('</svg>')
     bar_length = scale_factor * 1000
     bar_legx = bar_length + 5
@@ -290,7 +284,7 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
               <tbody>
                 <tr>
                 <th scope="col">index</th>""")
-    if peptide_type in ["lasso", "lanthi", "sacti", "thio", "grasp"]:
+    if peptide_type in ["lasso", "lanthi", "sacti", "thio"]:
         main_html.write("""
               <th scope="col">leader</th>
               <th scope="col">core</th>""")
@@ -300,33 +294,50 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
     main_html.write("""
       <th scope="col">start</th>
       <th scope="col">end</th>
-      <th scope="col">dir</th>
-      <th scope="col">score</th>
-    </tr>""")
+      <th scope="col">dir</th>""")
+    if peptide_type != 'general':
+      main_html.write("""<th scope="col">score</th>""")
+    main_html.write("""\n</tr>""")
+    
     index = 1
-    for ripp in record.ripps[peptide_type]:
-        if not master_conf[peptide_type]['variables']['precursor_min'] <= len(ripp.sequence) <= master_conf[peptide_type]['variables']['precursor_max'] and \
-                        not ("M" in ripp.sequence[-master_conf[peptide_type]['variables']['precursor_max']:]):
-                        continue
-        main_html.write("<tr>\n")
-        main_html.write("<td>%d</td>" % (index))
-        if print_precursors:
-            if peptide_type in ["lasso", "lanthi", "sacti", "thio", "grasp"]:
-                main_html.write("<td>%s</td>" % (ripp.leader))
-                main_html.write("<td>%s</td>" % (ripp.core))
-            else:
-                main_html.write("<td>%s</td>" % (ripp.sequence))
-        main_html.write("<td>%d</td>" % (ripp.start))
-        main_html.write("<td>%d</td>" % (ripp.end))
-        main_html.write("<td>%s</td>" % (ripp.direction))
-        main_html.write("<td>%d</td>" % (ripp.score))
-        main_html.write("</tr>\n")
-        index += 1
+    if peptide_type == 'general':
+        for orf in record.intergenic_orfs:
+            main_html.write("<tr>\n")
+            main_html.write("<td>%d</td>" % (index))
+            main_html.write("<td>%s</td>" % (orf.sequence))
+            main_html.write("<td>%d</td>" % (orf.start))
+            main_html.write("<td>%d</td>" % (orf.end))
+            main_html.write("<td>%s</td>" % (orf.direction))
+            main_html.write("</tr>\n")
+            index += 1
+    elif peptide_type in ["lasso", "lanthi", "sacti", "thio"]:
+        for ripp in record.ripps[peptide_type]:
+            if ripp.score <= 0:
+                continue
+            if not master_conf[peptide_type]['variables']['precursor_min'] <= len(ripp.sequence) <= master_conf[peptide_type]['variables']['precursor_max'] and \
+                            not ("M" in ripp.sequence[-master_conf[peptide_type]['variables']['precursor_max']:]):
+                            continue
+            main_html.write("<tr>\n")
+            main_html.write("<td>%d</td>" % (index))
+            if print_precursors:
+                if peptide_type in ["lasso", "lanthi", "sacti", "thio"]:
+                    main_html.write("<td>%s</td>" % (ripp.leader))
+                    main_html.write("<td>%s</td>" % (ripp.core))
+                else:
+                    main_html.write("<td>%s</td>" % (ripp.sequence))
+            main_html.write("<td>%d</td>" % (ripp.start))
+            main_html.write("<td>%d</td>" % (ripp.end))
+            main_html.write("<td>%s</td>" % (ripp.direction))
+            main_html.write("<td>%d</td>" % (ripp.score))
+            main_html.write("</tr>\n")
+            index += 1
     main_html.write("</tbody></table>")
     
         
 
 def write_table_of_contents(main_html, queries):
+    global index
+    index = 0
     main_html.write("<h3> Input Queries (click to navigate)</h3>")
     main_html.write('<ul style="list-style-type:none">')
     for query in queries:
