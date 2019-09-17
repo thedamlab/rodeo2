@@ -33,6 +33,7 @@ import csv
 import os
 import re
 import tempfile
+import random
 import subprocess
 import importlib
 import logging
@@ -113,6 +114,51 @@ def run_svm(output_dir, peptide_type, cutoff):
         else:
             row[7] = 'N'
         final_output_writer.writerow(row)        
+
+def get_radar_score(sequence):
+    #TODO change to temp file
+        pid = str(os.getpid())
+        try:
+            with open("tmp_files/" + pid + "RADAR.fasta", 'w+') as tfile:
+                tfile.write(">query\n%s" % (sequence))
+            if WEB_TOOL:
+                raise NotImplementedError
+            else:
+                command = ["radar.py -a tmp_files/" + pid + "RADAR.fasta"]
+            try:
+                out, err, retcode = execute(command)
+            except OSError:
+                logger.error("Could not run RADAR")
+                try:
+                    os.remove(pid+"RADAR.fasta")
+                except OSError:
+                    pass
+                return ""
+            if retcode != 0:
+                logger.error('RADAR returned %d: %r', retcode,
+                                err)
+                return []
+            try:
+                os.remove("tmp_files/" + pid + "RADAR.fasta")
+            except OSError:
+                    pass
+        except KeyboardInterrupt:
+            try:
+                os.remove("tmp_files/" + pid + "RADAR.fasta")
+                return
+            except OSError:
+                pass
+        # RADAR output is inconsistent. Most of the time it will print
+        # two lines of "no results", but other times just 1...
+        if (len(out.decode("utf-8").split('\n')) < 4): 
+            return 0
+        results = out.decode("utf-8").split('\n')[3].split('|')
+        if len(results) > 1:
+            print(out.decode("utf-8"))
+            return int(results[0])
+        else:
+            return 0
+
         
 class VirtualRipp(object):
     def __init__(self,
@@ -204,11 +250,11 @@ class VirtualRipp(object):
                 return
             except OSError:
                 pass
-        return str(out)
+        return out.decode("utf-8")
     
     def get_min_dist(self, coords_list):
         if coords_list == []:
-            return 9999999999
+            return 66666
         min_dist = abs(self.start-coords_list[0][0])
         for coord in coords_list:
             min_dist = min(abs(self.start-coord[0]), abs(self.end-coord[0]),
