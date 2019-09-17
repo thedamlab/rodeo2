@@ -42,6 +42,7 @@ from ripp_modules.SvmClassify import SVMRunner
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from ripp_modules.VirtualRipp import VirtualRipp
 import hmmer_utils
+from collections import defaultdict
 
 peptide_type = "grasp"
 CUTOFF = 11
@@ -52,7 +53,7 @@ def write_csv_headers(output_dir):
     dir_prefix = output_dir + '/grasp/'
     if not os.path.exists(dir_prefix):
         os.makedirs(dir_prefix)
-    svm_headers = 'Precursor Index,classification, <600 from MdnB C or D, <300 from MdnB C or D, >2000 from MdnB C or D, 2nd half contains >8% Asp residue (acceptor site), 2n half of precursor contains >7% Thr residues (donor site), Full length precursor contains >7% Lys residues (donor site), Second half of precursor contains >7% Pro residues, Precursor contains >0 Cys residues, Second half of precursor contains <3 acceptor residues (Asp + Glu), Second half of precursor contains <3 donor residues (Ser + Thr + Lys), Second half of precursor contains more donor residues than acceptor residues, % acceptor residues in second half of precursor > % acceptor residues in first half of precursor,  % acceptor residues (Asp + Glu) in second half of precursor >13%, % donor residues (Ser + Thr + Lys) in second half of precursor >18%, Precursor ends with Val or Leu, Precursor ends with Tyr or Ser, First half of the precursor contains a “PFxL” motif, Precursor and the ATP-grasp protein (MdnC homolog) are encoded on same strand, Gene cluster contains one of the following: PF0005 PF06472 PF00664 PF03412 (ABC transporters that co-occur frequently), Gene cluster contains one of the following: PF13302 PF00583 PF13523 (acetyltransferases that co-occur frequently), A local gene product hits TIGR04188 (methyltransferase), Precursor hits PF12559 (serine endopeptidase inhibitor) or TIGR04186 (GRASP_targ), Precursor his PF14404 (strep_pep) PF14406 (bacteroid_pep) PF14407 (frankia_pep) PF14408 (actino_pep) or PF14409 (herpeto_pep), Acceptor compressionC index > Donor compressionC index*, Calculated charge at pH7 of second half of precursor < charge of first half of precursor, Precursor peptide contains sequence motif #1 “PFFAxxL”, Precursor peptide contains sequence motif #2 “TxKxPSD”, Minimum distance from MdnB C D homologs  (nt), Precursor length, Estimated first half charge, Estimated second half charge, Estimated precursor charge,Absolute value of second half charge,Absolute value of first half charge,Absolute value of precursor charge,FIRST HALF A,R,D,N,C,Q,E,G,H,I,L,K,M,F,P,S,T,W,Y,V,Aromatics,Neg charged,Pos charged,Charged,Aliphatic,Hydroxyl,SECOND HALF A,R,D,N,C,Q,E,G,H,I,L,K,M,F,P,S,T,W,Y,V,Aromatics,Neg charged,Pos charged,Charged,Aliphatic,Hydroxyl,PRECURSOR A,R,D,N,C,Q,E,G,H,I,L,K,M,F,P,S,T,W,Y,V, LAST RESIDUE A,R,D,N,C,Q,E,G,H,I,L,K,M,F,P,S,T,W,Y,V,Aromatics,Neg charged,Pos charged,Charged,Aliphatic,Hydroxyl, acceptor compression index, donor compression index, total motifs hit, meme1,meme2,meme3,meme4,meme5,meme6,meme7,meme8,meme9,meme10,meme11,meme12,meme13,meme14,meme15, sum of meme scores, no motifs present '
+    svm_headers = 'Precursor Index,classification, <1100 from MdnB C or D or TgnB or PsnB homologs, <300 from MdnB C or D or TgnB or PsnB homologs, >2000 from MdnB C or D or TgnB or PsnB homologs, 2nd half contains >8% Asp residue (acceptor site), 2n half of precursor contains >7% Thr residues (donor site), Full length precursor contains >7% Lys residues (donor site), Second half of precursor contains >7% Pro residues, Precursor contains >0 Cys residues, Second half of precursor contains <3 acceptor residues (Asp + Glu), Second half of precursor contains <3 donor residues (Ser + Thr + Lys), Second half of precursor contains more donor residues than acceptor residues, % acceptor residues in second half of precursor > % acceptor residues in first half of precursor,  % acceptor residues (Asp + Glu) in second half of precursor >13%, % donor residues (Ser + Thr + Lys) in second half of precursor >18%, Precursor ends with Val or Leu, Precursor ends with Tyr or Ser, First half of the precursor contains a “PFxL” motif, Precursor and the ATP-grasp protein (MdnC homolog) are encoded on same strand, Gene cluster contains one of the following: PF0005 PF06472 PF00664 PF03412 TIGR03796 TIGR01846 TIGR03797 TIGR00954 TIGR02203 TIGR02204 TIGR03375 (ABC transporters that co-occur frequently), Gene cluster contains one of the following: PF13302 PF00583 PF13523 (acetyltransferases that co-occur frequently), A local gene product hits TIGR04188 (methyltransferase), Precursor hits PF12559 (serine endopeptidase inhibitor) or TIGR04186 (GRASP_targ), Precursor his PF14404 (strep_pep) PF14406 (bacteroid_pep) PF14407 (frankia_pep) PF14408 (actino_pep) or PF14409 (herpeto_pep), Acceptor compressionC index > Donor compressionC index*, Calculated charge at pH7 of second half of precursor < charge of first half of precursor, Precursor peptide contains sequence motif #1 “PFFAxxL”, Precursor peptide contains sequence motif #3 “LFIx(D/E)L”, Precursor peptide contains sequence motif “KPYxxxYxE”, Count of sequence motif #2 “TxKxPSDx(E/D)(E/D)” in precursor, Count of sequence motif #4 “TTxxxxEE” in precursor, Count of sequence motif “TxxTxxxExxDxD” in precursor, Minimum distance from MdnB C D TgnB and PsnB homologs  (nt), Precursor length, Estimated first half charge, Estimated second half charge, Estimated precursor charge,Absolute value of second half charge,Absolute value of first half charge,Absolute value of precursor charge,FIRST HALF A,R,D,N,C,Q,E,G,H,I,L,K,M,F,P,S,T,W,Y,V,Aromatics,Neg charged,Pos charged,Charged,Aliphatic,Hydroxyl,SECOND HALF A,R,D,N,C,Q,E,G,H,I,L,K,M,F,P,S,T,W,Y,V,Aromatics,Neg charged,Pos charged,Charged,Aliphatic,Hydroxyl,PRECURSOR A,R,D,N,C,Q,E,G,H,I,L,K,M,F,P,S,T,W,Y,V, LAST RESIDUE A,R,D,N,C,Q,E,G,H,I,L,K,M,F,P,S,T,W,Y,V,Aromatics,Neg charged,Pos charged,Charged,Aliphatic,Hydroxyl, acceptor compression index, donor compression index, total motifs hit, meme1,meme2,meme3,meme4,meme5,meme6,meme7,meme8,meme9,meme10,meme11,meme12, sum of meme scores, no motifs present '
     svm_headers = svm_headers.split(',')
     features_headers = ['Accession_id', 'Genus/Species', 'First half', 'Second Half', 'Start', 'End' , "Total Score", "Valid Precursor"] + svm_headers 
     features_csv_file = open(dir_prefix + "temp_features.csv", 'w')
@@ -91,16 +92,15 @@ class Ripp(VirtualRipp):
     def get_fimo_score(self):
         fimo_output = self.run_fimo_simple()
         fimo_motifs = []
-        fimo_motifs = [int(line.partition("\t")[0]) for line in fimo_output.split("\n") if "\t" in line and line.partition("\t")[0].isdigit()]
-        fimo_scores = {int(line.split("\t")[0]): float(line.split("\t")[6]) for line in fimo_output.split("\n") if "\t" in line and line.partition("\t")[0].isdigit()}
+        fimo_motifs = [int(line.partition("\t")[0]) for line in fimo_output.split("\n")[1:] if "\t" in line]
+        fimo_scores = defaultdict(int) # = {int(line.split("\t")[0]): float(line.split("\t")[6]) for line in fimo_output.split("\n") if "\t" in line and line.partition("\t")[0].isdigit()}
+        for line in fimo_output.split("\n"):
+            if not ("\t" in line and line.partition("\t")[0].isdigit()):
+                continue
+            fimo_scores[int(line.split("\t")[0])] = max(fimo_scores[int(line.split("\t")[0])], 
+                                                        float(line.split("\t")[6]))
         #Calculate score
         motif_score = 0
-        if 2 in fimo_motifs:
-            motif_score += 4
-        elif len(fimo_motifs) > 0:
-            motif_score += 2
-        else:
-            motif_score += -1
         return fimo_motifs, motif_score, fimo_scores
     
     def set_monoisotopic_mass(self):
@@ -125,20 +125,20 @@ class Ripp(VirtualRipp):
     def set_score(self, pfam_dir, cust_hmm):
         scoring_csv_columns = []
         self.score = 0
-        mdn_bcd = ["TIGR04185", "TIGR04184", "PF00583", "PF13673", "PF13302", "PF13523"]
+        mdn_bcd = ["TIGR04185", "TIGR04184", "PF00583", "PF13673", "PF13302", "PF13523", "TIGR04187"]
         bsp_coords = []
         for pfam in self.pfam_2_coords.keys():
             if any(fam in pfam for fam in mdn_bcd):
                 bsp_coords += self.pfam_2_coords[pfam]
         min_distance = self.get_min_dist(bsp_coords)
         if min_distance is None:
-            min_distance = 99999
+            min_distance = 66666
         within_300 = False
         within_600 = False
-        within_2000 = False
+        within_1100 = False
         
-        if min_distance < 2000:
-            within_2000 = True
+        if min_distance < 1100:
+            within_1100 = True
             if min_distance < 600:
                 within_600 = True
                 if min_distance < 300:
@@ -157,7 +157,7 @@ class Ripp(VirtualRipp):
             scoring_csv_columns.append(1)
         else:
             scoring_csv_columns.append(0)
-        if not within_2000:
+        if not within_1100:
             scoring_csv_columns.append(1)
         else:
             scoring_csv_columns.append(0)
@@ -259,7 +259,6 @@ class Ripp(VirtualRipp):
             direction = 1
         else:
             direction = -1
-            
         same_dir = False
         if "TIGR04184" in self.pfam_2_coords.keys():
             for coord in self.pfam_2_coords["TIGR04184"]:
@@ -273,7 +272,10 @@ class Ripp(VirtualRipp):
             
         ABC_trans = False
         for pfam in self.pfam_2_coords.keys():
-            if any(fam in pfam for fam in ["PF0005", "PF06472", "PF00664"]):
+            if any(fam in pfam for fam in ["PF0005", "PF06472", "PF00664", "PF03412", 
+                                           "TIGR03796", "TIGR01846", "TIGR03797", 
+                                           "TIGR00954", "TIGR02203", "TIGR02204", 
+                                           "TIGR03375"]):
                 ABC_trans = True
         if ABC_trans:
             self.score += 1
@@ -300,9 +302,7 @@ class Ripp(VirtualRipp):
             scoring_csv_columns.append(1)
         else:
             scoring_csv_columns.append(0)
-        
         precursor_hmm_info = hmmer_utils.get_hmmer_info(self.sequence, pfam_dir, cust_hmm)
-        
         pfams = []
         for pfam_dot, _, _, _, in precursor_hmm_info:
             pfams.append(pfam_dot.split('.')[0])
@@ -323,7 +323,6 @@ class Ripp(VirtualRipp):
             self.score += 5
         else:
             scoring_csv_columns.append(0) 
-            
         donor_c_index = self.compression_index(['S', 'T', 'K'])
         acceptor_c_index = self.compression_index(['D','G'])
         if acceptor_c_index > donor_c_index:
@@ -342,18 +341,17 @@ class Ripp(VirtualRipp):
         else:
             scoring_csv_columns.append(0) 
         
+        #MOTIFS
         fimo_motifs, motif_score, fimo_scores = self.get_fimo_score()
-        match = re.search('(PFFA[A-Z]{2}L)', self.sequence)
-        if match is not None:
-            scoring_csv_columns.append(1)
-            self.score += 1
-        else:
-            scoring_csv_columns.append(0) 
-        
-        match = re.findall('(T[A-Z]K[A-Z]PSD)', self.sequence)
-        scoring_csv_columns.append(len(match))
-        self.score += len(match)
-            
+        for motif_idx in [1, 4, 8]:
+            if motif_idx in fimo_motifs:
+                scoring_csv_columns.append(1)
+                self.score += 1
+            else:
+                scoring_csv_columns.append(0)
+        for motif_idx in [2, 10, 12]:
+            scoring_csv_columns.append(fimo_motifs.count(motif_idx))
+            self.score += fimo_motifs.count(motif_idx)
         ##SVM SCORING SECTION
         scoring_csv_columns.append(min_distance)
         scoring_csv_columns.append(len(self.sequence))
@@ -419,10 +417,10 @@ class Ripp(VirtualRipp):
         #Total motifs hit
         scoring_csv_columns.append(len(fimo_motifs))
         #Motif scores
-        scoring_csv_columns += [fimo_scores[motif] if motif in fimo_motifs else 0 for motif in range(1, 16)]
+        scoring_csv_columns += [fimo_scores[motif] if motif in fimo_motifs else 0 for motif in range(1, 13)]
         
         #Sum of MEME scores
-        scoring_csv_columns.append(sum([fimo_scores[motif] if motif in fimo_motifs else 0 for motif in range(1, 16)]))
+        scoring_csv_columns.append(sum([fimo_scores[motif] if motif in fimo_motifs else 0 for motif in range(1, 13)]))
         #No Motifs?
         if len(fimo_motifs) == 0:
             scoring_csv_columns.append(1)
