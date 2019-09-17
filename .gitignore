@@ -1,0 +1,8 @@
+/ripp_modules/*/svm/fitting*.csv
+/.spyproject/
+__pycache__/
+*.pyc
+/confs/default.conf
+
+
+
