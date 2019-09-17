@@ -1,11 +1,4 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Aug  7 20:58:10 2017
-
-@author: bryce
-"""
-
 #==============================================================================
 # NCBI utilities policies are available here:
 # https://www.ncbi.nlm.nih.gov/home/about/policies/
@@ -39,15 +32,13 @@ Created on Mon Aug  7 20:58:10 2017
 # GNU Affero General Public License for more details.
 #==============================================================================
 
-import socket
-import time
 import traceback
 from Bio import Entrez, SeqIO
-from Bio.Seq import Seq
 from Bio.Alphabet import generic_dna
 from My_Record import My_Record, Sub_Seq
 import logging
 from rodeo_main import VERBOSITY
+import time
 from timeout_decorator import timeout, TimeoutError
 
 logger = logging.getLogger(__name__)
@@ -83,15 +74,13 @@ def get_gb_handles(prot_accession_id):
             record = Entrez.read(Entrez.esearch("protein",term=prot_accession_id))
             total_count = record["Count"]
             if int(total_count) < 1:
-#                logger.error("Esearch returns no results for query " + prot_accession_id)
                 return -1
                 
             IdList = record["IdList"]
-            time.sleep(.5)
+            time.sleep(0.5)
             link_records = Entrez.read(Entrez.elink(dbfrom="protein",db="nuccore",id=IdList))
             nuccore_ids=[]
             if len(link_records[0]['LinkSetDb']) == 0:
-#                logger.error("%s has no nuccore entries..." % (prot_accession_id))
                 return -2
             for record in link_records[0]['LinkSetDb'][0]['Link']:
                 nuccore_ids.append(record['Id']) 
@@ -104,7 +93,7 @@ def get_gb_handles(prot_accession_id):
             
             handles = []
             for start in range(len(nuccore_ids)):
-                time.sleep(.5)
+                time.sleep(0.5)
                 orig_handle = Entrez.efetch(db="nuccore", dbfrom="protein", rettype="gbwithparts", 
                                                retmode="text", retstart=start, retmax=batchSize, 
                                                webenv=webenv, query_key=query_key)
@@ -116,10 +105,11 @@ def get_gb_handles(prot_accession_id):
             logger.error("Timeout while reaching genbank for %s." % (prot_accession_id))
             return -3
         except Exception as e:
-            time.sleep(.5)
+            time.sleep(0.5)
             logger.error("Failed to fetch record for %s." % (prot_accession_id))
             logger.error(e)
             pass
+        time.sleep(2)
     return -3
 
 #gb_handle should only be a handle to ONE query 
@@ -156,7 +146,7 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
                     inferred = False
                     start = int(feature.location.start)
                     end = int(feature.location.end)
-                    seq = "X" * (abs(start-end)/3)
+                    seq = "X" * int((abs(start-end)/3))
                     direction = 1
                     if end < start:
                         direction = -1
