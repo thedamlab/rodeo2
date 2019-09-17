@@ -1,11 +1,4 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Aug  7 21:09:19 2017
-
-@author: bryce
-"""
-
 #==============================================================================
 # Copyright (C) 2017 Bryce L. Kille
 # University of Illinois
@@ -40,18 +33,10 @@ import hmmer_utils
 import csv
 import logging 
 from rodeo_main import VERBOSITY
-from multiprocessing import Pool
-#NOTE TODO
-#TOC w/ genus psecies
-#Config files w color
-#config files unique to module
-#Don't print precursors in master
-#web tool deletion day to 2 weeks
-#split html files that get too large
 
 logger = logging.getLogger(__name__)
 logger.setLevel(VERBOSITY)
-# create console handler and set level to debug
+# create console handler and set level
 ch = logging.StreamHandler()
 ch.setLevel(VERBOSITY)
 
@@ -148,7 +133,7 @@ class My_Record(object):
         self.window_end = min(len(self.cluster_sequence), 
                               self.window_end + fetch_distance)
         self._clean_CDSs()
-        
+    
     def annotate_w_hmmer(self, primary_hmm, cust_hmm, min_length, max_length):
         self.pfam_2_coords = {}
         for CDS in self.CDSs:
@@ -160,20 +145,7 @@ class My_Record(object):
                 if annot[0] not in self.pfam_2_coords.keys(): #annot[0] is the PF* key
                     self.pfam_2_coords[annot[0]] = []
                 self.pfam_2_coords[annot[0]].append((CDS.start, CDS.end))
-
-#        p = Pool(6)
-##        try:
-#        hmmer_annots = p.map_async(hmmer_utils.get_hmmer_info, [cds.sequence for cds in self.CDSs]).get(999999) #http://xcodest.me/interrupt-the-python-multiprocessing-pool-in-graceful-way.html
-#        for i in range(len(self.CDSs)):
-#            self.CDSs[i].pfam_descr_list = hmmer_annots[i]
-#            for annot in self.CDSs[i].pfam_descr_list:
-#                if annot[0] not in self.pfam_2_coords.keys(): #annot[0] is the PF* key
-#                    self.pfam_2_coords[annot[0]] = []
-#                self.pfam_2_coords[annot[0]].append((self.CDSs[i].start, self.CDSs[i].end))
-##        except KeyboardInterrupt:
-##            logger.critical("SIGINT recieved during HMMScan")
-##            p.terminate()
-#        p.close()
+                
 
     def set_intergenic_seqs(self, min_length, max_length):
         """Sets the sequences between called CDSs"""
@@ -183,9 +155,6 @@ class My_Record(object):
             self.window_end = len(self.cluster_sequence)
         start = self.window_start
         for cds in self.CDSs:
-#            if len(cds.pfam_descr_list) == 0 and (min_length <= len(cds.sequence) <= max_length):
-#                print(cds.sequence)
-#                self.intergenic_orfs.append(cds)
             end = min(cds.start, cds.end)
             if end-start >= MIN_CUTOFF:
                 #end == start could happen if the first cds starts at 0
@@ -291,21 +260,11 @@ class My_Record(object):
         logger.debug("Setting %s ripps for %s" % (module.peptide_type, self.query_accession_id))
         self.ripps[module.peptide_type] = []
         for orf in self.intergenic_orfs:
-#            if len(orf.sequence) < master_conf[module.peptide_type]['variables']['precursor_min']:
-#                continue
-#            elif len(orf.sequence)  > master_conf[module.peptide_type]['variables']['precursor_max']:
-#                if "M" in orf.sequence[2:]:
-#                    logger.debug("{} contains multiple start sites, but the first does not fit the length cutoffs. Using the full sequence for scoring".format(orf.sequence))
-#                else:
-#                    continue
-
-            if not master_conf[module.peptide_type]['variables']['precursor_min'] <= len(orf.sequence) <=  master_conf[module.peptide_type]['variables']['precursor_max'] and \
-            not ("M" in orf.sequence[-master_conf[module.peptide_type]['variables']['precursor_max']:]):
-                continue
-            ripp = module.Ripp(orf.start, orf.end, str(orf.sequence), orf.upstream_sequence, self.pfam_2_coords)
-            if ripp.valid_split or master_conf[module.peptide_type]['variables']['exhaustive']:
-                self.ripps[module.peptide_type].append(ripp)
-                
+            if master_conf[module.peptide_type]['variables']['precursor_min'] <= len(orf.sequence) <=  master_conf[module.peptide_type]['variables']['precursor_max'] \
+                or ("M" in orf.sequence[-master_conf[module.peptide_type]['variables']['precursor_max']:]):
+                ripp = module.Ripp(orf.start, orf.end, str(orf.sequence), orf.upstream_sequence, self.pfam_2_coords)
+                if ripp.valid_split or master_conf[module.peptide_type]['variables']['exhaustive']:
+                    self.ripps[module.peptide_type].append(ripp)
                 
     def score_ripps(self, module, pfam_hmm, cust_hmm):
         logger.debug("Scoring %s ripps for %s" % (module.peptide_type, self.query_accession_id))
@@ -356,14 +315,14 @@ def update_score_w_svm(output_dir, records):
         for peptide_type in records[0].ripps.keys():
             score_reader = csv.reader(open(output_dir + '/' + peptide_type + '/' +\
                                            peptide_type + '_features.csv')) 
-            score_reader.next()
+            next(score_reader)
             
             score_reader_done = False
             for record in records:
                 for ripp in record.ripps[peptide_type]:
                     if not score_reader_done:
                         try:
-                            line = score_reader.next()
+                            line = next(score_reader)
                         except KeyboardInterrupt:
                             raise KeyboardInterrupt
                         except Exception as e:
