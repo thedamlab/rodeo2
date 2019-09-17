@@ -331,16 +331,12 @@ def __main__():
                 list_of_rows = []
                 module = ripp_modules[peptide_type]
                 for ripp in record.ripps[peptide_type]:
-#                    if len(ripp.sequence) < master_conf[peptide_type]['variables']['precursor_min']:
-#                        continue
-#                    elif len(orf.sequence)  > master_conf[peptide_type]['variables']['precursor_max']:
-#                        if not "M" in orf.sequence[2:]:
-#                            continue
-                    if not master_conf[peptide_type]['variables']['precursor_min'] <= len(ripp.sequence) <= master_conf[peptide_type]['variables']['precursor_max'] and \
-                        not ("M" in ripp.sequence[-master_conf[peptide_type]['variables']['precursor_max']:]):
-                        continue
-                    list_of_rows.append(ripp.csv_columns)
-                VirtualRipp.ripp_write_rows(args.output_dir, peptide_type, record.cluster_accession, #cluster acc or query acc?
+                    if master_conf[peptide_type]['variables']['precursor_min'] <= len(ripp.sequence) <= master_conf[peptide_type]['variables']['precursor_max'] \
+                        or ("M" in ripp.sequence[-master_conf[peptide_type]['variables']['precursor_max']:]) \
+                        or ripp.radar_count > 0:
+                            
+                        list_of_rows.append(ripp.csv_columns)
+                VirtualRipp.ripp_write_rows(args.output_dir, peptide_type, record.query_accession_id, #cluster acc or query acc?
                                        record.cluster_genus_species, list_of_rows)
             records.append(record)
             record = processed_records_q.get()    
