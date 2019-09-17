@@ -41,6 +41,7 @@ import csv
 import logging 
 from rodeo_main import VERBOSITY
 from multiprocessing import Pool
+from ripp_modules.VirtualRipp import get_radar_score
 #NOTE TODO
 #TOC w/ genus psecies
 #Config files w color
@@ -75,6 +76,7 @@ class Sub_Seq(object):
                 self.direction = "-"
             self.sequence = seq
             self.accession_id = accession_id
+            self.radar_count = -1
             self.upstream_sequence ="xxxxx"
             self.type = seq_type ##aa, nt etc.
 
@@ -148,12 +150,16 @@ class My_Record(object):
         self.window_end = min(len(self.cluster_sequence), 
                               self.window_end + fetch_distance)
         self._clean_CDSs()
-        
+    
+    def run_radar(self):
+        for CDS in self.CDSs:
+            CDS.radar_count = get_radar_score(CDS.sequence)
+            
     def annotate_w_hmmer(self, primary_hmm, cust_hmm, min_length, max_length):
         self.pfam_2_coords = {}
         for CDS in self.CDSs:
             CDS.pfam_descr_list = hmmer_utils.get_hmmer_info(CDS.sequence, primary_hmm, cust_hmm) #Possible input for n and e_cutoff here
-            if min_length <= len(CDS.sequence) <= max_length: # len(CDS.pfam_descr_list) == 0 and 
+            if min_length <= len(CDS.sequence) <= max_length or CDS.radar_count > 0: # len(CDS.pfam_descr_list) == 0 and 
                 self.intergenic_orfs.append(CDS)
                 continue
             for annot in CDS.pfam_descr_list:
@@ -163,20 +169,7 @@ class My_Record(object):
                 if annot[0] not in self.pfam_2_coords.keys(): #annot[0] is the PF* key
                     self.pfam_2_coords[annot[0]] = []
                 self.pfam_2_coords[annot[0]].append((CDS.start, CDS.end))
-
-#        p = Pool(6)
-##        try:
-#        hmmer_annots = p.map_async(hmmer_utils.get_hmmer_info, [cds.sequence for cds in self.CDSs]).get(999999) #http://xcodest.me/interrupt-the-python-multiprocessing-pool-in-graceful-way.html
-#        for i in range(len(self.CDSs)):
-#            self.CDSs[i].pfam_descr_list = hmmer_annots[i]
-#            for annot in self.CDSs[i].pfam_descr_list:
-#                if annot[0] not in self.pfam_2_coords.keys(): #annot[0] is the PF* key
-#                    self.pfam_2_coords[annot[0]] = []
-#                self.pfam_2_coords[annot[0]].append((self.CDSs[i].start, self.CDSs[i].end))
-##        except KeyboardInterrupt:
-##            logger.critical("SIGINT recieved during HMMScan")
-##            p.terminate()
-#        p.close()
+                
 
     def set_intergenic_seqs(self, min_length, max_length):
         """Sets the sequences between called CDSs"""
@@ -186,9 +179,6 @@ class My_Record(object):
             self.window_end = len(self.cluster_sequence)
         start = self.window_start
         for cds in self.CDSs:
-#            if len(cds.pfam_descr_list) == 0 and (min_length <= len(cds.sequence) <= max_length):
-#                print(cds.sequence)
-#                self.intergenic_orfs.append(cds)
             end = min(cds.start, cds.end)
             if end-start >= MIN_CUTOFF:
                 #end == start could happen if the first cds starts at 0
@@ -294,21 +284,17 @@ class My_Record(object):
         logger.debug("Setting %s ripps for %s" % (module.peptide_type, self.query_accession_id))
         self.ripps[module.peptide_type] = []
         for orf in self.intergenic_orfs:
-#            if len(orf.sequence) < master_conf[module.peptide_type]['variables']['precursor_min']:
-#                continue
-#            elif len(orf.sequence)  > master_conf[module.peptide_type]['variables']['precursor_max']:
-#                if "M" in orf.sequence[2:]:
-#                    logger.debug("{} contains multiple start sites, but the first does not fit the length cutoffs. Using the full sequence for scoring".format(orf.sequence))
-#                else:
-#                    continue
-
-            if not master_conf[module.peptide_type]['variables']['precursor_min'] <= len(orf.sequence) <=  master_conf[module.peptide_type]['variables']['precursor_max'] and \
-            not ("M" in orf.sequence[-master_conf[module.peptide_type]['variables']['precursor_max']:]):
-                continue
-            ripp = module.Ripp(orf.start, orf.end, str(orf.sequence), orf.upstream_sequence, self.pfam_2_coords)
-            if ripp.valid_split or master_conf[module.peptide_type]['variables']['exhaustive']:
-                self.ripps[module.peptide_type].append(ripp)
-                
+            if master_conf[module.peptide_type]['variables']['precursor_min'] <= len(orf.sequence) <=  master_conf[module.peptide_type]['variables']['precursor_max'] \
+                or ("M" in orf.sequence[-master_conf[module.peptide_type]['variables']['precursor_max']:])  \
+                or (module.peptide_type == "grasp" and orf.radar_count > 0):
+                ripp = module.Ripp(orf.start, orf.end, str(orf.sequence), orf.upstream_sequence, self.pfam_2_coords)
+                if module.peptide_type == "grasp":
+                    ripp.radar_count  = orf.radar_count
+                if ripp.valid_split or master_conf[module.peptide_type]['variables']['exhaustive']:
+                    if orf.radar_count > 0:
+                        print("RADAR SCORE", orf.radar_count)
+                        print(len(orf.sequence))
+                    self.ripps[module.peptide_type].append(ripp)
                 
     def score_ripps(self, module, pfam_hmm, cust_hmm):
         logger.debug("Scoring %s ripps for %s" % (module.peptide_type, self.query_accession_id))
