@@ -1,11 +1,4 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Oct  3 19:24:08 2017
-
-@author: bryce
-"""
-
 #==============================================================================
 # Copyright (C) 2017 Bryce L. Kille
 # University of Illinois
@@ -36,13 +29,11 @@ Created on Tue Oct  3 19:24:08 2017
 # GNU Affero General Public License for more details.
 #==============================================================================
 
-import os
 from entrez_utils import get_gb_handles, get_record_from_gb_handle
 import logging
 from rodeo_main import VERBOSITY, QUEUE_CAP
 import traceback
 import sys
-import glob
 
 logger = logging.getLogger(__name__)
 logger.setLevel(VERBOSITY)
@@ -103,11 +94,10 @@ def process_record_worker(unprocessed_records_q, processed_records_q, args, mast
             except Exception as e:
                 logger.error("ERROR FOR %s" % (record.query_accession_id))
                 logger.error(e)
-                processed_records_q.put(ErrorReport(record.query_accession_id, str(e)))
                 traceback.print_exc(file=sys.stdout)
+                processed_records_q.put(ErrorReport(record.query_accession_id, str(e)))
                 logger.error("Worker process %s is moving on" % (my_id))
-#                processed_records_q.put(QUEUE_CAP)
-#                return
+
             record = unprocessed_records_q.get()
         
         logger.debug("Worker process %s pulled queue cap" % (my_id))
@@ -123,25 +113,35 @@ def process_record_worker(unprocessed_records_q, processed_records_q, args, mast
     
     
 def fill_request_queue(queries, processed_records_q, unprocessed_records_q, args, master_conf, ripp_modules):
-    for query in queries:
-        try:
+    try:
+        for query in queries:
             logger.debug("Fetching %s data" % query)
-            gb_handles = get_gb_handles(query)
-            nuccore_accession = query
-            if gb_handles < 0:
-                if gb_handles == -1:
-                    error_message = "No results in protein db for Esearch on %s" % (query)
-                elif gb_handles == -2:
-                    error_message = "No results in nuccore db for value obtained from protein db"
-                elif gb_handles == -3:
-                    error_message = "Any response failure from Entrez database (error on database side)"
-                else:
-                    error_message = "Unknown Entrez error."
-                unprocessed_records_q.put(ErrorReport(query, error_message))
-                continue
+            if '.gbk' != query[-4:] and '.gb' != query[-3:]: #accession_id
+                gb_handles = get_gb_handles(query)
+                nuccore_accession = query
+                if type(gb_handles) is int:
+                    if gb_handles == -1:
+                        error_message = "No results in protein db for Esearch on %s" % (query)
+                    elif gb_handles == -2:
+                        error_message = "No results in nuccore db for value obtained from protein db"
+                    elif gb_handles == -3:
+                        error_message = "Any response failure from Entrez database (error on database side)"
+                    else:
+                        error_message = "Unknown Entrez error."
+                    unprocessed_records_q.put(ErrorReport(query, error_message))
+                    continue
+            else:#gbk file
+                nuccore_accession = query.split('\t')[0]
+                try:
+                    gb_handles = [open(query.split('\t')[1])]
+                except OSError as e:
+                    error_message = "Error opening %s" % (query)
+                    logger.error(e)
+                    unprocessed_records_q.put(ErrorReport(query, error_message))
+                    continue
             for handle in gb_handles:
                 record = get_record_from_gb_handle(handle, nuccore_accession)
-                if record < 0:
+                if type(record) is int:
                     if record == -1:
                         error_message = "Couldn't process %s Genbank filestream. May be corrupt."\
                           % (query)
@@ -156,11 +156,11 @@ def fill_request_queue(queries, processed_records_q, unprocessed_records_q, args
                 unprocessed_records_q.put(record)
                 if not master_conf['general']['variables']['evaluate_all']:
                     break
-        except KeyboardInterrupt:
-            logger.critical("KeyboardInterrupt recieved during record fetching")
-            return
-        except EOFError:
-            logger.critical("EOFError recieved during record fetching")
-            unprocessed_records_q.put(ErrorReport(query, "EOFError recieved during record fetching"))
-            continue
-    unprocessed_records_q.put(QUEUE_CAP)
+        unprocessed_records_q.put(QUEUE_CAP)
+    except KeyboardInterrupt:
+        logger.critical("KeyboardInterrupt recieved during record fetching")
+        return
+    except EOFError:
+        logger.critical("EOFError recieved during record fetching")
+        return
+        
