@@ -79,8 +79,8 @@ class SVMRunner(object):
         self.kernel_option = 'rbf'
         self.class_weight_option = 'balanced'
         if peptide_type == 'grasp':
-            self.C_option = 283117
-            self.gamma_option = 1E-9
+            self.C_option = 6.8986
+            self.gamma_option = 1E-4
         elif peptide_type == 'lasso':
             self.C_option = 25
             self.gamma_option = 2.75E-06
@@ -161,8 +161,8 @@ class SVMRunner(object):
             fitting_data_just_features.append(entry)
         
         # Scaling -- this ensures standardization of model and target data
-        training_data_refined = preprocessing.scale(training_data_just_features)
-        scaler = preprocessing.StandardScaler().fit(training_data_refined)
+        # training_data_refined = preprocessing.scale(training_data_just_features)
+        scaler = preprocessing.StandardScaler().fit(training_data_just_features)
         training_data_refined = scaler.transform(training_data_just_features)
         fitting_data_refined = scaler.transform(fitting_data_just_features)
     

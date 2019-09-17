@@ -84,7 +84,7 @@ gamma_base = 10
 gamma_steps = 9
 gamma_options = np.logspace(gamma_min,gamma_max,num=gamma_steps,base=gamma_base,dtype=float)
 class_weight_option = 'balanced'
-folds_validation = [3, 5]
+folds_validation = [5]
 
 
     
@@ -110,10 +110,10 @@ def main():
     print("Initiating learning and fitting")
     
     # Scaling -- this ensures standardization of model and target data
-    training_data_refined = preprocessing.scale(training_data_just_features)
-    scaler = preprocessing.StandardScaler().fit(training_data_refined)
-    training_data_refined = scaler.transform(training_data_just_features)
-
+    # training_data_refined = preprocessing.scale(training_data_just_features)
+    scaler = preprocessing.StandardScaler()#.fit(training_data_just_features)
+    training_data_refined = scaler.fit_transform(training_data_just_features)
+    print("Data has been scaled" )
     test_results = []
     
     for fold in folds_validation:
