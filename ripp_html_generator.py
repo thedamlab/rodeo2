@@ -177,6 +177,8 @@ def draw_orf_diagram(main_html, peptide_conf, record, peptide_type):
     index = 0
     if peptide_type != 'general':
         for ripp in record.ripps[peptide_type]:
+            if ripp.score <= 0:
+                continue
             index += 1
             if ripp.score <= ripp.CUTOFF/4.0:
                 continue
@@ -314,6 +316,8 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
             index += 1
     elif peptide_type in ["lasso", "lanthi", "sacti", "thio", "grasp"]:
         for ripp in record.ripps[peptide_type]:
+            if ripp.score <= 0:
+                continue
             if not master_conf[peptide_type]['variables']['precursor_min'] <= len(ripp.sequence) <= master_conf[peptide_type]['variables']['precursor_max'] and \
                             not ("M" in ripp.sequence[-master_conf[peptide_type]['variables']['precursor_max']:]):
                             continue

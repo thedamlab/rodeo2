@@ -31,16 +31,12 @@
 
 import csv
 import os
-import re
-import tempfile
-import random
 import subprocess
 import importlib
 import logging
 import socket
 import ripp_modules.SvmClassify as svmc
 from rodeo_main import VERBOSITY
-VERBOSITY = logging.DEBUG
 
 WEB_TOOL = False
 if socket.gethostname() == "rodeo.scs.illinois.edu":
@@ -84,7 +80,7 @@ def execute(commands, input=None):
         raise e
 
 
-def ripp_write_rows(output_dir, peptide_type, accession_id, genus_species, list_of_rows):
+def ripp_write_rows(output_dir, peptide_type, accession_id, genus_species, list_of_rows, feature_count=5):
     dir_prefix = output_dir + '/{}/'.format(peptide_type)
     global index
     features_csv_file = open(dir_prefix + "temp_features.csv", 'a')
@@ -92,11 +88,11 @@ def ripp_write_rows(output_dir, peptide_type, accession_id, genus_species, list_
     features_writer = csv.writer(features_csv_file)
     svm_writer = csv.writer(svm_csv_file)
     for row in list_of_rows:
-        features_writer.writerow([accession_id, genus_species] + row[0:5] + ["valid_precursor_placeholder", index, ''] + row[5:])
-        svm_writer.writerow([index, ''] + row[5:]) #Don't include accession_id, leader, core sequence, start, end, or score
+        features_writer.writerow([accession_id, genus_species] + row[0:feature_count] + ["valid_precursor_placeholder", index, ''] + row[feature_count:])
+        svm_writer.writerow([index, ''] + row[feature_count:]) #Don't include accession_id, leader, core sequence, start, end, or score
         index += 1
         
-def run_svm(output_dir, peptide_type, cutoff):
+def run_svm(output_dir, peptide_type, cutoff, feature_count=5):
     runner = svmc.SVMRunner(peptide_type)
     runner.run_svm()
     svm_output_reader = csv.reader(open("ripp_modules/{}/svm/fitting_results.csv".format(peptide_type)))
@@ -106,15 +102,60 @@ def run_svm(output_dir, peptide_type, cutoff):
     final_output_writer.writerow(header_row)
     for row, svm_output_line in zip(features_reader, svm_output_reader):
         svm_output = svm_output_line[1]
-        row[9] = svm_output
+        row[feature_count+4] = svm_output
         if int(svm_output) == 1:
-            row[6] = int(row[6]) + 10
-        if int(row[6]) >= cutoff: #CUTOFF
-            row[7] = 'Y'
+            row[feature_count+1] = int(row[feature_count+1]) + 10
+        if int(row[feature_count+1]) >= cutoff: #CUTOFF
+            row[feature_count+2] = 'Y'
         else:
-            row[7] = 'N'
+            row[feature_count+2] = 'N'
         final_output_writer.writerow(row)        
 
+def get_match_score(a, b):
+    if a == b:
+        return 1
+    elif (a in ['D', 'E'] and b in ['D', 'E']) \
+    or (a in ['S', 'T'] and b in ['S', 'T']):
+        return .5
+    else:
+        return 0
+
+def get_repeat_score(repeats):
+    score = 0
+    for i in range(len(repeats[0])):
+        char_to_match = repeats[0][i]
+        if char_to_match not in ['D', 'E', 'T', 'S', 'K']:
+            continue
+        count_same = 0
+        for r in repeats:
+            count_same += get_match_score(char_to_match, r[i])
+        if count_same == len(repeats):
+            score += 1
+    return score
+            
+    
+def parse_radar_output(radar_output):
+    score = 0
+    i = 0
+    repeat_count = 0
+    while i < len(radar_output):
+        line = radar_output[i]
+        if len(line.split('|')) > 1:
+            if line.split('|')[0] == "No. of Repeats":
+                i += 1
+                line = radar_output[i]
+                repeat_count = int(line.split('|')[0])
+                i += 2
+                repeats = []
+                for repeat_idx in range(repeat_count):
+                    line = radar_output[i]
+                    repeats.append(line.split('\t')[-1])
+                    i += 1
+                if len(repeats) > 0:
+                    score = max(score, get_repeat_score(repeats))
+        i += 1
+    return score
+                    
 def get_radar_score(sequence):
     #TODO change to temp file
         pid = str(os.getpid())
@@ -150,12 +191,12 @@ def get_radar_score(sequence):
                 pass
         # RADAR output is inconsistent. Most of the time it will print
         # two lines of "no results", but other times just 1...
-        if (len(out.decode("utf-8").split('\n')) < 4): 
+        lines = out.decode("utf-8").split('\n')
+        if (len(lines) < 4): 
             return 0
-        results = out.decode("utf-8").split('\n')[3].split('|')
+        results = lines[3].split('|')
         if len(results) > 1:
-            print(out.decode("utf-8"))
-            return int(results[0])
+            return parse_radar_output(lines[1:])
         else:
             return 0
 

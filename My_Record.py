@@ -1,11 +1,4 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Aug  7 21:09:19 2017
-
-@author: bryce
-"""
-
 #==============================================================================
 # Copyright (C) 2017 Bryce L. Kille
 # University of Illinois
@@ -40,19 +33,11 @@ import hmmer_utils
 import csv
 import logging 
 from rodeo_main import VERBOSITY
-from multiprocessing import Pool
 from ripp_modules.VirtualRipp import get_radar_score
-#NOTE TODO
-#TOC w/ genus psecies
-#Config files w color
-#config files unique to module
-#Don't print precursors in master
-#web tool deletion day to 2 weeks
-#split html files that get too large
 
 logger = logging.getLogger(__name__)
 logger.setLevel(VERBOSITY)
-# create console handler and set level to debug
+# create console handler and set level
 ch = logging.StreamHandler()
 ch.setLevel(VERBOSITY)
 
@@ -76,7 +61,7 @@ class Sub_Seq(object):
                 self.direction = "-"
             self.sequence = seq
             self.accession_id = accession_id
-            self.radar_count = -1
+            self.radar_score = -1
             self.upstream_sequence ="xxxxx"
             self.type = seq_type ##aa, nt etc.
 
@@ -153,13 +138,13 @@ class My_Record(object):
     
     def run_radar(self):
         for CDS in self.CDSs:
-            CDS.radar_count = get_radar_score(CDS.sequence)
+            CDS.radar_score = get_radar_score(CDS.sequence)
             
     def annotate_w_hmmer(self, primary_hmm, cust_hmm, min_length, max_length):
         self.pfam_2_coords = {}
         for CDS in self.CDSs:
             CDS.pfam_descr_list = hmmer_utils.get_hmmer_info(CDS.sequence, primary_hmm, cust_hmm) #Possible input for n and e_cutoff here
-            if min_length <= len(CDS.sequence) <= max_length or CDS.radar_count > 0: # len(CDS.pfam_descr_list) == 0 and 
+            if min_length <= len(CDS.sequence) <= max_length or CDS.radar_score > 0 and len(CDS.sequence) < 400: # len(CDS.pfam_descr_list) == 0 and 
                 self.intergenic_orfs.append(CDS)
                 continue
             for annot in CDS.pfam_descr_list:
@@ -284,16 +269,15 @@ class My_Record(object):
         logger.debug("Setting %s ripps for %s" % (module.peptide_type, self.query_accession_id))
         self.ripps[module.peptide_type] = []
         for orf in self.intergenic_orfs:
+            orf.radar_score = get_radar_score(orf.sequence)
             if master_conf[module.peptide_type]['variables']['precursor_min'] <= len(orf.sequence) <=  master_conf[module.peptide_type]['variables']['precursor_max'] \
                 or ("M" in orf.sequence[-master_conf[module.peptide_type]['variables']['precursor_max']:])  \
-                or (module.peptide_type == "grasp" and orf.radar_count > 0):
+                or (module.peptide_type == "grasp" and orf.radar_score > 0 and len(orf.sequence) < 400):
                 ripp = module.Ripp(orf.start, orf.end, str(orf.sequence), orf.upstream_sequence, self.pfam_2_coords)
                 if module.peptide_type == "grasp":
-                    ripp.radar_count  = orf.radar_count
+                    ripp.radar_score  = orf.radar_score
+                    ripp.csv_columns.append(orf.radar_score)
                 if ripp.valid_split or master_conf[module.peptide_type]['variables']['exhaustive']:
-                    if orf.radar_count > 0:
-                        print("RADAR SCORE", orf.radar_count)
-                        print(len(orf.sequence))
                     self.ripps[module.peptide_type].append(ripp)
                 
     def score_ripps(self, module, pfam_hmm, cust_hmm):

@@ -1,10 +1,4 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Oct  3 18:36:01 2017
-
-@author: bryce
-"""
 #==============================================================================
 # Copyright (C) 2017 Bryce L. Kille
 # University of Illinois

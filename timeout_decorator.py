@@ -1,16 +1,8 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Dec  3 09:13:51 2017
-
-@author: bryce
-"""
-
 from functools import wraps
 import errno
 import os
 import signal
-
 
 class TimeoutError(Exception):
     pass

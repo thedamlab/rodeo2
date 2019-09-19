@@ -1,11 +1,4 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Aug  7 20:58:10 2017
-
-@author: bryce
-"""
-
 #==============================================================================
 # NCBI utilities policies are available here:
 # https://www.ncbi.nlm.nih.gov/home/about/policies/
@@ -39,16 +32,13 @@ Created on Mon Aug  7 20:58:10 2017
 # GNU Affero General Public License for more details.
 #==============================================================================
 
-import socket
 import traceback
 from Bio import Entrez, SeqIO
-from Bio.Seq import Seq
 from Bio.Alphabet import generic_dna
 from My_Record import My_Record, Sub_Seq
 import logging
 from rodeo_main import VERBOSITY
 import time
-import random
 from timeout_decorator import timeout, TimeoutError
 
 logger = logging.getLogger(__name__)
@@ -84,7 +74,6 @@ def get_gb_handles(prot_accession_id):
             record = Entrez.read(Entrez.esearch("protein",term=prot_accession_id))
             total_count = record["Count"]
             if int(total_count) < 1:
-#                logger.error("Esearch returns no results for query " + prot_accession_id)
                 return -1
                 
             IdList = record["IdList"]
@@ -92,7 +81,6 @@ def get_gb_handles(prot_accession_id):
             link_records = Entrez.read(Entrez.elink(dbfrom="protein",db="nuccore",id=IdList))
             nuccore_ids=[]
             if len(link_records[0]['LinkSetDb']) == 0:
-#                logger.error("%s has no nuccore entries..." % (prot_accession_id))
                 return -2
             for record in link_records[0]['LinkSetDb'][0]['Link']:
                 nuccore_ids.append(record['Id']) 

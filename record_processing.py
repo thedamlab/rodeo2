@@ -1,11 +1,4 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Oct  3 19:24:08 2017
-
-@author: bryce
-"""
-
 #==============================================================================
 # Copyright (C) 2017 Bryce L. Kille
 # University of Illinois
@@ -36,13 +29,11 @@ Created on Tue Oct  3 19:24:08 2017
 # GNU Affero General Public License for more details.
 #==============================================================================
 
-import os
 from entrez_utils import get_gb_handles, get_record_from_gb_handle
 import logging
 from rodeo_main import VERBOSITY, QUEUE_CAP
 import traceback
 import sys
-import glob
 
 logger = logging.getLogger(__name__)
 logger.setLevel(VERBOSITY)
