@@ -1,11 +1,4 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Aug 23 20:06:47 2017
-
-@author: bryce
-"""
-
 #==============================================================================
 # Copyright (C) 2017 Bryce L. Kille
 # University of Illinois
@@ -45,7 +38,6 @@ Created on Wed Aug 23 20:06:47 2017
 import csv
 import os
 import re
-from ripp_modules.SvmClassify import SVMRunner
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from ripp_modules.VirtualRipp import VirtualRipp
 import hmmer_utils
