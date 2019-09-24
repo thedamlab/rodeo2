@@ -183,11 +183,9 @@ def draw_orf_diagram(main_html, peptide_conf, record, peptide_type):
     index = 0
     if peptide_type != 'general':
         for ripp in record.ripps[peptide_type]:
-            if ripp.score <= 0:
-                continue
-            index += 1
             if ripp.score <= ripp.CUTOFF // 2:
                 continue
+            index += 1
             if peptide_conf['variables']['precursor_min'] <= len(ripp.sequence) <= peptide_conf['variables']['precursor_max'] or \
                             ("M" in ripp.sequence[-peptide_conf['variables']['precursor_max']:]):
                             draw_orf_arrow(main_html, ripp, sub_by, scale_factor, index)
