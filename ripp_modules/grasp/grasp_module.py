@@ -44,7 +44,7 @@ import hmmer_utils
 from collections import defaultdict
 
 peptide_type = "grasp"
-CUTOFF = 11
+CUTOFF = 10
 index = 0
 
 
@@ -124,7 +124,7 @@ class Ripp(VirtualRipp):
     def set_score(self, pfam_dir, cust_hmm):
         scoring_csv_columns = []
         self.score = 0
-        mdn_bcd = ["TIGR04185", "TIGR04184", "PF00583", "PF13673", "PF13302", "PF13523", "TIGR04187"]
+        mdn_bcd = ["TIGR04185", "TIGR04184", "PF00583", "PF13673", "PF13302", "PF13523", "TIGR04187", "TgnB", "PsnB", "MvdD", "MvdC"]
         bsp_coords = []
         for pfam in self.pfam_2_coords.keys():
             if any(fam in pfam for fam in mdn_bcd):
@@ -261,6 +261,10 @@ class Ripp(VirtualRipp):
         same_dir = False
         if "TIGR04184" in self.pfam_2_coords.keys():
             for coord in self.pfam_2_coords["TIGR04184"]:
+                if (coord[0] < coord[1] and direction == 1) or coord[0] > coord[1] and direction == -1:
+                    same_dir = True
+        if "MvdD" in self.pfam_2_coords.keys():
+            for coord in self.pfam_2_coords["MvdD"]:
                 if (coord[0] < coord[1] and direction == 1) or coord[0] > coord[1] and direction == -1:
                     same_dir = True
         if same_dir:

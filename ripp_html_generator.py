@@ -33,6 +33,12 @@ from rodeo_main import VERSION
 
 index = 0
 
+def compress_sequence(sequence, threshold=100):
+    if len(sequence) > threshold:
+        return sequence[:(threshold//2)] +  "..." + sequence[-(threshold//2):]
+    else:
+        return sequence
+
 def write_header(html_file, master_conf, peptide_type):
     html_file.write("""
     <html>
@@ -180,7 +186,7 @@ def draw_orf_diagram(main_html, peptide_conf, record, peptide_type):
             if ripp.score <= 0:
                 continue
             index += 1
-            if ripp.score <= ripp.CUTOFF/4.0:
+            if ripp.score <= ripp.CUTOFF // 2:
                 continue
             if peptide_conf['variables']['precursor_min'] <= len(ripp.sequence) <= peptide_conf['variables']['precursor_max'] or \
                             ("M" in ripp.sequence[-peptide_conf['variables']['precursor_max']:]):
@@ -308,7 +314,7 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
         for orf in record.intergenic_orfs:
             main_html.write("<tr>\n")
             main_html.write("<td>%d</td>" % (index))
-            main_html.write("<td>%s</td>" % (orf.sequence))
+            main_html.write("<td>%s</td>" % (compress_sequence(orf.sequence)))
             main_html.write("<td>%d</td>" % (orf.start))
             main_html.write("<td>%d</td>" % (orf.end))
             main_html.write("<td>%s</td>" % (orf.direction))
@@ -316,7 +322,7 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
             index += 1
     elif peptide_type in ["lasso", "lanthi", "sacti", "thio", "grasp"]:
         for ripp in record.ripps[peptide_type]:
-            if ripp.score <= 0:
+            if ripp.score <= ripp.CUTOFF // 2:
                 continue
             if not master_conf[peptide_type]['variables']['precursor_min'] <= len(ripp.sequence) <= master_conf[peptide_type]['variables']['precursor_max'] and \
                             not ("M" in ripp.sequence[-master_conf[peptide_type]['variables']['precursor_max']:]):
@@ -325,10 +331,10 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
             main_html.write("<td>%d</td>" % (index))
             if print_precursors:
                 if peptide_type in ["lasso", "lanthi", "sacti", "thio", "grasp"]:
-                    main_html.write("<td>%s</td>" % (ripp.leader))
-                    main_html.write("<td>%s</td>" % (ripp.core))
+                    main_html.write("<td>%s</td>" % (compress_sequence(ripp.leader,50)))
+                    main_html.write("<td>%s</td>" % (compress_sequence(ripp.core, 50)))
                 else:
-                    main_html.write("<td>%s</td>" % (ripp.sequence))
+                    main_html.write("<td>%s</td>" % (compress_sequence(ripp.sequence)))
             main_html.write("<td>%d</td>" % (ripp.start))
             main_html.write("<td>%d</td>" % (ripp.end))
             main_html.write("<td>%s</td>" % (ripp.direction))

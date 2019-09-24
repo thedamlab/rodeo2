@@ -144,9 +144,8 @@ class My_Record(object):
         self.pfam_2_coords = {}
         for CDS in self.CDSs:
             CDS.pfam_descr_list = hmmer_utils.get_hmmer_info(CDS.sequence, primary_hmm, cust_hmm) #Possible input for n and e_cutoff here
-            if min_length <= len(CDS.sequence) <= max_length or CDS.radar_score > 0 and len(CDS.sequence) < 400: # len(CDS.pfam_descr_list) == 0 and 
+            if min_length <= len(CDS.sequence) <= max_length: # len(CDS.pfam_descr_list) == 0 and 
                 self.intergenic_orfs.append(CDS)
-                continue
             for annot in CDS.pfam_descr_list:
                 if any(fam in annot[0] for fam in ["PF14404", "PF14406", "PF14407", "PF14408", "PF14409", "PF12559" ,"TIGR04186"]):
                     self.intergenic_orfs.append(CDS)
@@ -271,12 +270,12 @@ class My_Record(object):
         for orf in self.intergenic_orfs:
             orf.radar_score = get_radar_score(orf.sequence)
             if master_conf[module.peptide_type]['variables']['precursor_min'] <= len(orf.sequence) <=  master_conf[module.peptide_type]['variables']['precursor_max'] \
-                or ("M" in orf.sequence[-master_conf[module.peptide_type]['variables']['precursor_max']:])  \
+                or ("M" in orf.sequence[-master_conf[module.peptide_type]['variables']['precursor_max']:]) \
                 or (module.peptide_type == "grasp" and orf.radar_score > 0 and len(orf.sequence) < 400):
                 ripp = module.Ripp(orf.start, orf.end, str(orf.sequence), orf.upstream_sequence, self.pfam_2_coords)
                 if module.peptide_type == "grasp":
-                    ripp.radar_score  = orf.radar_score
                     ripp.csv_columns.append(orf.radar_score)
+                ripp.radar_score  = orf.radar_score
                 if ripp.valid_split or master_conf[module.peptide_type]['variables']['exhaustive']:
                     self.ripps[module.peptide_type].append(ripp)
                 
@@ -329,10 +328,17 @@ def update_score_w_svm(output_dir, records):
         for peptide_type in records[0].ripps.keys():
             score_reader = csv.reader(open(output_dir + '/' + peptide_type + '/' +\
                                            peptide_type + '_features.csv')) 
-            next(score_reader)
+            header = next(score_reader)
+            score_col = 6
+            try:
+                score_col = header.index("Total Score")
+            except ValueError:
+                logger.error("Temporary CSV format invalid. No column named \"Total Score\". Score results are most likely invalid.")
             
             score_reader_done = False
+            total_ripps = 0
             for record in records:
+                total_ripps += len(record.ripps[peptide_type])
                 for ripp in record.ripps[peptide_type]:
                     if not score_reader_done:
                         try:
@@ -345,6 +351,7 @@ def update_score_w_svm(output_dir, records):
                             print(e)
                             score_reader_done = True
                             logger.warning("Mismatch in RiPP count and length of CSV. Score results are most likely invalid")
+                            print(total_ripps)
                             return
-                    ripp.score = int(line[6])
+                    ripp.score = int(line[score_col])
                         

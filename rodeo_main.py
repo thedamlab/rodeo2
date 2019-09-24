@@ -199,9 +199,11 @@ def __main__():
         logger.critical("Invalid argument for -ft/-fetch_type")
         return None
     
-    if 'sacti' in args.peptide_types or 'lanthi' in args.peptide_types:
+    if any(pt in ['sacti', 'lanthi', 'grasp'] for pt in args.peptide_types):
         if not any ("tigr" in hmm_name.lower() for hmm_name in args.custom_hmm):
             logger.warn("Lanthi and/or sacti heuristics require TIGRFAM hmm. Make sure its location is specified with the -hmm or --custom_hmm flag.")
+    if "grasp" in args.peptide_types:
+        args.custom_hmm.append("ripp_modules/grasp/hmms/grasp.hmm")
             
 #==============================================================================
 #   Set up queries/read query files   
@@ -331,7 +333,7 @@ def __main__():
                 for ripp in record.ripps[peptide_type]:
                     if master_conf[peptide_type]['variables']['precursor_min'] <= len(ripp.sequence) <= master_conf[peptide_type]['variables']['precursor_max'] \
                         or ("M" in ripp.sequence[-master_conf[peptide_type]['variables']['precursor_max']:]) \
-                        or (module.peptide_type == "grasp" and orf.radar_score > 0 and len(orf.sequence) < 400):
+                        or (module.peptide_type == "grasp" and ripp.radar_score > 0 and len(ripp.sequence) < 400):
                             
                         list_of_rows.append(ripp.csv_columns)
                 if peptide_type == "grasp":
@@ -344,7 +346,6 @@ def __main__():
             record = processed_records_q.get()    
         # END MAIN LOOP
         main_html.write("</html>")
-        
         # Update score w SVM.
         try:
             for peptide_type in peptide_types:
