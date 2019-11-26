@@ -288,7 +288,7 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
               <tbody>
                 <tr>
                 <th scope="col">index</th>""")
-    if peptide_type in ["lasso", "lanthi", "sacti", "thio"]:
+    if peptide_type in ["lasso", "lanthi", "lanthi_i", "sacti", "thio"]:
         main_html.write("""
               <th scope="col">leader</th>
               <th scope="col">core</th>""")
@@ -318,7 +318,7 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
             main_html.write("<td>%s</td>" % (orf.direction))
             main_html.write("</tr>\n")
             index += 1
-    elif peptide_type in ["lasso", "lanthi", "sacti", "thio", "grasp"]:
+    elif peptide_type in ["lasso", "lanthi", "lanthi_i", "sacti", "thio", "grasp"]:
         for ripp in record.ripps[peptide_type]:
             if ripp.score <= ripp.CUTOFF // 2:
                 continue
@@ -328,7 +328,7 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
             main_html.write("<tr>\n")
             main_html.write("<td>%d</td>" % (index))
             if print_precursors:
-                if peptide_type in ["lasso", "lanthi", "sacti", "thio", "grasp"]:
+                if peptide_type in ["lasso", "lanthi", "lanthi_i", "sacti", "thio", "grasp"]:
                     main_html.write("<td>%s</td>" % (compress_sequence(ripp.leader,50)))
                     main_html.write("<td>%s</td>" % (compress_sequence(ripp.core, 50)))
                 else:

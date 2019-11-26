@@ -245,6 +245,8 @@ def __main__():
             import ripp_modules.lasso.lasso_module as module
         elif peptide_type == "lanthi":
             import ripp_modules.lanthi.lanthi_module as module
+        elif peptide_type == "lanthi_i":
+            import ripp_modules.lanthi_i.lanthi_i_module as module
         elif peptide_type == "sacti":
             import ripp_modules.sacti.sacti_module as module
         elif peptide_type == "thio":
@@ -372,7 +374,7 @@ def __main__():
             for record in records:
                 ripp_html_generator.write_record(ripp_htmls[peptide_type], master_conf, record, peptide_type)
             try:
-                os.remove(output_dir + "/" + peptide_type + "/" + "temp_features.csv")
+#                os.remove(output_dir + "/" + peptide_type + "/" + "temp_features.csv")
                 pass
             except OSError:
                 logger.debug("Temp feature file appears to be missing...")
