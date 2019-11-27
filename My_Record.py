@@ -354,4 +354,6 @@ def update_score_w_svm(output_dir, records):
                             print(total_ripps)
                             return
                     ripp.score = int(line[score_col])
+                    ripp.confidence = float(ripp.score)/(ripp.CUTOFF)
+                    
                         
