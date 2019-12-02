@@ -268,7 +268,8 @@ class My_Record(object):
         logger.debug("Setting %s ripps for %s" % (module.peptide_type, self.query_accession_id))
         self.ripps[module.peptide_type] = []
         for orf in self.intergenic_orfs:
-            orf.radar_score = get_radar_score(orf.sequence)
+            if module.peptide_type == "grasp":
+                orf.radar_score = get_radar_score(orf.sequence)
             if master_conf[module.peptide_type]['variables']['precursor_min'] <= len(orf.sequence) <=  master_conf[module.peptide_type]['variables']['precursor_max'] \
                 or ("M" in orf.sequence[-master_conf[module.peptide_type]['variables']['precursor_max']:]) \
                 or (module.peptide_type == "grasp" and orf.radar_score > 0 and len(orf.sequence) < 400):

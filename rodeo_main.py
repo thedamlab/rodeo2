@@ -245,8 +245,14 @@ def __main__():
             import ripp_modules.lasso.lasso_module as module
         elif peptide_type == "lanthi":
             import ripp_modules.lanthi.lanthi_module as module
-        elif peptide_type == "lanthi_i":
-            import ripp_modules.lanthi_i.lanthi_i_module as module
+        elif peptide_type == "lanthi1":
+            import ripp_modules.lanthi1.lanthi1_module as module
+        elif peptide_type == "lanthi2":
+            import ripp_modules.lanthi2.lanthi2_module as module
+        elif peptide_type == "lanthi3":
+            import ripp_modules.lanthi3.lanthi3_module as module
+        elif peptide_type == "lanthi4":
+            import ripp_modules.lanthi4.lanthi4_module as module
         elif peptide_type == "sacti":
             import ripp_modules.sacti.sacti_module as module
         elif peptide_type == "thio":
