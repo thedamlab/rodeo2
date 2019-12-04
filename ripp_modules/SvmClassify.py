@@ -90,6 +90,18 @@ class SVMRunner(object):
         elif peptide_type == 'lanthi':
             self.C_option = 48205.77
             self.gamma_option = 1E-9
+        elif peptide_type == 'lanthi1':
+            self.C_option = 283117
+            self.gamma_option = 1E-7
+        elif peptide_type == 'lanthi2':
+            self.C_option = 8208
+            self.gamma_option = 1E-6
+        elif peptide_type == 'lanthi3':
+            self.C_option = 283117
+            self.gamma_option = 1E-7
+        elif peptide_type == 'lanthi4':
+            self.C_option = 283117
+            self.gamma_option = 1E-7
         elif peptide_type == 'sacti':
             self.C_option = 9765625
             self.gamma_option = 1E-9
