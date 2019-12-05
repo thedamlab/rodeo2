@@ -101,7 +101,7 @@ class Ripp(VirtualRipp):
         if len(f_scores[0]) > 0:
             self.score += 10
         regex1 = re.search('(.[S|T].{2,7}C)', self.sequence[l_stop:])
-        regex2 = re.search('(G[G|A])', self.sequence[l_stop:])
+        regex2 = re.search('(G[G|A|S])', self.sequence[l_stop:])
     
         if regex1 and regex2:
             if regex2.end() < regex1.start() and regex2.end()+l_stop > 10:
