@@ -50,7 +50,7 @@ if socket.gethostname() == "rodeo.scs.illinois.edu":
 if WEB_TOOL:
     RODEO_DIR = "/home/ubuntu/website/go/rodeo2/"
     os.chdir(RODEO_DIR)
-VERSION = "2.1.4"
+VERSION = "2.2.0"
 VERBOSITY = logging.DEBUG
 QUEUE_CAP = "END_OF_QUEUE"
 processes = []
