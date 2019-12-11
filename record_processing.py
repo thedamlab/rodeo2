@@ -74,6 +74,8 @@ def process_record_worker(unprocessed_records_q, processed_records_q, args, mast
                     record.trim_to_n_orfs(master_conf['general']['variables']['fetch_n'], master_conf['general']['variables']['fetch_distance'])
                 elif master_conf['general']['variables']['fetch_type'].lower() == 'nucs':
                     record.trim_to_n_nucleotides(master_conf['general']['variables']['fetch_n'])
+#                if "grasp" in args.peptide_types:
+#                    record.run_radar()
                 record.annotate_w_hmmer(master_conf['general']['variables']['pfam_dir'], args.custom_hmm, 
                                         min_length=master_conf['general']['variables']['precursor_min'], 
                                         max_length=master_conf['general']['variables']['precursor_max'])

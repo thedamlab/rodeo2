@@ -44,12 +44,14 @@ try:
 except ImportError:
     from urllib2 import Request, urlopen  # Python 2
 
-WEB_TOOL = (socket.gethostname() == "rodeo.scs.illinois.edu")
+WEB_TOOL = False
+if socket.gethostname() == "rodeo.scs.illinois.edu":
+    WEB_TOOL = True
 if WEB_TOOL:
     RODEO_DIR = "/home/ubuntu/website/go/rodeo2/"
     os.chdir(RODEO_DIR)
 VERSION = "2.1.4"
-VERBOSITY = logging.INFO
+VERBOSITY = logging.DEBUG
 QUEUE_CAP = "END_OF_QUEUE"
 processes = []
 
@@ -197,9 +199,11 @@ def __main__():
         logger.critical("Invalid argument for -ft/-fetch_type")
         return None
     
-    if 'sacti' in args.peptide_types or 'lanthi' in args.peptide_types:
+    if any(pt in ['sacti', 'lanthi', 'grasp'] for pt in args.peptide_types):
         if not any ("tigr" in hmm_name.lower() for hmm_name in args.custom_hmm):
             logger.warn("Lanthi and/or sacti heuristics require TIGRFAM hmm. Make sure its location is specified with the -hmm or --custom_hmm flag.")
+    if "grasp" in args.peptide_types:
+        args.custom_hmm.append("ripp_modules/grasp/hmms/grasp.hmm")
             
 #==============================================================================
 #   Set up queries/read query files   
@@ -241,10 +245,20 @@ def __main__():
             import ripp_modules.lasso.lasso_module as module
         elif peptide_type == "lanthi":
             import ripp_modules.lanthi.lanthi_module as module
+        elif peptide_type == "lanthi1":
+            import ripp_modules.lanthi1.lanthi1_module as module
+        elif peptide_type == "lanthi2":
+            import ripp_modules.lanthi2.lanthi2_module as module
+        elif peptide_type == "lanthi3":
+            import ripp_modules.lanthi3.lanthi3_module as module
+        elif peptide_type == "lanthi4":
+            import ripp_modules.lanthi4.lanthi4_module as module
         elif peptide_type == "sacti":
             import ripp_modules.sacti.sacti_module as module
         elif peptide_type == "thio":
             import ripp_modules.thio.thio_module as module
+        elif peptide_type == "grasp":
+            import ripp_modules.grasp.grasp_module as module
         else:
             logger.error("%s not in supported RiPP types" % (peptide_type))
             continue
@@ -298,14 +312,22 @@ def __main__():
             # Write unclassified ripps
             module = nulltype_module
             for orf in record.intergenic_orfs:
+                if orf.start < orf.end:
+                    direction = "+"
+                else:
+                    direction = "-"
                 row = [query, record.cluster_genus_species, record.cluster_accession, 
-                       orf.start, orf.end, orf.direction, orf.sequence]
+                       orf.start, orf.end, direction, orf.sequence]
                 module.main_write_row(output_dir, row)
                 
             # Write unclassified CDSs
             for cds in record.CDSs:
+                if cds.start < cds.end:
+                    direction = "+"
+                else:
+                    direction = "-"
                 row = [query, record.cluster_genus_species, record.cluster_accession,
-                       cds.accession_id, cds.start, cds.end, cds.direction]
+                       cds.accession_id, cds.start, cds.end, direction]
                 for pfam_acc, desc, e_val, name in cds.pfam_descr_list:
                     row += [pfam_acc, name, desc, e_val]
                 module.co_occur_write_row(output_dir, row)
@@ -318,21 +340,28 @@ def __main__():
                 module = ripp_modules[peptide_type]
                 for ripp in record.ripps[peptide_type]:
                     if master_conf[peptide_type]['variables']['precursor_min'] <= len(ripp.sequence) <= master_conf[peptide_type]['variables']['precursor_max'] \
-                        or ("M" in ripp.sequence[-master_conf[peptide_type]['variables']['precursor_max']:]):
+                        or ("M" in ripp.sequence[-master_conf[peptide_type]['variables']['precursor_max']:]) \
+                        or (module.peptide_type == "grasp" and ripp.radar_score > 0 and len(ripp.sequence) < 400):
                             
                         list_of_rows.append(ripp.csv_columns)
-                VirtualRipp.ripp_write_rows(args.output_dir, peptide_type, record.query_accession_id, #cluster acc or query acc?
-                                       record.cluster_genus_species, list_of_rows)
+                if peptide_type == "grasp":
+                    VirtualRipp.ripp_write_rows(args.output_dir, peptide_type, record.query_accession_id, #cluster acc or query acc?
+                                           record.cluster_genus_species, list_of_rows, 6)
+                else:
+                    VirtualRipp.ripp_write_rows(args.output_dir, peptide_type, record.query_accession_id, #cluster acc or query acc?
+                                           record.cluster_genus_species, list_of_rows)
             records.append(record)
             record = processed_records_q.get()    
         # END MAIN LOOP
         main_html.write("</html>")
-        
         # Update score w SVM.
         try:
             for peptide_type in peptide_types:
                 module = ripp_modules[peptide_type]
-                VirtualRipp.run_svm(output_dir, peptide_type, module.CUTOFF)
+                if peptide_type == "grasp":
+                    VirtualRipp.run_svm(output_dir, peptide_type, module.CUTOFF, 6)
+                else:
+                    VirtualRipp.run_svm(output_dir, peptide_type, module.CUTOFF)
             My_Record.update_score_w_svm(output_dir, records)
         except KeyboardInterrupt:
             raise KeyboardInterrupt
@@ -351,7 +380,7 @@ def __main__():
             for record in records:
                 ripp_html_generator.write_record(ripp_htmls[peptide_type], master_conf, record, peptide_type)
             try:
-                os.remove(output_dir + "/" + peptide_type + "/" + "temp_features.csv")
+#                os.remove(output_dir + "/" + peptide_type + "/" + "temp_features.csv")
                 pass
             except OSError:
                 logger.debug("Temp feature file appears to be missing...")
