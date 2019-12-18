@@ -43,7 +43,7 @@ from ripp_modules.VirtualRipp import VirtualRipp
 import hmmer_utils
 
 peptide_type = "linar"
-CUTOFF = 20
+CUTOFF = 10
 index = 0
 
 def write_csv_headers(output_dir):
