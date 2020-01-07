@@ -124,6 +124,10 @@ class Ripp(VirtualRipp):
             self.split_index = (int)((len(self.sequence)-l_stop)/2)+l_stop
         self.leader = self.sequence[:self.split_index]
         self.core = self.sequence[self.split_index:]
+        if len(self.core) < 7:
+            self.split_index = len(self.sequence) // 2
+            self.leader = self.sequence[:self.split_index]
+            self.core = self.sequence[self.split_index:]
     
     def set_score(self, pfam_hmm, cust_hmm):
         scoring_csv_columns = []
