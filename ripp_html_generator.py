@@ -309,35 +309,51 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
     
     index = 1
     if peptide_type == 'general':
+        prev_end = 0
+        rowcolor = 1
         for orf in record.intergenic_orfs:
-            main_html.write("<tr>\n")
+            if prev_end != orf.end:
+                rowcolor = rowcolor * -1
+            if rowcolor == 1:
+                main_html.write("<tr>\n")
+            else:
+                main_html.write('<tr style="background-color:#E8E8E8">\n')
             main_html.write("<td>%d</td>" % (index))
-            main_html.write("<td>%s</td>" % (compress_sequence(orf.sequence)))
+            main_html.write('<td style="text-align:right">%s</td>' % (compress_sequence(orf.sequence)))
             main_html.write("<td>%d</td>" % (orf.start))
             main_html.write("<td>%d</td>" % (orf.end))
             main_html.write("<td>%s</td>" % (orf.direction))
             main_html.write("</tr>\n")
+            prev_end = orf.end
             index += 1
     elif peptide_type in ["lasso", "lanthi", "lanthi1", "lanthi2", "lanthi3", "lanthi4", "sacti", "thio"]:
+        prev_end = 0
+        rowcolor = 1
         for ripp in record.ripps[peptide_type]:
             if ripp.score <= ripp.CUTOFF // 2:
                 continue
             if not master_conf[peptide_type]['variables']['precursor_min'] <= len(ripp.sequence) <= master_conf[peptide_type]['variables']['precursor_max'] and \
                             not ("M" in ripp.sequence[-master_conf[peptide_type]['variables']['precursor_max']:]):
                             continue
-            main_html.write("<tr>\n")
+            if prev_end != ripp.end:
+                rowcolor = rowcolor * -1
+            if rowcolor == 1:
+                main_html.write("<tr>\n")
+            else:
+                main_html.write('<tr style="background-color:#E8E8E8">\n')
             main_html.write("<td>%d</td>" % (index))
             if print_precursors:
                 if peptide_type in ["lasso", "lanthi", "lanthi1", "lanthi2", "lanthi3", "lanthi4", "sacti", "thio", "grasp"]:
-                    main_html.write("<td>%s</td>" % (compress_sequence(ripp.leader,50)))
-                    main_html.write("<td>%s</td>" % (compress_sequence(ripp.core, 50)))
+                    main_html.write('<td style="text-align:right">%s</td>' % (compress_sequence(ripp.leader,50)))
+                    main_html.write('<td style="text-align:right">%s</td>' % (compress_sequence(ripp.core, 50)))
                 else:
-                    main_html.write("<td>%s</td>" % (compress_sequence(ripp.sequence)))
+                    main_html.write('<td style="text-align:right">%s</td>' % (compress_sequence(ripp.sequence)))
             main_html.write("<td>%d</td>" % (ripp.start))
             main_html.write("<td>%d</td>" % (ripp.end))
             main_html.write("<td>%s</td>" % (ripp.direction))
             main_html.write("<td>%d</td>" % (ripp.score))
             main_html.write("</tr>\n")
+            prev_end = ripp.end
             index += 1
     main_html.write("</tbody></table>")
     
@@ -380,4 +396,5 @@ def write_record(main_html, master_conf, record, peptide_type):
     draw_cds_table(main_html, record)
     draw_orf_table(main_html, record, peptide_type, master_conf)
     index += 1
+
     
