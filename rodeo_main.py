@@ -50,8 +50,8 @@ if socket.gethostname() == "rodeo.scs.illinois.edu":
 if WEB_TOOL:
     RODEO_DIR = "/home/ubuntu/website/go/rodeo2/"
     os.chdir(RODEO_DIR)
-VERSION = "2.1.4"
-VERBOSITY = logging.DEBUG
+VERSION = "2.2.0"
+VERBOSITY = logging.INFO
 QUEUE_CAP = "END_OF_QUEUE"
 processes = []
 
@@ -201,7 +201,7 @@ def __main__():
     
     if any(pt in ['sacti', 'lanthi', 'grasp'] for pt in args.peptide_types):
         if not any ("tigr" in hmm_name.lower() for hmm_name in args.custom_hmm):
-            logger.warn("Lanthi and/or sacti heuristics require TIGRFAM hmm. Make sure its location is specified with the -hmm or --custom_hmm flag.")
+            logger.warning("Lanthi, sacti, and grasp heuristics require TIGRFAM hmm. Make sure its location is specified with the -hmm or --custom_hmm flag.")
     if "grasp" in args.peptide_types:
         args.custom_hmm.append("ripp_modules/grasp/hmms/grasp.hmm")
             
@@ -344,12 +344,8 @@ def __main__():
                         or (module.peptide_type == "grasp" and ripp.radar_score > 0 and len(ripp.sequence) < 400):
                             
                         list_of_rows.append(ripp.csv_columns)
-                if peptide_type == "grasp":
-                    VirtualRipp.ripp_write_rows(args.output_dir, peptide_type, record.query_accession_id, #cluster acc or query acc?
-                                           record.cluster_genus_species, list_of_rows, 6)
-                else:
-                    VirtualRipp.ripp_write_rows(args.output_dir, peptide_type, record.query_accession_id, #cluster acc or query acc?
-                                           record.cluster_genus_species, list_of_rows)
+                VirtualRipp.ripp_write_rows(args.output_dir, peptide_type, record.query_accession_id, #cluster acc or query acc?
+                                       record.cluster_genus_species, list_of_rows)
             records.append(record)
             record = processed_records_q.get()    
         # END MAIN LOOP
@@ -358,10 +354,7 @@ def __main__():
         try:
             for peptide_type in peptide_types:
                 module = ripp_modules[peptide_type]
-                if peptide_type == "grasp":
-                    VirtualRipp.run_svm(output_dir, peptide_type, module.CUTOFF, 6)
-                else:
-                    VirtualRipp.run_svm(output_dir, peptide_type, module.CUTOFF)
+                VirtualRipp.run_svm(output_dir, peptide_type, module.CUTOFF)
             My_Record.update_score_w_svm(output_dir, records)
         except KeyboardInterrupt:
             raise KeyboardInterrupt

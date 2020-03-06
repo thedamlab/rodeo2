@@ -114,9 +114,10 @@ class My_Record(object):
         self.fetch_n = n
         if query_index == -1:
             return
-        self.window_start = max(0, self.CDSs[query_index].start - n)
+        self.window_start = max(0, min(self.CDSs[query_index].start, self.CDSs[query_index].end) - n)
         self.window_end = min(len(self.cluster_sequence), 
-                              self.CDSs[query_index].end + n)
+                              max(self.CDSs[query_index].start, self.CDSs[query_index].end) + n)
+
         self._clean_CDSs()
         
     def trim_to_n_orfs(self, n, fetch_distance):
@@ -128,9 +129,10 @@ class My_Record(object):
             return
         first_cds = max(0, query_index - n)
         last_cds = min(len(self.CDSs)-1, query_index + n)
-        self.window_start = min(self.CDSs[first_cds].start, self.CDSs[first_cds].end)
-        self.window_end = max(self.CDSs[first_cds].start, 
-                              self.CDSs[last_cds].end)
+        self.window_start = min(self.CDSs[first_cds].start, self.CDSs[first_cds].end,
+                                self.CDSs[last_cds].start, self.CDSs[last_cds].end)
+        self.window_end = max(self.CDSs[first_cds].start,  self.CDSs[first_cds].end,
+                              self.CDSs[last_cds].start, self.CDSs[last_cds].end)
         self.window_start = max(0, self.window_start - fetch_distance)
         self.window_end = min(len(self.cluster_sequence), 
                               self.window_end + fetch_distance)
@@ -144,7 +146,7 @@ class My_Record(object):
         self.pfam_2_coords = {}
         for CDS in self.CDSs:
             CDS.pfam_descr_list = hmmer_utils.get_hmmer_info(CDS.sequence, primary_hmm, cust_hmm) #Possible input for n and e_cutoff here
-            if min_length <= len(CDS.sequence) <= max_length: # len(CDS.pfam_descr_list) == 0 and 
+            if min_length <= len(CDS.sequence)/3 <= max_length: # len(CDS.pfam_descr_list) == 0 and 
                 self.intergenic_orfs.append(CDS)
             for annot in CDS.pfam_descr_list:
                 if any(fam in annot[0] for fam in ["PF14404", "PF14406", "PF14407", "PF14408", "PF14409", "PF12559" ,"TIGR04186"]):
@@ -202,7 +204,6 @@ class My_Record(object):
                     else:
                         next_start = max(intergenic_seq.start - overlap, self.window_start)
                         intergenic_seq_end = min(self.window_end, intergenic_seq.end + overlap)
-                        
                     start = 0
                     #Stay in the loop until we can't find a stop codon
                     while start < intergenic_seq_end:
@@ -257,6 +258,7 @@ class My_Record(object):
         #they share nucleotides with eachother
         i = 1
         while i < len(self.intergenic_orfs):
+            # print(self.intergenic_orfs[i].start)
             if self.intergenic_orfs[i].start == self.intergenic_orfs[i-1].start:
                 del self.intergenic_orfs[i]
             i += 1
@@ -275,7 +277,7 @@ class My_Record(object):
                 or (module.peptide_type == "grasp" and orf.radar_score > 0 and len(orf.sequence) < 400):
                 ripp = module.Ripp(orf.start, orf.end, str(orf.sequence), orf.upstream_sequence, self.pfam_2_coords)
                 if module.peptide_type == "grasp":
-                    ripp.csv_columns.append(orf.radar_score)
+                    ripp.radar_score = orf.radar_score
                 ripp.radar_score  = orf.radar_score
                 if ripp.valid_split or master_conf[module.peptide_type]['variables']['exhaustive']:
                     self.ripps[module.peptide_type].append(ripp)

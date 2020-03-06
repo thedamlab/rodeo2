@@ -318,7 +318,7 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
             main_html.write("<td>%s</td>" % (orf.direction))
             main_html.write("</tr>\n")
             index += 1
-    elif peptide_type in ["lasso", "lanthi", "lanthi1", "lanthi2", "lanthi3", "lanthi4", "sacti", "thio"]:
+    elif peptide_type in ["lasso", "lanthi", "lanthi1", "lanthi2", "lanthi3", "lanthi4", "sacti", "thio", "grasp"]:
         for ripp in record.ripps[peptide_type]:
             if ripp.score <= ripp.CUTOFF // 2:
                 continue
