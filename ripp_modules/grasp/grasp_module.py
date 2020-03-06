@@ -508,6 +508,7 @@ class Ripp(VirtualRipp):
         scoring_csv_columns.append(len(all_fimo_motifs))
         #Motif scores
         scoring_csv_columns += [all_fimo_score[motif] if motif in all_fimo_score else 0 for motif in all_motifs]
+        
         #Sum of MEME scores
         scoring_csv_columns.append(sum([all_fimo_score[motif] if motif in all_fimo_score else 0 for motif in all_motifs]))
         #No Motifs?
