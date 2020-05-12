@@ -50,7 +50,7 @@ def parse_config_file(filename):
             line = line.strip()
             if line == "\n" or line == "":
                 continue
-            elif line[0] == BEGIN_RIPP:
+            elif line[0] == BEGIN_RIPP and line != ">>":
                 in_ripp = True
                 ripp_type = line[1:].lower()
                 conf_dict[ripp_type] = {}
