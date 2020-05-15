@@ -40,8 +40,10 @@ import sys
 import socket
 from shutil import copyfile
 try:
+    import urllib
     from urllib.request import Request, urlopen  # Python 3
 except ImportError:
+    import urllib2
     from urllib2 import Request, urlopen  # Python 2
 
 WEB_TOOL = False
@@ -128,19 +130,30 @@ def __main__():
 # =============================================================================
 #   Check for updates
 # =============================================================================
-    req = Request('http://update.ripprodeo.org')
-    req.add_header('user-agent', VERSION)
-    mostRecentVersion = urlopen(req, timeout=2.5).read()
-    if mostRecentVersion.decode().strip() != VERSION:
-        logger.info("""
-                    
-        
-                    You are currently running RODEO2 version {}.
-                    The most recent stable version is {}. 
-                    To update your repository, simply run `git pull`
-                    
-                    
-                    """.format(VERSION, mostRecentVersion.decode().strip())) 
+    try:
+        req = Request('http://update.ripprodeo.org')
+        req.add_header('user-agent', VERSION)
+        mostRecentVersion = urlopen(req, timeout=2.5).read()
+        if mostRecentVersion.decode().strip() != VERSION:
+            logger.info("""
+                        
+            
+                        You are currently running RODEO2 version {}.
+                        The most recent stable version is {}. 
+                        To update your repository, simply run `git pull`
+                        
+                        
+                        """.format(VERSION, mostRecentVersion.decode().strip())) 
+    except urllib.error.URLError:
+            logger.warning("""
+                        
+            
+                        You are currently running RODEO2 version {}.
+                        RODEO is unable to check for the most recent version. 
+                        
+                        
+                        """.format(VERSION)) 
+
         
 #==============================================================================
 #   Handle configureations
