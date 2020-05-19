@@ -157,8 +157,8 @@ def __main__():
             print(e)
     master_conf = config_parser.merge_confs(confs)
     master_conf = config_parser.merge_conf_and_arg(master_conf, args)
-    master_conf["general"]["variables"]["precursor_min"] = min([master_conf[x]["variables"]["precursor_min"] for x in args.peptide_types])
-    master_conf["general"]["variables"]["precursor_max"] = max([master_conf[x]["variables"]["precursor_max"] for x in args.peptide_types])
+    master_conf["general"]["variables"]["precursor_min"] = min([master_conf[x]["variables"]["precursor_min"] for x in ["general"] + args.peptide_types])
+    master_conf["general"]["variables"]["precursor_max"] = max([master_conf[x]["variables"]["precursor_max"] for x in ["general"] + args.peptide_types])
     general_conf = master_conf['general']
     if WEB_TOOL:
         general_conf['variables']['pfam_dir'] = "/home/ubuntu/website/go/rodeo2/hmm_dir/Pfam-A.hmm"
