@@ -192,7 +192,7 @@ def get_radar_score(sequence):
                 pass
         # RADAR output is inconsistent. Most of the time it will print
         # two lines of "no results", but other times just 1...
-        lines = out.decode("utf-8").split('\n')
+        lines = out.decode("utf-8", errors="replace").split('\n')
         if (len(lines) < 4): 
             return 0
         results = lines[3].split('|')
