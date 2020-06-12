@@ -30,7 +30,7 @@
 #==============================================================================
 
 import hmmer_utils
-import csv
+import csv, subprocess, os
 import logging 
 from rodeo_main import VERBOSITY
 from ripp_modules.VirtualRipp import get_radar_score
@@ -70,6 +70,7 @@ class My_Record(object):
     #TODO get genus and species frecom gb file
     def __init__(self, query_accession_id):
         self.query_accession_id = query_accession_id
+        self.query_short = query_accession_id.split(".")[0]
         self.cluster_accession = ""
         self.cluster_sequence = ""
         self.cluster_length = ""
@@ -79,6 +80,7 @@ class My_Record(object):
         self.CDSs = []
         self.intergenic_seqs = []
         self.intergenic_orfs = []
+        self.prod_window_start = 0
         self.window_start = 0
         self.window_end = 0
         self.start_codons = ['ATG','GTG', 'TTG']
@@ -106,6 +108,14 @@ class My_Record(object):
             else:
                 i += 1
     
+    def trim_for_prodigal(self, n=50000):
+        """Trim the window down to -n nucleotides of the start of the 
+        query CDS and +n nucleotides of the end of the CDS"""
+        query_index = self.query_index
+        if query_index == -1:
+            return
+        self.prod_window_start = max(0, self.CDSs[query_index].start - n)
+
     #TODO cutoff or keep if in middle of gene?
     def trim_to_n_nucleotides(self, n):
         """Trim the window down to -n nucleotides of the start of the 
@@ -322,7 +332,60 @@ class My_Record(object):
                   " on strand " + str(strand))
             print(sub_seq.sequence + '\n')
         print("="*50)
-    
+
+    def run_prodigal(self):
+        try:
+            prod_prefix = "tmp_files/" + self.query_short
+            prod_train_file = open(prod_prefix+"train.fasta", 'w')
+            prod_train_file.write(">%s %s %s\n%s" % (self.query_accession_id, self.genus, self.species, self.cluster_sequence[self.prod_window_start:self.prod_window_start+100000]))
+            prod_train_file.close()
+            prod_use_file = open(prod_prefix+"prod.fasta", 'w')
+            prod_use_file.write(">%s %s %s\n%s" % (self.query_accession_id, self.genus, self.species, self.cluster_sequence[self.window_start:self.window_end]))
+            prod_use_file.close()
+            try:
+                process = subprocess.Popen(["prodigal", "-i", prod_prefix+"train.fasta", "-o", prod_prefix+"output.txt", "-t", prod_prefix+"train.txt", "-q"])
+                process.wait()
+            except OSError:
+                logger.error("Prodigal failed for %s" % self.query_accession_id)
+            try:
+                process = subprocess.Popen(["prodigal", "-i", prod_prefix+"prod.fasta", "-o", prod_prefix+"output.txt", "-t", prod_prefix+"train.txt", "-s", prod_prefix+"orfs.tsv", "-q"])
+                process.wait()
+            except OSError:
+                logger.error("Prodigal failed for %s" % self.query_accession_id)         
+            os.remove(prod_prefix+"train.fasta")
+            os.remove(prod_prefix+"output.txt")
+            os.remove(prod_prefix+"prod.fasta")
+            os.remove(prod_prefix+"train.txt")
+        except KeyboardInterrupt:
+            try:
+                os.remove(prod_prefix+"train.fasta")
+            except:
+                pass
+            try:
+                os.remove(prod_prefix+"output.txt")
+            except:
+                pass
+            try:
+                os.remove(prod_prefix+"prod.fasta")
+            except:
+                pass
+            try:
+                os.remove(prod_prefix+"train.txt")
+            except:
+                pass
+            try:
+                os.remove(prod_prefix+"orfs.tsv")
+            except:
+                pass
+            logger.critical("SIGINT recieved during Prodigal")
+            raise KeyboardInterrupt
+
+    def find_prod_coordinates(self, beg, end):
+        if(beg<end):
+            return(beg-self.window_start+1, end-self.window_start)
+        else:
+            return(beg-self.window_start+2, end-self.window_start-1)                  
+        
     
 def update_score_w_svm(output_dir, records):
         """Order should be preserved. Goes through file and updates scores"""
@@ -356,5 +419,4 @@ def update_score_w_svm(output_dir, records):
                             return
                     ripp.score = int(line[score_col])
                     ripp.confidence = float(ripp.score)/(ripp.CUTOFF)
-                    
-                        
+

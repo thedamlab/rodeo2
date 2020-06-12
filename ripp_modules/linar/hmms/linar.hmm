@@ -1,7 +1,7 @@
 HMMER3/f [3.1b2 | February 2015]
-NAME  CypH
-ACC   CypH
-DESC CypH Fusion
+NAME  LinH
+ACC   LinH
+DESC LinH (Fusion of LinE/LinG)
 LENG  614
 ALPH  amino
 RF    no
@@ -1867,7 +1867,7 @@ HMM          A        C        D        E        F        G        H        I   
 HMMER3/f [3.1b2 | February 2015]
 NAME  LinA
 ACC LinA
-DESC LinA
+DESC LinA (linaridin precursor)
 LENG  66
 ALPH  amino
 RF    no
@@ -3107,9 +3107,9 @@ HMM          A        C        D        E        F        G        H        I   
           0.57023  0.83332        *  0.94648  0.49120  0.00000        *
 //
 HMMER3/f [3.1b2 | February 2015]
-NAME  LinF
-ACC  LinF
-DESC LinF
+NAME  LinL
+ACC  LinL
+DESC LinL
 LENG  198
 ALPH  amino
 RF    no
@@ -3725,9 +3725,9 @@ HMM          A        C        D        E        F        G        H        I   
           1.07027  0.41994        *  2.22499  0.11437  0.00000        *
 //
 HMMER3/f [3.1b2 | February 2015]
-NAME  LinH
-ACC LinH
-DESC LinH Homolog
+NAME  LinG
+ACC LinG
+DESC LinG Homolog
 LENG  307
 ALPH  amino
 RF    no

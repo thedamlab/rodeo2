@@ -102,6 +102,8 @@ def __main__():
                         help="Score RiPPs even if they don't have a valid split site")
     parser.add_argument('-print', '--print_precursors', action='store_true', default=None,
                         help="Print precursors in HTML file")
+    parser.add_argument('-prod', '--prodigal', action='store_true', default=False,
+                        help="Run Prodigal scoring algorithm")
     parser.add_argument('-w', '--web', action='store_true', default=False,
                         help="Only to use when running as a web tool")
     
@@ -234,6 +236,8 @@ def __main__():
     
     module.main_write_headers(output_dir)
     module.co_occur_write_headers(output_dir)
+    if args.prodigal:
+        module.prod_write_headers(output_dir)
     main_html = open(output_dir + "/main_results.html", 'w')
     ripp_html_generator.write_header(main_html, master_conf, 'general')
     ripp_html_generator.write_table_of_contents(main_html, queries)
@@ -315,6 +319,11 @@ def __main__():
             
             # Write unclassified ripps
             module = nulltype_module
+            if args.prodigal:
+                prod_file = open("tmp_files/%sorfs.tsv" % (record.query_short), 'r')
+                prod_results = prod_file.readlines()
+                prod_file.close()
+                os.remove("tmp_files/%sorfs.tsv" % (record.query_short))
             for orf in record.intergenic_orfs:
                 if orf.start < orf.end:
                     direction = "+"
@@ -323,6 +332,18 @@ def __main__():
                 row = [query, record.cluster_genus_species, record.cluster_accession, 
                        orf.start, orf.end, direction, orf.sequence]
                 module.main_write_row(output_dir, row)
+                if args.prodigal:
+                    prod_start, prod_end = record.find_prod_coordinates(min(orf.start, orf.end), max(orf.start, orf.end))
+                    for line in prod_results:
+                        tmp_line = line.split("\t")
+                        if tmp_line[0] == str(prod_start):
+                            if tmp_line[1] == str(prod_end):
+                                row = [query, record.cluster_genus_species, record.cluster_accession, 
+                                        orf.start, orf.end, direction, tmp_line[3], tmp_line[4], 
+                                        tmp_line[5], tmp_line[6], tmp_line[7], tmp_line[8], tmp_line[9], 
+                                        tmp_line[10], tmp_line[11], orf.sequence]
+                                break
+                    module.prod_write_row(output_dir, row)
                 
             # Write unclassified CDSs
             for cds in record.CDSs:

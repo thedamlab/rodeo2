@@ -70,6 +70,8 @@ def process_record_worker(unprocessed_records_q, processed_records_q, args, mast
                 continue
             try:
                 logger.info("Worker process %s is processing %s" % (my_id, record.query_accession_id))
+                if args.prodigal:
+                    record.trim_for_prodigal()
                 if master_conf['general']['variables']['fetch_type'].lower() == 'cds':
                     record.trim_to_n_orfs(master_conf['general']['variables']['fetch_n'], master_conf['general']['variables']['fetch_distance'])
                 elif master_conf['general']['variables']['fetch_type'].lower() == 'nucs':
@@ -84,6 +86,8 @@ def process_record_worker(unprocessed_records_q, processed_records_q, args, mast
                 record.set_intergenic_orfs(min_aa_seq_length=master_conf['general']['variables']['precursor_min'], 
                                            max_aa_seq_length=master_conf['general']['variables']['precursor_max'],
                                            overlap=master_conf['general']['variables']['overlap']) 
+                if args.prodigal:
+                    record.run_prodigal()
                 for peptide_type in args.peptide_types:
                     module = ripp_modules[peptide_type]
                     record.set_ripps(module, master_conf)
@@ -165,4 +169,4 @@ def fill_request_queue(queries, processed_records_q, unprocessed_records_q, args
     except EOFError:
         logger.critical("EOFError recieved during record fetching")
         return
-        
+

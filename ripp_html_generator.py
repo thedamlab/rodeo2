@@ -68,7 +68,7 @@ def write_header(html_file, master_conf, peptide_type):
     <div class="container">
     <h1 align="center" id="header">RODEO2</h1>
     <div class="row">
-         <div class="col-md-5">
+         <div class="col-md-11">
             <h3>Parameters</h3>
                  <table class="table table-condensed" style="width:100%;">
                         <tr><th scope="row">Run Time</th><td>""" + datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y") + """</td></tr>

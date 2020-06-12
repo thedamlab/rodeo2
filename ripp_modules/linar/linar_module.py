@@ -50,7 +50,7 @@ def write_csv_headers(output_dir):
     dir_prefix = output_dir + '/linar/'
     if not os.path.exists(dir_prefix):
         os.makedirs(dir_prefix)
-    svm_headers = 'PK,Classification,Contains ABC Transporter,Contains n-methyl transferase,Contains flavin decarboxylase,Has CXXC motif and flavin decarboxylase in BGC,Has GST motif and flavin decarboxylase,Gene cluster and precursor in same direction,Charge of leader <1 at pH 7,Core contains >2 Cysteine,Leader contains 0 Cysteine,Core % Aliphatic and Dhb residues,Core begins with XTP motif,Leader contains GXG motif,Leader contains LXD motif,Leader contains FAN motif,Distance from LinH/CypH homolog,Length of precursor,Leader Percent A,R,D,N,C,Q,E,G,H,I,L,K,M,F,P,S,T,W,Y,V,% Aromatics,% Negative,% Positive,% Charged,% Aliphatic,% Hydroxyl,Core percent A,R,D,N,C,Q,E,G,H,I,L,K,M,F,P,S,T,W,Y,V,% Aromatics,% Negative,% Positive,% Charged,% Aliphatic,% Hydroxyl,Relative charge of core,Relative charge of leader,Relative charge of precursor,Absolute charge of core,Absolute charge of Leader,Absolute charge of precursor' #,Motif 1,2,3,4,5,6,7,8,Number of motifs hit,Motif score 1,2,3,4,5,6,7,8,Total motif score,No motifs hit'
+    svm_headers = 'PK,Classification,Contains ABC Transporter,Contains n-methyl transferase,Contains flavin decarboxylase,Has CXXC motif and flavin decarboxylase in BGC,Has GST motif and flavin decarboxylase,Gene cluster and precursor in same direction,Charge of leader <1 at pH 7,Core contains >2 Cysteine,Leader contains 0 Cysteine,Core % Aliphatic and Dhb residues,Core begins with XTP motif,Leader contains GXG motif,Leader contains LXD motif,Leader contains FAN motif,Distance from LinG homolog,Length of precursor,Leader Percent A,R,D,N,C,Q,E,G,H,I,L,K,M,F,P,S,T,W,Y,V,% Aromatics,% Negative,% Positive,% Charged,% Aliphatic,% Hydroxyl,Core percent A,R,D,N,C,Q,E,G,H,I,L,K,M,F,P,S,T,W,Y,V,% Aromatics,% Negative,% Positive,% Charged,% Aliphatic,% Hydroxyl,Relative charge of core,Relative charge of leader,Relative charge of precursor,Absolute charge of core,Absolute charge of Leader,Absolute charge of precursor' #,Motif 1,2,3,4,5,6,7,8,Number of motifs hit,Motif score 1,2,3,4,5,6,7,8,Total motif score,No motifs hit'
     svm_headers = svm_headers.split(',')
     features_headers = ["Accession_id", "Genus/Species/Code", "Leader", "Core", "Start", "End", "Total Score", "Valid Precursor" ] + svm_headers
     features_csv_file = open(dir_prefix + "temp_features.csv", 'w')
@@ -110,35 +110,67 @@ class Ripp(VirtualRipp):
 #            self.leader = self.sequence[:self.split]
 #            self.core = self.sequence[self.split:]
 
-        core_starts = [".TP", ".T[A|V|L|I|F]", ".[A|V|L|I|P]P"]
-        leader_ends = ["P..", "[A|V|L|I|F].."]
+#        core_starts = [".TP", ".T[A|V|L|I|F|T]", ".[A|V|L|I|P|C]P"]
+#        leader_ends = ["P..", "[A|V|L|I|F].."]
 
-        end = 0
+#        end = 0
+#        valid_split = False
+#        for leader_end in leader_ends:
+#            for core_start in core_starts:
+#                if re.search(leader_end + core_start, self.sequence) and len(re.split(leader_end + core_start, self.sequence)[-1]) > 10:
+#                    rex = re.compile(leader_end + core_start)
+#                    for m in rex.finditer(self.sequence):
+#                        start, end = m.span()
+#                    end -= 3
+#                    valid_split = True
+#                    break
+#            if valid_split == True:
+#                break
+        
+        score = [1, int(.50*len(self.sequence))]
+        fimo_output = self.run_fimo_simple("ripp_modules/linar/linar_cutsites.txt")
+        fimo_output = fimo_output.split('\n')
         valid_split = False
-        for leader_end in leader_ends:
-            for core_start in core_starts:
-                if re.search(leader_end + core_start, self.sequence) and len(re.split(leader_end + core_start, self.sequence)[-1]) > 10:
-                    rex = re.compile(leader_end + core_start)
-                    for m in rex.finditer(self.sequence):
-                        start, end = m.span()
-                    end -= 3
-                    valid_split = True
+        if len(fimo_output) > 1:
+            for line in fimo_output[1:]:
+                line = line.split('\t')
+                if len(line) <= 1:
+                    continue
+                if float(line[7]) < score[0]:
+                        score = [float(line[7]), int(line[4])-4]
+            valid_split = True
+
+        if valid_split == False:
+            core_starts = [".TP", ".T[A|V|L|I|F|T]", ".[A|V|L|I|P|C]P"]
+            leader_ends = ["P..", "[A|V|L|I|F].."]
+
+            end = 0
+            valid_split = False
+            for leader_end in leader_ends:
+                for core_start in core_starts:
+                    if re.search(leader_end + core_start, self.sequence) and len(re.split(leader_end + core_start, self.sequence)[-1]) > 10:
+                        rex = re.compile(leader_end + core_start)
+                        for m in rex.finditer(self.sequence):
+                            _, score[1] = m.span()
+                        score[1] -= 3
+                        valid_split = True
+                        break
+                if valid_split == True:
                     break
-            if valid_split == True:
-                break
 
-
-        self.split = end
+        self.split = score[1]
         self.leader = self.sequence[:self.split]
         self.core = self.sequence[self.split:]
-        if len(self.leader) < 5 or len(self.core) < 5: #TAG CHRIS
+        if len(self.leader) < 5 or len(self.core) < 5: 
             valid_split = False
 
-        self.valid_split = valid_split 
-        if self.valid_split == False:
+        self.valid_split = valid_split
+        self.split = score[1] 
+        if self.split < 10 or self.split > len(self.sequence) - 10:
             self.split = int(.5*len(self.sequence))
-            self.leader = self.sequence[:self.split]
-            self.core = self.sequence[self.split:]
+            self.valid_split = False
+        self.leader = self.sequence[:self.split]
+        self.core = self.sequence[self.split:]
             
     def get_fimo_score(self):
         fimo_output = str(self.run_fimo_simple())
@@ -214,13 +246,13 @@ class Ripp(VirtualRipp):
             tabs.append(0)
 
         precursor_pfam = hmmer_utils.get_hmmer_info(self.sequence, "ripp_modules/linar/hmms/LinA.hmm", "", n=1)
-        if precursor_pfam:
+        if precursor_pfam and len(self.sequence) < 120:
             score += 10
 
         #Adding distance heuristic scoring
         dist = 1000000
         for pfam in self.pfam_2_coords.keys():
-            for fam in ["LinE", "LinH", "LinF"]:
+            for fam in ["LinE", "LinG", "LinL"]:
                 if fam in pfam[0]:
                     dist = min(self.get_min_dist(self.pfam_2_coords[pfam[0]]), dist)
         if dist < 300:
@@ -233,6 +265,10 @@ class Ripp(VirtualRipp):
         #Length of Precursor is between 50 and 70 aa
         if 50 <= len(self.sequence) <= 70:
             score += 2
+        if len(self.sequence) > 120:
+            score -= 5
+        if len(self.sequence) > 150:
+            score -= 5
 
         #Length of precursor is between 71 and 100 aa
         if 71 <= len(self.sequence) <= 100:
@@ -344,10 +380,10 @@ class Ripp(VirtualRipp):
         columns = []
         #append classification and index
         columns += tabs
-        #Minimum distance from LinH/CypH homolog
+        #Minimum distance from LinG homolog
         dist = 10000
         for pfam in self.pfam_2_coords.keys():
-            if "LinH" in pfam:
+            if "LinG" in pfam:
                 dist = self.get_min_dist(self.pfam_2_coords[pfam])
         columns.append(dist)
         #Length of Precursor
