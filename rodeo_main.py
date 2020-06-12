@@ -62,6 +62,7 @@ def __main__():
     from record_processing import fill_request_queue, ErrorReport
     import My_Record
     import record_processing
+    import swarm_processing
     
 #==============================================================================
 #     First we will handle the input, whether it be an accession, a list of acc
@@ -104,6 +105,8 @@ def __main__():
                         help="Print precursors in HTML file")
     parser.add_argument('-prod', '--prodigal', action='store_true', default=False,
                         help="Run Prodigal scoring algorithm")
+    parser.add_argument('-s', '--swarm', action='store_true', default=False,
+                        help="Use Prodigal scoring to identify potential precursors")
     parser.add_argument('-w', '--web', action='store_true', default=False,
                         help="Only to use when running as a web tool")
     
@@ -186,6 +189,13 @@ def __main__():
                  logger.warning("Problem copying configuration file {}".format("conf_file"))
     except:
         logger.warning("Problem creating configuration copy directory")
+    if args.swarm:
+        args.prodigal = True
+    if args.prodigal:
+        try:
+            os.mkdir(args.output_dir + '/prodigal')
+        except:
+            logger.warning("Problem creating prodigal results directory")
     if overwriting_folder:
         logger.warning("Overwriting %s folder." % (args.output_dir))
     
@@ -379,6 +389,11 @@ def __main__():
             record = processed_records_q.get()    
         # END MAIN LOOP
         main_html.write("</html>")
+
+        #SWARM handling
+        if args.swarm:
+            swarm_processing.swarm_filter(args.output_dir)
+
         # Update score w SVM.
         try:
             for peptide_type in peptide_types:
