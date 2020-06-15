@@ -174,11 +174,12 @@ def get_radar_score(sequence):
                     os.remove(pid+"RADAR.fasta")
                 except OSError:
                     pass
-                return ""
+                return 0
             if retcode != 0:
                 logger.error('RADAR returned %d: %r', retcode,
                                 err)
-                return []
+                logger.error(sequence)
+                return 0
             try:
                 os.remove("tmp_files/" + pid + "RADAR.fasta")
             except OSError:
@@ -191,7 +192,7 @@ def get_radar_score(sequence):
                 pass
         # RADAR output is inconsistent. Most of the time it will print
         # two lines of "no results", but other times just 1...
-        lines = out.decode("utf-8").split('\n')
+        lines = out.decode("utf-8", errors="replace").split('\n')
         if (len(lines) < 4): 
             return 0
         results = lines[3].split('|')
@@ -280,7 +281,7 @@ class VirtualRipp(object):
             if retcode != 0:
                 logger.error('FIMO returned %d: %r while searching %r', retcode,
                                 err, query_motif_file)
-                return []
+                return ""
             try:
                 os.remove("tmp_files/" + pid + "FIMO.seq")
             except OSError:

@@ -68,7 +68,7 @@ def write_header(html_file, master_conf, peptide_type):
     <div class="container">
     <h1 align="center" id="header">RODEO2</h1>
     <div class="row">
-         <div class="col-md-5">
+         <div class="col-md-11">
             <h3>Parameters</h3>
                  <table class="table table-condensed" style="width:100%;">
                         <tr><th scope="row">Run Time</th><td>""" + datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y") + """</td></tr>
@@ -309,35 +309,54 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
     
     index = 1
     if peptide_type == 'general':
+        prev_end = 0
+        rowcolor = 1
         for orf in record.intergenic_orfs:
-            main_html.write("<tr>\n")
+            if prev_end != orf.end:
+                rowcolor = rowcolor * -1
+            if rowcolor == 1:
+                main_html.write("<tr>\n")
+            else:
+                main_html.write('<tr style="background-color:#E8E8E8">\n')
             main_html.write("<td>%d</td>" % (index))
-            main_html.write("<td>%s</td>" % (compress_sequence(orf.sequence)))
+            main_html.write('<td style="text-align:right">%s</td>' % (compress_sequence(orf.sequence)))
             main_html.write("<td>%d</td>" % (orf.start))
             main_html.write("<td>%d</td>" % (orf.end))
             main_html.write("<td>%s</td>" % (orf.direction))
             main_html.write("</tr>\n")
+            prev_end = orf.end
             index += 1
-    elif peptide_type in ["lasso", "lanthi", "lanthi1", "lanthi2", "lanthi3", "lanthi4", "sacti", "thio", "linar"]:
+            
+    elif peptide_type in ["lasso", "lanthi", "lanthi1", "lanthi2", "lanthi3", "lanthi4", "sacti", "thio", "grasp", "linar"]:
+        prev_end = 0
+        rowcolor = 1
+
         for ripp in record.ripps[peptide_type]:
             if ripp.score <= ripp.CUTOFF // 2:
                 continue
             if not master_conf[peptide_type]['variables']['precursor_min'] <= len(ripp.sequence) <= master_conf[peptide_type]['variables']['precursor_max'] and \
                             not ("M" in ripp.sequence[-master_conf[peptide_type]['variables']['precursor_max']:]):
                             continue
-            main_html.write("<tr>\n")
+            if prev_end != ripp.end:
+                rowcolor = rowcolor * -1
+            if rowcolor == 1:
+                main_html.write("<tr>\n")
+            else:
+                main_html.write('<tr style="background-color:#E8E8E8">\n')
             main_html.write("<td>%d</td>" % (index))
             if print_precursors:
+
                 if peptide_type in ["lasso", "lanthi", "lanthi1", "lanthi2", "lanthi3", "lanthi4", "sacti", "thio", "grasp", "linar"]:
-                    main_html.write("<td>%s</td>" % (compress_sequence(ripp.leader,50)))
-                    main_html.write("<td>%s</td>" % (compress_sequence(ripp.core, 50)))
+                    main_html.write('<td style="text-align:right">%s</td>' % (compress_sequence(ripp.leader,50)))
+                    main_html.write('<td style="text-align:right">%s</td>' % (compress_sequence(ripp.core, 50)))
                 else:
-                    main_html.write("<td>%s</td>" % (compress_sequence(ripp.sequence)))
+                    main_html.write('<td style="text-align:right">%s</td>' % (compress_sequence(ripp.sequence)))
             main_html.write("<td>%d</td>" % (ripp.start))
             main_html.write("<td>%d</td>" % (ripp.end))
             main_html.write("<td>%s</td>" % (ripp.direction))
             main_html.write("<td>%d</td>" % (ripp.score))
             main_html.write("</tr>\n")
+            prev_end = ripp.end
             index += 1
     main_html.write("</tbody></table>")
     
@@ -381,4 +400,4 @@ def write_record(main_html, master_conf, record, peptide_type):
     draw_orf_table(main_html, record, peptide_type, master_conf)
     index += 1
 
-    
+

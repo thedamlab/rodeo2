@@ -30,7 +30,7 @@
 #==============================================================================
 
 import hmmer_utils
-import csv
+import csv, subprocess, os
 import logging 
 from rodeo_main import VERBOSITY
 from ripp_modules.VirtualRipp import get_radar_score
@@ -70,6 +70,7 @@ class My_Record(object):
     #TODO get genus and species frecom gb file
     def __init__(self, query_accession_id):
         self.query_accession_id = query_accession_id
+        self.query_short = query_accession_id.split(".")[0]
         self.cluster_accession = ""
         self.cluster_sequence = ""
         self.cluster_length = ""
@@ -79,6 +80,8 @@ class My_Record(object):
         self.CDSs = []
         self.intergenic_seqs = []
         self.intergenic_orfs = []
+        self.prod_window_start = 0
+        self.prod_window_end = 0
         self.window_start = 0
         self.window_end = 0
         self.start_codons = ['ATG','GTG', 'TTG']
@@ -106,6 +109,16 @@ class My_Record(object):
             else:
                 i += 1
     
+    def trim_for_prodigal(self, n=50000):
+        """Trim the window down to -n nucleotides of the start of the 
+        query CDS and +n nucleotides of the end of the CDS"""
+        query_index = self.query_index
+        if query_index == -1:
+            return
+        self.prod_window_start = max(0, self.CDSs[query_index].start - n)
+        self.prod_window_end = min(len(self.cluster_sequence), 
+                              self.CDSs[query_index].end + n)
+
     #TODO cutoff or keep if in middle of gene?
     def trim_to_n_nucleotides(self, n):
         """Trim the window down to -n nucleotides of the start of the 
@@ -114,9 +127,10 @@ class My_Record(object):
         self.fetch_n = n
         if query_index == -1:
             return
-        self.window_start = max(0, self.CDSs[query_index].start - n)
+        self.window_start = max(0, min(self.CDSs[query_index].start, self.CDSs[query_index].end) - n)
         self.window_end = min(len(self.cluster_sequence), 
-                              self.CDSs[query_index].end + n)
+                              max(self.CDSs[query_index].start, self.CDSs[query_index].end) + n)
+
         self._clean_CDSs()
         
     def trim_to_n_orfs(self, n, fetch_distance):
@@ -128,9 +142,10 @@ class My_Record(object):
             return
         first_cds = max(0, query_index - n)
         last_cds = min(len(self.CDSs)-1, query_index + n)
-        self.window_start = min(self.CDSs[first_cds].start, self.CDSs[first_cds].end)
-        self.window_end = max(self.CDSs[first_cds].start, 
-                              self.CDSs[last_cds].end)
+        self.window_start = min(self.CDSs[first_cds].start, self.CDSs[first_cds].end,
+                                self.CDSs[last_cds].start, self.CDSs[last_cds].end)
+        self.window_end = max(self.CDSs[first_cds].start,  self.CDSs[first_cds].end,
+                              self.CDSs[last_cds].start, self.CDSs[last_cds].end)
         self.window_start = max(0, self.window_start - fetch_distance)
         self.window_end = min(len(self.cluster_sequence), 
                               self.window_end + fetch_distance)
@@ -144,7 +159,7 @@ class My_Record(object):
         self.pfam_2_coords = {}
         for CDS in self.CDSs:
             CDS.pfam_descr_list = hmmer_utils.get_hmmer_info(CDS.sequence, primary_hmm, cust_hmm) #Possible input for n and e_cutoff here
-            if min_length <= len(CDS.sequence) <= max_length: # len(CDS.pfam_descr_list) == 0 and 
+            if min_length <= len(CDS.sequence)/3 <= max_length: # len(CDS.pfam_descr_list) == 0 and 
                 self.intergenic_orfs.append(CDS)
             for annot in CDS.pfam_descr_list:
                 if any(fam in annot[0] for fam in ["PF14404", "PF14406", "PF14407", "PF14408", "PF14409", "PF12559" ,"TIGR04186"]):
@@ -202,7 +217,6 @@ class My_Record(object):
                     else:
                         next_start = max(intergenic_seq.start - overlap, self.window_start)
                         intergenic_seq_end = min(self.window_end, intergenic_seq.end + overlap)
-                        
                     start = 0
                     #Stay in the loop until we can't find a stop codon
                     while start < intergenic_seq_end:
@@ -257,6 +271,7 @@ class My_Record(object):
         #they share nucleotides with eachother
         i = 1
         while i < len(self.intergenic_orfs):
+            # print(self.intergenic_orfs[i].start)
             if self.intergenic_orfs[i].start == self.intergenic_orfs[i-1].start:
                 del self.intergenic_orfs[i]
             i += 1
@@ -271,11 +286,11 @@ class My_Record(object):
             if module.peptide_type == "grasp":
                 orf.radar_score = get_radar_score(orf.sequence)
             if master_conf[module.peptide_type]['variables']['precursor_min'] <= len(orf.sequence) <=  master_conf[module.peptide_type]['variables']['precursor_max'] \
-                or ("M" in orf.sequence[-master_conf[module.peptide_type]['variables']['precursor_max']:]) \
-                or (module.peptide_type == "grasp" and orf.radar_score > 0 and len(orf.sequence) < 400):
+                    or ("M" in orf.sequence[-master_conf[module.peptide_type]['variables']['precursor_max']:]) \
+                    or (module.peptide_type == "grasp" and orf.radar_score > 0 and len(orf.sequence) < 400):
                 ripp = module.Ripp(orf.start, orf.end, str(orf.sequence), orf.upstream_sequence, self.pfam_2_coords)
                 if module.peptide_type == "grasp":
-                    ripp.csv_columns.append(orf.radar_score)
+                    ripp.radar_score = orf.radar_score
                 ripp.radar_score  = orf.radar_score
                 if ripp.valid_split or master_conf[module.peptide_type]['variables']['exhaustive']:
                     self.ripps[module.peptide_type].append(ripp)
@@ -322,7 +337,14 @@ class My_Record(object):
                   " on strand " + str(strand))
             print(sub_seq.sequence + '\n')
         print("="*50)
-    
+
+
+    def find_prod_coordinates(self, beg, end):
+        if(beg<end):
+            return(beg-self.window_start+1, end-self.window_start)
+        else:
+            return(beg-self.window_start+2, end-self.window_start-1)                  
+        
     
 def update_score_w_svm(output_dir, records):
         """Order should be preserved. Goes through file and updates scores"""
@@ -356,5 +378,4 @@ def update_score_w_svm(output_dir, records):
                             return
                     ripp.score = int(line[score_col])
                     ripp.confidence = float(ripp.score)/(ripp.CUTOFF)
-                    
-                        
+

@@ -50,8 +50,8 @@ if socket.gethostname() == "rodeo.scs.illinois.edu":
 if WEB_TOOL:
     RODEO_DIR = "/home/ubuntu/website/go/rodeo2/"
     os.chdir(RODEO_DIR)
-VERSION = "2.1.4"
-VERBOSITY = logging.DEBUG
+VERSION = "2.2.0"
+VERBOSITY = logging.INFO
 QUEUE_CAP = "END_OF_QUEUE"
 processes = []
 
@@ -62,6 +62,7 @@ def __main__():
     from record_processing import fill_request_queue, ErrorReport
     import My_Record
     import record_processing
+    import prodigal_processing
     
 #==============================================================================
 #     First we will handle the input, whether it be an accession, a list of acc
@@ -102,10 +103,14 @@ def __main__():
                         help="Score RiPPs even if they don't have a valid split site")
     parser.add_argument('-print', '--print_precursors', action='store_true', default=None,
                         help="Print precursors in HTML file")
+    parser.add_argument('-prod', '--prodigal', action='store_true', default=False,
+                        help="Run Prodigal scoring algorithm")
+    parser.add_argument('-s', '--swarm', action='store_true', default=False,
+                        help="Use Prodigal scoring to identify potential precursors")
     parser.add_argument('-w', '--web', action='store_true', default=False,
                         help="Only to use when running as a web tool")
     
-    args, _ = parser.parse_known_args()
+    args  = parser.parse_args()
     
 #==============================================================================
 #   Set up logger
@@ -157,6 +162,8 @@ def __main__():
             print(e)
     master_conf = config_parser.merge_confs(confs)
     master_conf = config_parser.merge_conf_and_arg(master_conf, args)
+    master_conf["general"]["variables"]["precursor_min"] = min([master_conf[x]["variables"]["precursor_min"] for x in ["general"] + args.peptide_types])
+    master_conf["general"]["variables"]["precursor_max"] = max([master_conf[x]["variables"]["precursor_max"] for x in ["general"] + args.peptide_types])
     general_conf = master_conf['general']
     if WEB_TOOL:
         general_conf['variables']['pfam_dir'] = "/home/ubuntu/website/go/rodeo2/hmm_dir/Pfam-A.hmm"
@@ -184,6 +191,13 @@ def __main__():
                  logger.warning("Problem copying configuration file {}".format("conf_file"))
     except:
         logger.warning("Problem creating configuration copy directory")
+    if args.swarm:
+        args.prodigal = True
+    if args.prodigal:
+        try:
+            os.mkdir(args.output_dir + '/prodigal')
+        except:
+            logger.warning("Problem creating prodigal results directory")
     if overwriting_folder:
         logger.warning("Overwriting %s folder." % (args.output_dir))
     
@@ -201,7 +215,7 @@ def __main__():
     
     if any(pt in ['sacti', 'lanthi', 'grasp', 'linar'] for pt in args.peptide_types):
         if not any ("tigr" in hmm_name.lower() for hmm_name in args.custom_hmm):
-            logger.warn("Lanthi and/or sacti heuristics require TIGRFAM hmm. Make sure its location is specified with the -hmm or --custom_hmm flag.")
+            logger.warning("Lanthi, sacti, and grasp heuristics require TIGRFAM hmm. Make sure its location is specified with the -hmm or --custom_hmm flag.")
     if "grasp" in args.peptide_types:
         args.custom_hmm.append("ripp_modules/grasp/hmms/grasp.hmm")
     if 'linar' in args.peptide_types:
@@ -234,6 +248,8 @@ def __main__():
     
     module.main_write_headers(output_dir)
     module.co_occur_write_headers(output_dir)
+    if args.prodigal:
+        module.prod_write_headers(output_dir)
     main_html = open(output_dir + "/main_results.html", 'w')
     ripp_html_generator.write_header(main_html, master_conf, 'general')
     ripp_html_generator.write_table_of_contents(main_html, queries)
@@ -315,6 +331,12 @@ def __main__():
             
             # Write unclassified ripps
             module = nulltype_module
+            if args.prodigal:
+                prod_file = open("tmp_files/%sorfs.tsv" % (record.query_short), 'r')
+                prod_results = prod_file.readlines()
+                prod_file.close()
+#                os.remove("tmp_files/%sorfs.tsv" % (record.query_short))
+                dup_removed_rows = {}
             for orf in record.intergenic_orfs:
                 if orf.start < orf.end:
                     direction = "+"
@@ -323,6 +345,29 @@ def __main__():
                 row = [query, record.cluster_genus_species, record.cluster_accession, 
                        orf.start, orf.end, direction, orf.sequence]
                 module.main_write_row(output_dir, row)
+                if args.prodigal and len(prod_results) > 1:
+                    prod_start, prod_end = record.find_prod_coordinates(min(orf.start, orf.end), max(orf.start, orf.end))
+                    for line in prod_results:
+                        tmp_line = line.split("\t")
+                        if tmp_line[0] == str(prod_start):
+                            if tmp_line[1] == str(prod_end):
+                                row = [">%s_Start:%d_End:%d" % (query, orf.start, orf.end), query, record.cluster_genus_species, record.cluster_accession, 
+                                        orf.start, orf.end, direction, tmp_line[3], tmp_line[4], 
+                                        tmp_line[5], tmp_line[6], tmp_line[7], tmp_line[8], tmp_line[9], 
+                                        tmp_line[10], tmp_line[11], orf.sequence]
+                                if direction+str(orf.end) in dup_removed_rows:
+                                    if float(dup_removed_rows[direction+str(orf.end)][7]) < float(row[7]):
+                                        dup_removed_rows[direction+str(orf.end)] = row
+                                else:
+                                    dup_removed_rows[direction+str(orf.end)] = row
+                                break
+            if args.prodigal:
+                for key in dup_removed_rows:
+                    module.prod_write_row(output_dir, dup_removed_rows[key])
+                try:
+                    os.remove("tmp_files/%sorfs.tsv" % (record.query_short))
+                except:
+                    pass
                 
             # Write unclassified CDSs
             for cds in record.CDSs:
@@ -348,24 +393,23 @@ def __main__():
                         or (module.peptide_type == "grasp" and ripp.radar_score > 0 and len(ripp.sequence) < 400):
                             
                         list_of_rows.append(ripp.csv_columns)
-                if peptide_type == "grasp":
-                    VirtualRipp.ripp_write_rows(args.output_dir, peptide_type, record.query_accession_id, #cluster acc or query acc?
-                                           record.cluster_genus_species, list_of_rows, 6)
-                else:
-                    VirtualRipp.ripp_write_rows(args.output_dir, peptide_type, record.query_accession_id, #cluster acc or query acc?
-                                           record.cluster_genus_species, list_of_rows)
+                VirtualRipp.ripp_write_rows(args.output_dir, peptide_type, record.query_accession_id, #cluster acc or query acc?
+                                       record.cluster_genus_species, list_of_rows)
             records.append(record)
             record = processed_records_q.get()    
         # END MAIN LOOP
         main_html.write("</html>")
+
+        #SWARM handling
+        if args.swarm:
+            prodigal_processing.swarm_filter(args.output_dir)
+            prodigal_processing.create_ssn(args.output_dir)
+
         # Update score w SVM.
         try:
             for peptide_type in peptide_types:
                 module = ripp_modules[peptide_type]
-                if peptide_type == "grasp":
-                    VirtualRipp.run_svm(output_dir, peptide_type, module.CUTOFF, 6)
-                else:
-                    VirtualRipp.run_svm(output_dir, peptide_type, module.CUTOFF)
+                VirtualRipp.run_svm(output_dir, peptide_type, module.CUTOFF)
             My_Record.update_score_w_svm(output_dir, records)
         except KeyboardInterrupt:
             raise KeyboardInterrupt
