@@ -109,14 +109,12 @@ class Ripp(VirtualRipp):
 #            self.leader = self.sequence[:self.split]
 #            self.core = self.sequence[self.split:]
         scores = [(1,int(.25*len(self.sequence)))]*3
-        print(scores)
         fimo_output = self.run_fimo_simple("ripp_modules/thio/berninamycin_fimo.txt")
         fimo_output = fimo_output.split('\n')
         valid_split = False
         if len(fimo_output) > 1:
             for line in fimo_output[1:]:
                 line = line.split('\t')
-                print(line)
                 if len(line) <= 1:
                     continue
                 if float(line[7]) < scores[0][0]:
@@ -126,18 +124,15 @@ class Ripp(VirtualRipp):
         if len(fimo_output) > 1:
             for line in fimo_output[1:]:
                 line = line.split('\t')
-                print(line)
                 if len(line) <= 1:
                     continue
                 if float(line[7]) < scores[1][0]:
                     scores[1] = (float(line[7]), int(line[4]))
-                    print(scores[1])
             valid_split = True    
         fimo_output = self.run_fimo_simple("ripp_modules/thio/dhpip_fimo.txt").split('\n')
         if len(fimo_output) > 1:
             for line in fimo_output[1:]:
                 line = line.split('\t')
-                print(line)
                 if len(line) <= 1:
                     continue
                 if float(line[7]) < scores[2][0]:
