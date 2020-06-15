@@ -84,7 +84,7 @@ gamma_base = 10
 gamma_steps = 9
 gamma_options = np.logspace(gamma_min,gamma_max,num=gamma_steps,base=gamma_base,dtype=float)
 class_weight_option = 'balanced'
-folds_validation = [10]
+folds_validation = [5]
 
 
     
@@ -121,9 +121,9 @@ def main():
             for gamma_option in gamma_options:
                 print(C_option, gamma_option)
                 clf = svm.SVC(kernel=kernel_option,class_weight=class_weight_option,C=C_option,gamma=gamma_option)
-                prec = cross_val_score(clf, training_data_refined, training_data_classifications, cv=71, scoring='precision')
-                recd = cross_val_score(clf, training_data_refined, training_data_classifications, cv=71, scoring='recall')
-                f1we = cross_val_score(clf, training_data_refined, training_data_classifications, cv=71, scoring='f1')
+                prec = cross_val_score(clf, training_data_refined, training_data_classifications, cv=fold, scoring='precision')
+                recd = cross_val_score(clf, training_data_refined, training_data_classifications, cv=fold, scoring='recall')
+                f1we = cross_val_score(clf, training_data_refined, training_data_classifications, cv=fold, scoring='f1')
                 scor = prec.mean() * recd.mean()
                 print('Using %d fold, %.4E C, %.4E gamma: %0.4f precision, %0.4f recall, %0.4f f1, %0.4f score' % (fold, C_option, gamma_option, prec.mean(), recd.mean(), f1we.mean(), scor))
                 test_results.append([kernel_option,fold,C_option,gamma_option,class_weight_option,prec.mean(),recd.mean(),f1we.mean(),scor])
