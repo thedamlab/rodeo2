@@ -53,7 +53,7 @@ def co_occur_write_row(output_folder, row):
     features_writer.writerow(row)
 
 def prod_write_headers(output_folder):
-    headers = ['Query', 'Genus/Species', 'Nucleotide_acc', 'start', 'end', 'dir', 'Prod_Score', 'CodPot', 'StrtSc', 'Codon', 'RBSMot', 'Spacer', 'RBSScr', 'UpsScr', 'TypeScr', 'AA_seq']
+    headers = ['ID', 'Query', 'Genus/Species', 'Nucleotide_acc', 'start', 'end', 'dir', 'Prod_Score', 'CodPot', 'StrtSc', 'Codon', 'RBSMot', 'Spacer', 'RBSScr', 'UpsScr', 'TypeScr', 'AA_seq']
     features_writer = csv.writer(open(output_folder + "/prodigal/prod_results.csv", 'w'))
     features_writer.writerow(headers)
     

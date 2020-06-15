@@ -81,6 +81,7 @@ class My_Record(object):
         self.intergenic_seqs = []
         self.intergenic_orfs = []
         self.prod_window_start = 0
+        self.prod_window_end = 0
         self.window_start = 0
         self.window_end = 0
         self.start_codons = ['ATG','GTG', 'TTG']
@@ -115,6 +116,8 @@ class My_Record(object):
         if query_index == -1:
             return
         self.prod_window_start = max(0, self.CDSs[query_index].start - n)
+        self.prod_window_end = min(len(self.cluster_sequence), 
+                              self.CDSs[query_index].end + n)
 
     #TODO cutoff or keep if in middle of gene?
     def trim_to_n_nucleotides(self, n):
@@ -333,52 +336,6 @@ class My_Record(object):
             print(sub_seq.sequence + '\n')
         print("="*50)
 
-    def run_prodigal(self):
-        try:
-            prod_prefix = "tmp_files/" + self.query_short
-            prod_train_file = open(prod_prefix+"train.fasta", 'w')
-            prod_train_file.write(">%s %s %s\n%s" % (self.query_accession_id, self.genus, self.species, self.cluster_sequence[self.prod_window_start:self.prod_window_start+100000]))
-            prod_train_file.close()
-            prod_use_file = open(prod_prefix+"prod.fasta", 'w')
-            prod_use_file.write(">%s %s %s\n%s" % (self.query_accession_id, self.genus, self.species, self.cluster_sequence[self.window_start:self.window_end]))
-            prod_use_file.close()
-            try:
-                process = subprocess.Popen(["prodigal", "-i", prod_prefix+"train.fasta", "-o", prod_prefix+"output.txt", "-t", prod_prefix+"train.txt", "-q"])
-                process.wait()
-            except OSError:
-                logger.error("Prodigal failed for %s" % self.query_accession_id)
-            try:
-                process = subprocess.Popen(["prodigal", "-i", prod_prefix+"prod.fasta", "-o", prod_prefix+"output.txt", "-t", prod_prefix+"train.txt", "-s", prod_prefix+"orfs.tsv", "-q"])
-                process.wait()
-            except OSError:
-                logger.error("Prodigal failed for %s" % self.query_accession_id)         
-            os.remove(prod_prefix+"train.fasta")
-            os.remove(prod_prefix+"output.txt")
-            os.remove(prod_prefix+"prod.fasta")
-            os.remove(prod_prefix+"train.txt")
-        except KeyboardInterrupt:
-            try:
-                os.remove(prod_prefix+"train.fasta")
-            except:
-                pass
-            try:
-                os.remove(prod_prefix+"output.txt")
-            except:
-                pass
-            try:
-                os.remove(prod_prefix+"prod.fasta")
-            except:
-                pass
-            try:
-                os.remove(prod_prefix+"train.txt")
-            except:
-                pass
-            try:
-                os.remove(prod_prefix+"orfs.tsv")
-            except:
-                pass
-            logger.critical("SIGINT recieved during Prodigal")
-            raise KeyboardInterrupt
 
     def find_prod_coordinates(self, beg, end):
         if(beg<end):

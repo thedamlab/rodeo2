@@ -62,7 +62,7 @@ def __main__():
     from record_processing import fill_request_queue, ErrorReport
     import My_Record
     import record_processing
-    import swarm_processing
+    import prodigal_processing
     
 #==============================================================================
 #     First we will handle the input, whether it be an accession, a list of acc
@@ -333,7 +333,8 @@ def __main__():
                 prod_file = open("tmp_files/%sorfs.tsv" % (record.query_short), 'r')
                 prod_results = prod_file.readlines()
                 prod_file.close()
-                os.remove("tmp_files/%sorfs.tsv" % (record.query_short))
+#                os.remove("tmp_files/%sorfs.tsv" % (record.query_short))
+                dup_removed_rows = {}
             for orf in record.intergenic_orfs:
                 if orf.start < orf.end:
                     direction = "+"
@@ -342,18 +343,29 @@ def __main__():
                 row = [query, record.cluster_genus_species, record.cluster_accession, 
                        orf.start, orf.end, direction, orf.sequence]
                 module.main_write_row(output_dir, row)
-                if args.prodigal:
+                if args.prodigal and len(prod_results) > 1:
                     prod_start, prod_end = record.find_prod_coordinates(min(orf.start, orf.end), max(orf.start, orf.end))
                     for line in prod_results:
                         tmp_line = line.split("\t")
                         if tmp_line[0] == str(prod_start):
                             if tmp_line[1] == str(prod_end):
-                                row = [query, record.cluster_genus_species, record.cluster_accession, 
+                                row = [">%s_Start:%d_End:%d" % (query, orf.start, orf.end), query, record.cluster_genus_species, record.cluster_accession, 
                                         orf.start, orf.end, direction, tmp_line[3], tmp_line[4], 
                                         tmp_line[5], tmp_line[6], tmp_line[7], tmp_line[8], tmp_line[9], 
                                         tmp_line[10], tmp_line[11], orf.sequence]
+                                if direction+str(orf.end) in dup_removed_rows:
+                                    if float(dup_removed_rows[direction+str(orf.end)][7]) < float(row[7]):
+                                        dup_removed_rows[direction+str(orf.end)] = row
+                                else:
+                                    dup_removed_rows[direction+str(orf.end)] = row
                                 break
-                    module.prod_write_row(output_dir, row)
+            if args.prodigal:
+                for key in dup_removed_rows:
+                    module.prod_write_row(output_dir, dup_removed_rows[key])
+                try:
+                    os.remove("tmp_files/%sorfs.tsv" % (record.query_short))
+                except:
+                    pass
                 
             # Write unclassified CDSs
             for cds in record.CDSs:
@@ -392,7 +404,8 @@ def __main__():
 
         #SWARM handling
         if args.swarm:
-            swarm_processing.swarm_filter(args.output_dir)
+            prodigal_processing.swarm_filter(args.output_dir)
+            prodigal_processing.create_ssn(args.output_dir)
 
         # Update score w SVM.
         try:
