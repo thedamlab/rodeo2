@@ -62,6 +62,7 @@ def __main__():
     from record_processing import fill_request_queue, ErrorReport
     import My_Record
     import record_processing
+    import prodigal_processing
     
 #==============================================================================
 #     First we will handle the input, whether it be an accession, a list of acc
@@ -102,6 +103,10 @@ def __main__():
                         help="Score RiPPs even if they don't have a valid split site")
     parser.add_argument('-print', '--print_precursors', action='store_true', default=None,
                         help="Print precursors in HTML file")
+    parser.add_argument('-prod', '--prodigal', action='store_true', default=False,
+                        help="Run Prodigal scoring algorithm")
+    parser.add_argument('-s', '--swarm', action='store_true', default=False,
+                        help="Use Prodigal scoring to identify potential precursors")
     parser.add_argument('-w', '--web', action='store_true', default=False,
                         help="Only to use when running as a web tool")
     
@@ -186,6 +191,13 @@ def __main__():
                  logger.warning("Problem copying configuration file {}".format("conf_file"))
     except:
         logger.warning("Problem creating configuration copy directory")
+    if args.swarm:
+        args.prodigal = True
+    if args.prodigal:
+        try:
+            os.mkdir(args.output_dir + '/prodigal')
+        except:
+            logger.warning("Problem creating prodigal results directory")
     if overwriting_folder:
         logger.warning("Overwriting %s folder." % (args.output_dir))
     
@@ -201,11 +213,13 @@ def __main__():
         logger.critical("Invalid argument for -ft/-fetch_type")
         return None
     
-    if any(pt in ['sacti', 'lanthi', 'grasp'] for pt in args.peptide_types):
+    if any(pt in ['sacti', 'lanthi', 'grasp', 'linar'] for pt in args.peptide_types):
         if not any ("tigr" in hmm_name.lower() for hmm_name in args.custom_hmm):
             logger.warning("Lanthi, sacti, and grasp heuristics require TIGRFAM hmm. Make sure its location is specified with the -hmm or --custom_hmm flag.")
     if "grasp" in args.peptide_types:
         args.custom_hmm.append("ripp_modules/grasp/hmms/grasp.hmm")
+    if 'linar' in args.peptide_types:
+        args.custom_hmm.append('ripp_modules/linar/hmms/linar.hmm')
             
 #==============================================================================
 #   Set up queries/read query files   
@@ -234,6 +248,8 @@ def __main__():
     
     module.main_write_headers(output_dir)
     module.co_occur_write_headers(output_dir)
+    if args.prodigal:
+        module.prod_write_headers(output_dir)
     main_html = open(output_dir + "/main_results.html", 'w')
     ripp_html_generator.write_header(main_html, master_conf, 'general')
     ripp_html_generator.write_table_of_contents(main_html, queries)
@@ -261,6 +277,8 @@ def __main__():
             import ripp_modules.thio.thio_module as module
         elif peptide_type == "grasp":
             import ripp_modules.grasp.grasp_module as module
+        elif peptide_type == "linar":
+            import ripp_modules.linar.linar_module as module
         else:
             logger.error("%s not in supported RiPP types" % (peptide_type))
             continue
@@ -313,6 +331,12 @@ def __main__():
             
             # Write unclassified ripps
             module = nulltype_module
+            if args.prodigal:
+                prod_file = open("tmp_files/%sorfs.tsv" % (record.query_short), 'r')
+                prod_results = prod_file.readlines()
+                prod_file.close()
+#                os.remove("tmp_files/%sorfs.tsv" % (record.query_short))
+                dup_removed_rows = {}
             for orf in record.intergenic_orfs:
                 if orf.start < orf.end:
                     direction = "+"
@@ -321,6 +345,29 @@ def __main__():
                 row = [query, record.cluster_genus_species, record.cluster_accession, 
                        orf.start, orf.end, direction, orf.sequence]
                 module.main_write_row(output_dir, row)
+                if args.prodigal and len(prod_results) > 1:
+                    prod_start, prod_end = record.find_prod_coordinates(min(orf.start, orf.end), max(orf.start, orf.end))
+                    for line in prod_results:
+                        tmp_line = line.split("\t")
+                        if tmp_line[0] == str(prod_start):
+                            if tmp_line[1] == str(prod_end):
+                                row = [">%s_Start:%d_End:%d" % (query, orf.start, orf.end), query, record.cluster_genus_species, record.cluster_accession, 
+                                        orf.start, orf.end, direction, tmp_line[3], tmp_line[4], 
+                                        tmp_line[5], tmp_line[6], tmp_line[7], tmp_line[8], tmp_line[9], 
+                                        tmp_line[10], tmp_line[11], orf.sequence]
+                                if direction+str(orf.end) in dup_removed_rows:
+                                    if float(dup_removed_rows[direction+str(orf.end)][7]) < float(row[7]):
+                                        dup_removed_rows[direction+str(orf.end)] = row
+                                else:
+                                    dup_removed_rows[direction+str(orf.end)] = row
+                                break
+            if args.prodigal:
+                for key in dup_removed_rows:
+                    module.prod_write_row(output_dir, dup_removed_rows[key])
+                try:
+                    os.remove("tmp_files/%sorfs.tsv" % (record.query_short))
+                except:
+                    pass
                 
             # Write unclassified CDSs
             for cds in record.CDSs:
@@ -352,6 +399,12 @@ def __main__():
             record = processed_records_q.get()    
         # END MAIN LOOP
         main_html.write("</html>")
+
+        #SWARM handling
+        if args.swarm:
+            prodigal_processing.swarm_filter(args.output_dir)
+            prodigal_processing.create_ssn(args.output_dir)
+
         # Update score w SVM.
         try:
             for peptide_type in peptide_types:

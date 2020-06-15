@@ -288,7 +288,7 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
               <tbody>
                 <tr>
                 <th scope="col">index</th>""")
-    if peptide_type in ["lasso", "lanthi", "lanthi1", "lanthi2", "lanthi3", "lanthi4", "sacti", "thio"]:
+    if peptide_type in ["lasso", "lanthi", "lanthi1", "lanthi2", "lanthi3", "lanthi4", "sacti", "thio", "linar"]:
         main_html.write("""
               <th scope="col">leader</th>
               <th scope="col">core</th>""")
@@ -326,9 +326,11 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
             main_html.write("</tr>\n")
             prev_end = orf.end
             index += 1
-    elif peptide_type in ["lasso", "lanthi", "lanthi1", "lanthi2", "lanthi3", "lanthi4", "sacti", "thio", "grasp"]:
+            
+    elif peptide_type in ["lasso", "lanthi", "lanthi1", "lanthi2", "lanthi3", "lanthi4", "sacti", "thio", "grasp", "linar"]:
         prev_end = 0
         rowcolor = 1
+
         for ripp in record.ripps[peptide_type]:
             if ripp.score <= ripp.CUTOFF // 2:
                 continue
@@ -343,7 +345,8 @@ def draw_orf_table(main_html, record, peptide_type, master_conf):
                 main_html.write('<tr style="background-color:#E8E8E8">\n')
             main_html.write("<td>%d</td>" % (index))
             if print_precursors:
-                if peptide_type in ["lasso", "lanthi", "lanthi1", "lanthi2", "lanthi3", "lanthi4", "sacti", "thio", "grasp"]:
+
+                if peptide_type in ["lasso", "lanthi", "lanthi1", "lanthi2", "lanthi3", "lanthi4", "sacti", "thio", "grasp", "linar"]:
                     main_html.write('<td style="text-align:right">%s</td>' % (compress_sequence(ripp.leader,50)))
                     main_html.write('<td style="text-align:right">%s</td>' % (compress_sequence(ripp.core, 50)))
                 else:
@@ -397,4 +400,4 @@ def write_record(main_html, master_conf, record, peptide_type):
     draw_orf_table(main_html, record, peptide_type, master_conf)
     index += 1
 
-    
+

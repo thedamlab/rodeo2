@@ -30,7 +30,7 @@
 #==============================================================================
 
 import hmmer_utils
-import csv
+import csv, subprocess, os
 import logging 
 from rodeo_main import VERBOSITY
 from ripp_modules.VirtualRipp import get_radar_score
@@ -70,6 +70,7 @@ class My_Record(object):
     #TODO get genus and species frecom gb file
     def __init__(self, query_accession_id):
         self.query_accession_id = query_accession_id
+        self.query_short = query_accession_id.split(".")[0]
         self.cluster_accession = ""
         self.cluster_sequence = ""
         self.cluster_length = ""
@@ -79,6 +80,8 @@ class My_Record(object):
         self.CDSs = []
         self.intergenic_seqs = []
         self.intergenic_orfs = []
+        self.prod_window_start = 0
+        self.prod_window_end = 0
         self.window_start = 0
         self.window_end = 0
         self.start_codons = ['ATG','GTG', 'TTG']
@@ -106,6 +109,16 @@ class My_Record(object):
             else:
                 i += 1
     
+    def trim_for_prodigal(self, n=50000):
+        """Trim the window down to -n nucleotides of the start of the 
+        query CDS and +n nucleotides of the end of the CDS"""
+        query_index = self.query_index
+        if query_index == -1:
+            return
+        self.prod_window_start = max(0, self.CDSs[query_index].start - n)
+        self.prod_window_end = min(len(self.cluster_sequence), 
+                              self.CDSs[query_index].end + n)
+
     #TODO cutoff or keep if in middle of gene?
     def trim_to_n_nucleotides(self, n):
         """Trim the window down to -n nucleotides of the start of the 
@@ -324,7 +337,14 @@ class My_Record(object):
                   " on strand " + str(strand))
             print(sub_seq.sequence + '\n')
         print("="*50)
-    
+
+
+    def find_prod_coordinates(self, beg, end):
+        if(beg<end):
+            return(beg-self.window_start+1, end-self.window_start)
+        else:
+            return(beg-self.window_start+2, end-self.window_start-1)                  
+        
     
 def update_score_w_svm(output_dir, records):
         """Order should be preserved. Goes through file and updates scores"""
@@ -358,5 +378,4 @@ def update_score_w_svm(output_dir, records):
                             return
                     ripp.score = int(line[score_col])
                     ripp.confidence = float(ripp.score)/(ripp.CUTOFF)
-                    
-                        
+
