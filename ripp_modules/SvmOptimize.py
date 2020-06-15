@@ -118,8 +118,8 @@ def main():
     
     for fold in folds_validation:
         for C_option in C_options:
-            print(C_option)
             for gamma_option in gamma_options:
+                print(C_option, gamma_option)
                 clf = svm.SVC(kernel=kernel_option,class_weight=class_weight_option,C=C_option,gamma=gamma_option)
                 prec = cross_val_score(clf, training_data_refined, training_data_classifications, cv=71, scoring='precision')
                 recd = cross_val_score(clf, training_data_refined, training_data_classifications, cv=71, scoring='recall')
