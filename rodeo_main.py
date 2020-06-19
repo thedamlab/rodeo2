@@ -212,9 +212,11 @@ def __main__():
         logger.critical("Invalid argument for -ft/-fetch_type")
         return None
     
-    if any(pt in ['sacti', 'lanthi', 'grasp'] for pt in args.peptide_types):
+    if any(pt in ['sacti', 'lanthi', 'linar', 'grasp'] for pt in args.peptide_types):
         if not any ("tigr" in hmm_name.lower() for hmm_name in args.custom_hmm):
-            logger.warn("Lanthi and/or sacti heuristics require TIGRFAM hmm. Make sure its location is specified with the -hmm or --custom_hmm flag.")
+            logger.warn("Lanthi, sacti, and/or linar heuristics require TIGRFAM hmm. Make sure its location is specified with the -hmm or --custom_hmm flag.")
+    if "linar" in args.peptide_types:
+        args.custom_hmm.append("ripp_modules/linar/hmms/linar.hmm")
     if "grasp" in args.peptide_types:
         args.custom_hmm.append("ripp_modules/grasp/hmms/grasp.hmm")
             
@@ -270,6 +272,8 @@ def __main__():
             import ripp_modules.sacti.sacti_module as module
         elif peptide_type == "thio":
             import ripp_modules.thio.thio_module as module
+        elif peptide_type == "linar":
+            import ripp_modules.linar.linar_module as module
         elif peptide_type == "grasp":
             import ripp_modules.grasp.grasp_module as module
         else:
