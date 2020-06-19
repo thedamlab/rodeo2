@@ -159,7 +159,7 @@ class My_Record(object):
         self.pfam_2_coords = {}
         for CDS in self.CDSs:
             CDS.pfam_descr_list = hmmer_utils.get_hmmer_info(CDS.sequence, primary_hmm, cust_hmm) #Possible input for n and e_cutoff here
-            if min_length <= len(CDS.sequence)/3 <= max_length: # len(CDS.pfam_descr_list) == 0 and 
+            if min_length <= len(CDS.sequence) <= max_length: # len(CDS.pfam_descr_list) == 0 and 
                 self.intergenic_orfs.append(CDS)
             for annot in CDS.pfam_descr_list:
                 if any(fam in annot[0] for fam in ["PF14404", "PF14406", "PF14407", "PF14408", "PF14409", "PF12559" ,"TIGR04186"]):
