@@ -215,7 +215,9 @@ def __main__():
     if any(pt in ['sacti', 'lanthi', 'linar', 'grasp'] for pt in args.peptide_types):
         if not any ("tigr" in hmm_name.lower() for hmm_name in args.custom_hmm):
             logger.warn("Lanthi, sacti, and/or linar heuristics require TIGRFAM hmm. Make sure its location is specified with the -hmm or --custom_hmm flag.")
-    if "linar" in args.peptide_types:
+    if "linar" in args.peptide_types and WEB_TOOL:
+        args.custom_hmm.append("ripp_modules/linar/hmms/")
+    elif "linar" in args.peptide_types:
         args.custom_hmm.append("ripp_modules/linar/hmms/linar.hmm")
     if "grasp" in args.peptide_types:
         args.custom_hmm.append("ripp_modules/grasp/hmms/grasp.hmm")
