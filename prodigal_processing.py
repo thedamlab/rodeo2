@@ -120,20 +120,31 @@ def run_prodigal(record):
         logger.critical("SIGINT recieved during Prodigal")
         raise KeyboardInterrupt
 
-def swarm_filter(output_dir, filtration_length=75, inclusion_length=150):
+def swarm_filter(output_dir, filtration_length=75, inclusion_length=120):
     input_file = open(output_dir + "/prodigal/prod_results.csv", 'r')
     output_fasta_file = open(output_dir + "/prodigal/filtered_sequences.txt", 'w')
+    output_fasta_file2 = open(output_dir + "/prodigal/unfiltered_sequences.txt", 'w')
     output_csv_file = open(output_dir + "/prodigal/filtered_prod_results.csv", 'w')
+    output_csv_file2 = open(output_dir + "/prodigal/unfiltered_prod_results.csv", "w")
 
     sequence_data = input_file.readlines()
-    output_csv_file.write(sequence_data[0])
 
-    maxtotalscore = 0.0
-    maxcodpotscore = 0.0
-    maxstrtscore = 0.0
-    maxrbsscore = 0.0
-    maxupsscore = 0.0
-    maxtypescore = 0.0
+    header = sequence_data[0].split(",")
+    line_to_print = ",".join([header[0], header[1], header[2], header[3], header[4], header[5], header[6], header[16][:-1], "Length",
+                            header[7], "Adj_" + header[7], header[8], "Adj_" + header[8], header[9], 
+                            "Adj_" + header[9], header[10], header[11], header[12], header[13],
+                            "Adj_" + header[13], header[14], "Adj_" + header[14], header[15], 
+                            "Adj_" + header[15], "Sum_Adj_Scores\n"])
+
+    output_csv_file.write(line_to_print)
+    output_csv_file2.write(line_to_print)
+
+    maxtotalscore = 0.1
+    maxcodpotscore = 0.1
+    maxstrtscore = 0.1
+    maxrbsscore = 0.1
+    maxupsscore = 0.1
+    maxtypescore = 0.1
     adjtotalscore = 0.0
     adjcodpotscore = 0.0
     adjstrtscore = 0.0
@@ -163,32 +174,87 @@ def swarm_filter(output_dir, filtration_length=75, inclusion_length=150):
         adjupsscore = statistics.median([float(entry[14])/maxupsscore, 0.0, 1.0])
         adjtypescore = statistics.median([float(entry[15])/maxtypescore, 0.0, 1.0])
 
-        if adjtotalscore + adjcodpotscore + adjstrtscore + adjrbsscore + adjupsscore + adjupsscore + adjtypescore > 1.0:
+        logit = adjtotalscore + adjcodpotscore + adjstrtscore + adjrbsscore + adjupsscore + adjtypescore
+
+        line_to_print = ",".join([entry[0], entry[1], entry[2], entry[3], entry[4], entry[5], entry[6], entry[16][:-1], str(len(entry[16])),
+                                    entry[7], str(adjtotalscore), entry[8], str(adjcodpotscore), entry[9], 
+                                    str(adjstrtscore), entry[10], entry[11], entry[12], entry[13],
+                                    str(adjrbsscore), entry[14], str(adjupsscore), entry[15], 
+                                    str(adjtypescore), str(logit)+"\n"])
+
+        if logit > 1:
             output_fasta_file.write(">%s\n%s" % (entry[0], entry[16]))
-            output_csv_file.write(line)
+            output_csv_file.write(line_to_print)
+
+        output_csv_file2.write(line_to_print)
+        output_fasta_file2.write(">%s\n%s" % (entry[0], entry[16]))
 
 def create_ssn(output_dir):
     process = subprocess.Popen(["diamond", "makedb", "--in", output_dir + "/prodigal/filtered_sequences.txt", "-d", output_dir + "/prodigal/align_db"])
     process.wait()
-    process = subprocess.Popen(["diamond", "blastp", "-d", output_dir + "/prodigal/align_db", "-q", output_dir + "/prodigal/filtered_sequences.txt", "-o", output_dir + "/prodigal/blastp_results.tsv", "--min-score", "0"])
+    process = subprocess.Popen(["diamond", "blastp", "-d", output_dir + "/prodigal/align_db", "-q", output_dir + "/prodigal/filtered_sequences.txt", 
+                                "-o", output_dir + "/prodigal/blastp_results.tsv", "--min-score", "0", "--more-sensitive"])
+    process.wait()
+
+    process = subprocess.Popen(["diamond", "makedb", "--in", output_dir + "/prodigal/unfiltered_sequences.txt", "-d", output_dir + "/prodigal/align_db2"])
+    process.wait()
+    process = subprocess.Popen(["diamond", "blastp", "-d", output_dir + "/prodigal/align_db2", "-q", output_dir + "/prodigal/unfiltered_sequences.txt", 
+                                "-o", output_dir + "/prodigal/blastp_results2.tsv", "--min-score", "0", "--more-sensitive"])
     process.wait()
 
     blastp_file = open(output_dir + "/prodigal/blastp_results.tsv", 'r')
-    ssn_file = open(output_dir + "/prodigal/precursor.ssn", 'w')
+    ssn_file = open(output_dir + "/prodigal/filtered_precursor.ssn", 'w')
     ssn_file.write("Node1\tNode2\tBitScore\n")
 
     blastp_results = blastp_file.readlines()
     for line in blastp_results:
     	result = line.split("\t")
-    	if result[0] == result[1]:
-    		continue
+#    	if result[0] == result[1]:
+#    		continue
     	ssn_file.write("%s\t%s\t%s\n" % (result[0], result[1], result[11]))
 
     blastp_file.close()
     ssn_file.close()
 
+    blastp_file = open(output_dir + "/prodigal/blastp_results2.tsv", 'r')
+    ssn_file = open(output_dir + "/prodigal/unfiltered_precursor.ssn", 'w')
+    ssn_file.write("Node1\tNode2\tBitScore\n")
+
+    blastp_results = blastp_file.readlines()
+    for line in blastp_results:
+        result = line.split("\t")
+#        if result[0] == result[1]:
+#            continue
+        ssn_file.write("%s\t%s\t%s\n" % (result[0], result[1], result[11]))
+
+    blastp_file.close()
+    ssn_file.close()    
+
     os.remove(output_dir + "/prodigal/align_db.dmnd")
     os.remove(output_dir + "/prodigal/blastp_results.tsv")
+    os.remove(output_dir + "/prodigal/align_db2.dmnd")
+    os.remove(output_dir + "/prodigal/blastp_results2.tsv")
+
+
+#def identify_precursor_clusters(output_dir):
+#    edges = open(output_dir + "/prodigal/precursor.ssn", 'r').readlines()
+#    nodes = []
+#    for edge in edges:
+#        data = edge.split("\t")
+#        if data[0] not in nodes:
+#            nodes.append(data[0])
+#        if data[1] not in nodes:
+#            nodes.append(data[1])
+#
+#    matrix = [[0 for i in range(0, len(nodes))] for j in range(0, len(nodes))]
+#    for edge in edges:
+#        data = edge.split("\t")
+#        index1 = nodes.index(data[0])
+#        index2 = nodes.index(data[1])
+#        matrix[index1][index2] = data[3]
+#
+#    print(matrix)
+
     	
 
 

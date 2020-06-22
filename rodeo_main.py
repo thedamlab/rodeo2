@@ -159,7 +159,6 @@ def __main__():
             raise KeyboardInterrupt
         except Exception as e:
             logger.error("Error with conf file %s" % (conf))
-            print(e)
     master_conf = config_parser.merge_confs(confs)
     master_conf = config_parser.merge_conf_and_arg(master_conf, args)
     master_conf["general"]["variables"]["precursor_min"] = min([master_conf[x]["variables"]["precursor_min"] for x in ["general"] + args.peptide_types])
@@ -193,6 +192,7 @@ def __main__():
         logger.warning("Problem creating configuration copy directory")
     if args.swarm:
         args.prodigal = True
+        args.print_precursors = True
     if args.prodigal:
         try:
             os.mkdir(args.output_dir + '/prodigal')
@@ -215,7 +215,7 @@ def __main__():
     
     if any(pt in ['sacti', 'lanthi', 'grasp', 'linar'] for pt in args.peptide_types):
         if not any ("tigr" in hmm_name.lower() for hmm_name in args.custom_hmm):
-            logger.warning("Lanthi, sacti, and grasp heuristics require TIGRFAM hmm. Make sure its location is specified with the -hmm or --custom_hmm flag.")
+            logger.warning("Lanthi, sacti, grasp, and linar heuristics require TIGRFAM hmm. Make sure its location is specified with the -hmm or --custom_hmm flag.")
     if "grasp" in args.peptide_types:
         args.custom_hmm.append("ripp_modules/grasp/hmms/grasp.hmm")
     if 'linar' in args.peptide_types:
@@ -335,7 +335,6 @@ def __main__():
                 prod_file = open("tmp_files/%sorfs.tsv" % (record.query_short), 'r')
                 prod_results = prod_file.readlines()
                 prod_file.close()
-#                os.remove("tmp_files/%sorfs.tsv" % (record.query_short))
                 dup_removed_rows = {}
             for orf in record.intergenic_orfs:
                 if orf.start < orf.end:
@@ -345,22 +344,25 @@ def __main__():
                 row = [query, record.cluster_genus_species, record.cluster_accession, 
                        orf.start, orf.end, direction, orf.sequence]
                 module.main_write_row(output_dir, row)
-                if args.prodigal and len(prod_results) > 1:
-                    prod_start, prod_end = record.find_prod_coordinates(min(orf.start, orf.end), max(orf.start, orf.end))
-                    for line in prod_results:
-                        tmp_line = line.split("\t")
-                        if tmp_line[0] == str(prod_start):
-                            if tmp_line[1] == str(prod_end):
-                                row = [">%s_Start:%d_End:%d" % (query, orf.start, orf.end), query, record.cluster_genus_species, record.cluster_accession, 
-                                        orf.start, orf.end, direction, tmp_line[3], tmp_line[4], 
-                                        tmp_line[5], tmp_line[6], tmp_line[7], tmp_line[8], tmp_line[9], 
-                                        tmp_line[10], tmp_line[11], orf.sequence]
-                                if direction+str(orf.end) in dup_removed_rows:
-                                    if float(dup_removed_rows[direction+str(orf.end)][7]) < float(row[7]):
+            if args.prodigal:
+                if len(prod_results) > 1:
+                    for orf in (record.intergenic_orfs + record.CDSs):
+                        prod_start, prod_end = record.find_prod_coordinates(min(orf.start, orf.end), max(orf.start, orf.end))
+                        for line in prod_results:
+                            tmp_line = line.split("\t")
+                            if tmp_line[0] == str(prod_start):
+                                if tmp_line[1] == str(prod_end):
+                                    row = [">%s_Start:%d_End:%d" % (query, orf.start, orf.end), query, record.cluster_genus_species, record.cluster_accession, 
+                                            orf.start, orf.end, direction, tmp_line[3], tmp_line[4], 
+                                            tmp_line[5], tmp_line[6], tmp_line[7], tmp_line[8], tmp_line[9], 
+                                            tmp_line[10], tmp_line[11], orf.sequence]
+                                    if direction+str(orf.end) in dup_removed_rows:
+                                        if float(dup_removed_rows[direction+str(orf.end)][7]) < float(row[7]):
+                                            dup_removed_rows[direction+str(orf.end)] = row
+                                    else:
                                         dup_removed_rows[direction+str(orf.end)] = row
-                                else:
-                                    dup_removed_rows[direction+str(orf.end)] = row
-                                break
+                                    break
+                            
             if args.prodigal:
                 for key in dup_removed_rows:
                     module.prod_write_row(output_dir, dup_removed_rows[key])

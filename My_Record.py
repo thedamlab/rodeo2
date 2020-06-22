@@ -271,7 +271,7 @@ class My_Record(object):
         #they share nucleotides with eachother
         i = 1
         while i < len(self.intergenic_orfs):
-            # print(self.intergenic_orfs[i].start)
+            #print(self.intergenic_orfs[i].sequence)
             if self.intergenic_orfs[i].start == self.intergenic_orfs[i-1].start:
                 del self.intergenic_orfs[i]
             i += 1
