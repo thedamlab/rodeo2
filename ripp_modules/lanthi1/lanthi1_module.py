@@ -225,5 +225,3 @@ class Ripp(VirtualRipp):
         scoring_csv_columns = [x for _, x in sorted(zip(scoring_column_names, scoring_csv_columns))]
         self.csv_columns += [self.score] + scoring_csv_columns
         
-                
-  

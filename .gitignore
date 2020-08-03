@@ -1,8 +1,9 @@
-/ripp_modules/*/svm/fitting*.csv
-/.spyproject/
+ripp_modules/*/svm/fitting*.csv
+.spyproject/
 __pycache__/
 *.pyc
-/confs/default.conf
-
-
-
+confs/default.conf
+**/*.pyc
+**/.DS_Store
+**/fitting_set.csv
+**/fitting_results.csv

@@ -391,7 +391,6 @@ class Ripp(VirtualRipp):
         self.fimo_motifs = fimo_motifs
         self.fimo_scores = fimo_scores
         self.score += motif_score
-
         self.score = score
         self.csv_columns += [score] + columns
         return
