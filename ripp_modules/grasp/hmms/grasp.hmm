@@ -2014,7 +2014,7 @@ HMM          A        C        D        E        F        G        H        I   
 HMMER3/f [3.1b2 | February 2015]
 NAME Group_2
 ACC Group_2
-DESC Macrolactam-installing ATP-grasp ligase (microviridins)
+DESC Macrolactone-installing ATP-grasp ligase (plesiocins)
 LENG  310
 ALPH  amino
 RF    no
@@ -4852,7 +4852,7 @@ HMM          A        C        D        E        F        G        H        I   
 HMMER3/f [3.1b2 | February 2015]
 NAME  Group_5
 ACC  Group_5
-DESC Macrolactone-installing ATP-grasp ligase (OEP4_1)
+DESC Macrolact(one/am)-installing ATP-grasp ligase (OEP5_1)
 LENG  320
 ALPH  amino
 RF    no
