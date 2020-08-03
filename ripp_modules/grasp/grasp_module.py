@@ -44,7 +44,7 @@ import hmmer_utils
 from collections import defaultdict
 
 peptide_type = "grasp"
-CUTOFF = 10
+CUTOFF = 12
 index = 0
 
 
