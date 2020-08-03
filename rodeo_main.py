@@ -62,7 +62,6 @@ def __main__():
     from record_processing import fill_request_queue, ErrorReport
     import My_Record
     import record_processing
-    import prodigal_processing
     
 #==============================================================================
 #     First we will handle the input, whether it be an accession, a list of acc
@@ -103,10 +102,6 @@ def __main__():
                         help="Score RiPPs even if they don't have a valid split site")
     parser.add_argument('-print', '--print_precursors', action='store_true', default=None,
                         help="Print precursors in HTML file")
-    parser.add_argument('-prod', '--prodigal', action='store_true', default=False,
-                        help="Run Prodigal scoring algorithm")
-    parser.add_argument('-s', '--swarm', action='store_true', default=False,
-                        help="Use Prodigal scoring to identify potential precursors")
     parser.add_argument('-w', '--web', action='store_true', default=False,
                         help="Only to use when running as a web tool")
     
@@ -200,14 +195,6 @@ def __main__():
                  logger.warning("Problem copying configuration file {}".format("conf_file"))
     except:
         logger.warning("Problem creating configuration copy directory")
-    if args.swarm:
-        args.prodigal = True
-        args.print_precursors = True
-    if args.prodigal:
-        try:
-            os.mkdir(args.output_dir + '/prodigal')
-        except:
-            logger.warning("Problem creating prodigal results directory")
     if overwriting_folder:
         logger.warning("Overwriting %s folder." % (args.output_dir))
     
@@ -260,8 +247,6 @@ def __main__():
     
     module.main_write_headers(output_dir)
     module.co_occur_write_headers(output_dir)
-    if args.prodigal:
-        module.prod_write_headers(output_dir)
     main_html = open(output_dir + "/main_results.html", 'w')
     ripp_html_generator.write_header(main_html, master_conf, 'general')
     ripp_html_generator.write_table_of_contents(main_html, queries)
@@ -343,11 +328,6 @@ def __main__():
             
             # Write unclassified ripps
             module = nulltype_module
-            if args.prodigal:
-                prod_file = open("tmp_files/%sorfs.tsv" % (record.query_short), 'r')
-                prod_results = prod_file.readlines()
-                prod_file.close()
-                dup_removed_rows = {}
             for orf in record.intergenic_orfs:
                 if orf.start < orf.end:
                     direction = "+"

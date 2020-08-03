@@ -109,15 +109,6 @@ class My_Record(object):
             else:
                 i += 1
     
-    def trim_for_prodigal(self, n=50000):
-        """Trim the window down to -n nucleotides of the start of the 
-        query CDS and +n nucleotides of the end of the CDS"""
-        query_index = self.query_index
-        if query_index == -1:
-            return
-        self.prod_window_start = max(0, self.CDSs[query_index].start - n)
-        self.prod_window_end = min(len(self.cluster_sequence), 
-                              self.CDSs[query_index].end + n)
 
     #TODO cutoff or keep if in middle of gene?
     def trim_to_n_nucleotides(self, n):
@@ -339,12 +330,6 @@ class My_Record(object):
         print("="*50)
 
 
-    def find_prod_coordinates(self, beg, end):
-        if(beg<end):
-            return(beg-self.window_start+1, end-self.window_start)
-        else:
-            return(beg-self.window_start+2, end-self.window_start-1)                  
-        
     
 def update_score_w_svm(output_dir, records):
         """Order should be preserved. Goes through file and updates scores"""
