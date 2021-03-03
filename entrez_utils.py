@@ -34,7 +34,6 @@
 
 import traceback
 from Bio import Entrez, SeqIO
-from Bio.Alphabet import generic_dna
 from My_Record import My_Record, Sub_Seq
 import logging
 from rodeo_main import VERBOSITY
@@ -125,7 +124,7 @@ def get_record_from_gb_handle(gb_handle, nuccore_accession_id):
     logger.info("Parsing %s handle." % nuccore_accession_id)
     try:
         try:
-            gb_record = SeqIO.parse(gb_handle, "genbank", generic_dna)
+            gb_record = SeqIO.parse(gb_handle, "genbank")
         except KeyboardInterrupt:
             raise KeyboardInterrupt
         except Exception as e:
