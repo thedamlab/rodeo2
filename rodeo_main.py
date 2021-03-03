@@ -30,6 +30,7 @@
 #==============================================================================
 
 import logging
+import pathlib
 import multiprocessing
 import shutil
 import os
@@ -48,12 +49,12 @@ WEB_TOOL = False
 if socket.gethostname() == "rodeo.scs.illinois.edu":
     WEB_TOOL = True
 if WEB_TOOL:
-    RODEO_DIR = "/home/ubuntu/website/go/rodeo2/"
     os.chdir(RODEO_DIR)
 VERSION = "2.2.0"
 VERBOSITY = logging.INFO
 QUEUE_CAP = "END_OF_QUEUE"
 processes = []
+RODEO_DIR = pathlib.Path(__file__).parent.absolute()
 
 def __main__():
     import nulltype_module
@@ -157,7 +158,7 @@ def __main__():
 #==============================================================================
     confs = []
     
-    for conf in ['confs/default.conf'] + args.conf_file:
+    for conf in [os.path.join(RODEO_DIR , 'confs/default.conf')] + args.conf_file:
         try:
             confs.append(config_parser.parse_config_file(conf))
         except KeyboardInterrupt:
