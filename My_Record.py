@@ -149,7 +149,11 @@ class My_Record(object):
     def annotate_w_hmmer(self, primary_hmm, cust_hmm, min_length, max_length):
         self.pfam_2_coords = {}
         for CDS in self.CDSs:
-            CDS.pfam_descr_list = hmmer_utils.get_hmmer_info(CDS.sequence, primary_hmm, cust_hmm) #Possible input for n and e_cutoff here
+            try:
+                CDS.pfam_descr_list = hmmer_utils.get_hmmer_info(CDS.sequence, primary_hmm, cust_hmm) #Possible input for n and e_cutoff here
+            except:
+                logger.error("Unable to obtain results from HMMER. Please check provided Pfam path")
+                CDS.pfam_descr_list = []
             if min_length <= len(CDS.sequence) <= max_length: # len(CDS.pfam_descr_list) == 0 and 
                 self.intergenic_orfs.append(CDS)
             for annot in CDS.pfam_descr_list:
