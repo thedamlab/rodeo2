@@ -160,12 +160,12 @@ def get_radar_score(sequence):
     #TODO change to temp file
         pid = str(os.getpid())
         try:
-            with open("tmp_files/" + pid + "RADAR.fasta", 'w+') as tfile:
+            with open("/tmp/" + pid + "RADAR.fasta", 'w+') as tfile:
                 tfile.write(">query\n%s" % (sequence))
             if WEB_TOOL:
                 raise NotImplementedError
             else:
-                command = ["radar.py -a tmp_files/" + pid + "RADAR.fasta"]
+                command = ["radar.py -a /tmp/" + pid + "RADAR.fasta"]
             try:
                 out, err, retcode = execute(command)
             except OSError:
@@ -181,12 +181,12 @@ def get_radar_score(sequence):
                 logger.error(sequence)
                 return 0
             try:
-                os.remove("tmp_files/" + pid + "RADAR.fasta")
+                os.remove("/tmp/" + pid + "RADAR.fasta")
             except OSError:
                     pass
         except KeyboardInterrupt:
             try:
-                os.remove("tmp_files/" + pid + "RADAR.fasta")
+                os.remove("/tmp/" + pid + "RADAR.fasta")
                 return
             except OSError:
                 pass
@@ -263,12 +263,12 @@ class VirtualRipp(object):
             query_motif_file = "ripp_modules/" + self.peptide_type + '/' + self.peptide_type + "_fimo.txt"
         pid = str(os.getpid())
         try:
-            with open("tmp_files/" + pid + "FIMO.seq", 'w+') as tfile:
+            with open("/tmp/" + pid + "FIMO.seq", 'w+') as tfile:
                 tfile.write(">query\n%s" % (self.sequence))
             if WEB_TOOL:
-                command = ["/home/ubuntu/meme/bin/fimo --text --verbosity 1 " + query_motif_file + ' ' + "tmp_files/" + pid + "FIMO.seq"]
+                command = ["/home/ubuntu/meme/bin/fimo --text --verbosity 1 " + query_motif_file + ' ' + "/tmp/" + pid + "FIMO.seq"]
             else:
-                command = ["fimo --text --verbosity 1 " + query_motif_file + ' ' + "tmp_files/" + pid + "FIMO.seq"]
+                command = ["fimo --text --verbosity 1 " + query_motif_file + ' ' + "/tmp/" + pid + "FIMO.seq"]
             try:
                 out, err, retcode = execute(command)
             except OSError:
@@ -283,12 +283,12 @@ class VirtualRipp(object):
                                 err, query_motif_file)
                 return ""
             try:
-                os.remove("tmp_files/" + pid + "FIMO.seq")
+                os.remove("/tmp/" + pid + "FIMO.seq")
             except OSError:
                     pass
         except KeyboardInterrupt:
             try:
-                os.remove("tmp_files/" + pid + "FIMO.seq")
+                os.remove("/tmp/" + pid + "FIMO.seq")
                 return
             except OSError:
                 pass

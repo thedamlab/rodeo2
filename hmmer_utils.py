@@ -113,7 +113,7 @@ def get_hmmer_info(query, primary_hmm, cust_hmm, n=5, e_cutoff=.001, query_is_ac
     """Returns top n hmmscan hits with e_values lower than e_cutoff"""
     try:
         global pid_prefix
-        pid_prefix = "tmp_files/" + str(os.getpid())
+        pid_prefix = "/tmp/" + str(os.getpid())
         _generate_fasta_from_string(query)
         pfam_desc_list = []
         try:
