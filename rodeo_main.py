@@ -52,7 +52,7 @@ if socket.gethostname() == "rodeo.scs.illinois.edu":
 RODEO_DIR = pathlib.Path(__file__).parent.absolute()
 if WEB_TOOL:
     os.chdir(RODEO_DIR)
-VERSION = "2.3.1"
+VERSION = "2.3.3"
 VERBOSITY = logging.INFO
 QUEUE_CAP = "END_OF_QUEUE"
 processes = []
