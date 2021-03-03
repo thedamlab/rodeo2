@@ -40,6 +40,8 @@ import re
 import numpy as np
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from ripp_modules.VirtualRipp import VirtualRipp
+import pathlib
+FILE_DIR = pathlib.Path(__file__).parent.absolute()
 
 peptide_type = "thio"
 CUTOFF = 20
@@ -53,7 +55,7 @@ def write_csv_headers(output_dir):
     svm_headers = svm_headers.split(',')
     features_headers = ["Accession_id", "Genus/Species/Code", "Leader", "Core", "Start", "End", "Total Score", "Valid Precursor" ] + svm_headers
     features_csv_file = open(dir_prefix + "temp_features.csv", 'w')
-    svm_csv_file = open("ripp_modules/thio/svm/fitting_set.csv", 'w')
+    svm_csv_file = open("{}/svm/fitting_set.csv".format(FILE_DIR), 'w')
     features_writer = csv.writer(features_csv_file)
     svm_writer = csv.writer(svm_csv_file)
     features_writer.writerow(features_headers)
@@ -109,7 +111,7 @@ class Ripp(VirtualRipp):
 #            self.leader = self.sequence[:self.split]
 #            self.core = self.sequence[self.split:]
         scores = [(1,int(.25*len(self.sequence)))]*3
-        fimo_output = self.run_fimo_simple("ripp_modules/thio/berninamycin_fimo.txt")
+        fimo_output = self.run_fimo_simple("{}/berninamycin_fimo.txt".format(FILE_DIR))
         fimo_output = fimo_output.split('\n')
         valid_split = False
         if len(fimo_output) > 1:
@@ -120,7 +122,7 @@ class Ripp(VirtualRipp):
                 if float(line[7]) < scores[0][0]:
                     scores[0] = (float(line[7]), int(line[4]))
             valid_split = True    
-        fimo_output = self.run_fimo_simple("ripp_modules/thio/thio_fimo.txt").split('\n')
+        fimo_output = self.run_fimo_simple("{}/thio_fimo.txt".format(FILE_DIR)).split('\n')
         if len(fimo_output) > 1:
             for line in fimo_output[1:]:
                 line = line.split('\t')
@@ -129,7 +131,7 @@ class Ripp(VirtualRipp):
                 if float(line[7]) < scores[1][0]:
                     scores[1] = (float(line[7]), int(line[4]))
             valid_split = True    
-        fimo_output = self.run_fimo_simple("ripp_modules/thio/dhpip_fimo.txt").split('\n')
+        fimo_output = self.run_fimo_simple("{}/dhpip_fimo.txt".format(FILE_DIR)).split('\n')
         if len(fimo_output) > 1:
             for line in fimo_output[1:]:
                 line = line.split('\t')

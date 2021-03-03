@@ -41,6 +41,8 @@ import re
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from ripp_modules.VirtualRipp import VirtualRipp
 import hmmer_utils
+import pathlib
+FILE_DIR = pathlib.Path(__file__).parent.absolute()
 
 peptide_type = "lanthi"
 CUTOFF = 14
@@ -54,7 +56,7 @@ def write_csv_headers(output_dir):
     svm_headers = svm_headers.split(',')
     features_headers = ["Accession_id", "Genus/Species/Code", "Leader", "Core", "Start", "End", "Total Score", "Valid Precursor" ] + svm_headers
     features_csv_file = open(dir_prefix + "temp_features.csv", 'w')
-    svm_csv_file = open("ripp_modules/lanthi/svm/fitting_set.csv", 'w')
+    svm_csv_file = open(os.path.join(FILE_DIR, "svm/fitting_set.csv"), 'w')
     features_writer = csv.writer(features_csv_file)
     svm_writer = csv.writer(svm_csv_file)
     features_writer.writerow(features_headers)

@@ -49,13 +49,13 @@ except ImportError:
 WEB_TOOL = False
 if socket.gethostname() == "rodeo.scs.illinois.edu":
     WEB_TOOL = True
+RODEO_DIR = pathlib.Path(__file__).parent.absolute()
 if WEB_TOOL:
     os.chdir(RODEO_DIR)
-VERSION = "2.3.0"
+VERSION = "2.3.1"
 VERBOSITY = logging.INFO
 QUEUE_CAP = "END_OF_QUEUE"
 processes = []
-RODEO_DIR = pathlib.Path(__file__).parent.absolute()
 
 def __main__():
     import nulltype_module
@@ -216,11 +216,11 @@ def __main__():
         if not any ("tigr" in hmm_name.lower() for hmm_name in args.custom_hmm):
             logger.warn("Lanthi, sacti, and/or linar heuristics require TIGRFAM hmm. Make sure its location is specified with the -hmm or --custom_hmm flag.")
     if "linar" in args.peptide_types and WEB_TOOL:
-        args.custom_hmm.append("ripp_modules/linar/hmms/")
+        args.custom_hmm.append(os.path.join(RODEO_DIR, "ripp_modules/linar/hmms/"))
     elif "linar" in args.peptide_types:
-        args.custom_hmm.append("ripp_modules/linar/hmms/linar.hmm")
+        args.custom_hmm.append(os.path.join(RODEO_DIR, "ripp_modules/linar/hmms/linar.hmm"))
     if "grasp" in args.peptide_types:
-        args.custom_hmm.append("ripp_modules/grasp/hmms/grasp.hmm")
+        args.custom_hmm.append(os.path.join(RODEO_DIR, "ripp_modules/grasp/hmms/grasp.hmm"))
             
 #==============================================================================
 #   Set up queries/read query files   

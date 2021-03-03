@@ -42,6 +42,8 @@ from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from ripp_modules.VirtualRipp import VirtualRipp
 import hmmer_utils
 from collections import defaultdict
+import pathlib
+FILE_DIR = pathlib.Path(__file__).parent.absolute()
 
 peptide_type = "grasp"
 CUTOFF = 12
@@ -56,7 +58,7 @@ def write_csv_headers(output_dir):
     svm_headers = svm_headers.split(',')
     features_headers = ['Accession_id', 'Genus/Species', 'First half', 'Second Half', 'Start', 'End', "Total Score", "Valid Precursor"] + svm_headers 
     features_csv_file = open(dir_prefix + "temp_features.csv", 'w')
-    svm_csv_file = open("ripp_modules/grasp/svm/fitting_set.csv", 'w')
+    svm_csv_file = open("{}/svm/fitting_set.csv".format(FILE_DIR), 'w')
     features_writer = csv.writer(features_csv_file)
     svm_writer = csv.writer(svm_csv_file)
     features_writer.writerow(features_headers)
@@ -343,7 +345,7 @@ class Ripp(VirtualRipp):
         
         #MOTIFS
         all_fimo_motifs, all_fimo_score = [], {}
-        fimo_motifs, fimo_scores = self.get_fimo_score("ripp_modules/" + self.peptide_type + "/MEME/Graspetide_1/meme.txt")
+        fimo_motifs, fimo_scores = self.get_fimo_score("{}/MEME/Graspetide_1/meme.txt".format(FILE_DIR))
         all_motifs = [
             'KNKNSKKKPFFASFLEKQVKDPETVKGG',
              'VTMKYPSDGDE',
@@ -392,7 +394,7 @@ class Ripp(VirtualRipp):
         all_fimo_motifs.extend(fimo_motifs)
         all_fimo_score.update(fimo_scores)
         
-        fimo_motifs, fimo_scores = self.get_fimo_score("ripp_modules/" + self.peptide_type + "/MEME/Graspetide_2/meme.txt")
+        fimo_motifs, fimo_scores = self.get_fimo_score("{}/MEME/Graspetide_2/meme.txt".format(FILE_DIR))
         if motif_4 in fimo_motifs:
             self.score += fimo_motifs.count(motif_4)
             scoring_csv_columns.append(fimo_motifs.count(motif_4))
@@ -401,7 +403,7 @@ class Ripp(VirtualRipp):
         all_fimo_motifs.extend(fimo_motifs)
         all_fimo_score.update(fimo_scores)
         
-        fimo_motifs, fimo_scores = self.get_fimo_score("ripp_modules/" + self.peptide_type + "/MEME/Graspetide_3/meme.txt")
+        fimo_motifs, fimo_scores = self.get_fimo_score("{}/MEME/Graspetide_3/meme.txt".format(FILE_DIR))
         if motif_5 in fimo_motifs:
             self.score += 1
             scoring_csv_columns.append(1)
@@ -415,7 +417,7 @@ class Ripp(VirtualRipp):
         all_fimo_motifs.extend(fimo_motifs)
         all_fimo_score.update(fimo_scores)
             
-        fimo_motifs, fimo_scores = self.get_fimo_score("ripp_modules/" + self.peptide_type + "/MEME/Graspetide_4/meme.txt")
+        fimo_motifs, fimo_scores = self.get_fimo_score("{}/MEME/Graspetide_4/meme.txt".format(FILE_DIR))
         if motif_7 in fimo_motifs:
             self.score += fimo_motifs.count(motif_7)
             scoring_csv_columns.append(fimo_motifs.count(motif_7))
@@ -424,7 +426,7 @@ class Ripp(VirtualRipp):
         all_fimo_motifs.extend(fimo_motifs)
         all_fimo_score.update(fimo_scores)
             
-        fimo_motifs, fimo_scores = self.get_fimo_score("ripp_modules/" + self.peptide_type + "/MEME/Graspetide_5/meme.txt")
+        fimo_motifs, fimo_scores = self.get_fimo_score("{}/MEME/Graspetide_5/meme.txt".format(FILE_DIR))
         if motif_8 in fimo_motifs:
             self.score += fimo_motifs.count(motif_8)
             scoring_csv_columns.append(fimo_motifs.count(motif_8))
@@ -433,7 +435,7 @@ class Ripp(VirtualRipp):
         all_fimo_motifs.extend(fimo_motifs)
         all_fimo_score.update(fimo_scores)
             
-        fimo_motifs, fimo_scores = self.get_fimo_score("ripp_modules/" + self.peptide_type + "/MEME/Graspetide_6/meme.txt")
+        fimo_motifs, fimo_scores = self.get_fimo_score("{}/MEME/Graspetide_6/meme.txt".format(FILE_DIR))
         if motif_9 in fimo_motifs:
             self.score += fimo_motifs.count(motif_9)
             scoring_csv_columns.append(fimo_motifs.count(motif_9))

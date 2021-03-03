@@ -41,6 +41,8 @@ import numpy as np
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from ripp_modules.VirtualRipp import VirtualRipp
 import hmmer_utils
+import pathlib
+FILE_DIR = pathlib.Path(__file__).parent.absolute()
 
 peptide_type = "linar"
 CUTOFF = 12
@@ -54,7 +56,7 @@ def write_csv_headers(output_dir):
     svm_headers = svm_headers.split(',')
     features_headers = ["Accession_id", "Genus/Species/Code", "Leader", "Core", "Start", "End", "Total Score", "Valid Precursor" ] + svm_headers
     features_csv_file = open(dir_prefix + "temp_features.csv", 'w')
-    svm_csv_file = open("ripp_modules/linar/svm/fitting_set.csv", 'w')
+    svm_csv_file = open("{}/svm/fitting_set.csv".format(FILE_DIR), 'w')
     features_writer = csv.writer(features_csv_file)
     svm_writer = csv.writer(svm_csv_file)
     features_writer.writerow(features_headers)
@@ -84,7 +86,7 @@ class Ripp(VirtualRipp):
         # If no motif is identified, then regular expressions are used to predict the cleavage site.
         # If still no cleavage site is identified, a default cleavage site halfway through the sequence is selected.
         score = [1, int(.50*len(self.sequence))]
-        fimo_output = self.run_fimo_simple("ripp_modules/linar/linar_cutsites.txt")
+        fimo_output = self.run_fimo_simple("{}/linar_cutsites.txt".format(FILE_DIR))
         fimo_output = fimo_output.split('\n')
         valid_split = False
         if len(fimo_output) > 1:
@@ -204,7 +206,7 @@ class Ripp(VirtualRipp):
             tabs.append(0)
 
         #Positive hit for LinA.hmm file at e-value < 0.001
-        precursor_pfam = hmmer_utils.get_hmmer_info(self.sequence, "ripp_modules/linar/hmms/LinA.hmm", "", n=1)
+        precursor_pfam = hmmer_utils.get_hmmer_info(self.sequence, "{}/hmms/LinA.hmm".format(FILE_DIR), "", n=1)
         if precursor_pfam and len(self.sequence) < 120:
             score += 10
 

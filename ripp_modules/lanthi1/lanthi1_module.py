@@ -42,6 +42,8 @@ from Bio.SeqUtils.ProtParam import ProteinAnalysis
 import numpy as np
 from ripp_modules.VirtualRipp import VirtualRipp
 import hmmer_utils
+import pathlib
+FILE_DIR = pathlib.Path(__file__).parent.absolute()
 
 peptide_type = "lanthi1"
 CUTOFF = 20
@@ -56,7 +58,7 @@ def write_csv_headers(output_dir):
     svm_headers = svm_headers.split(',')
     features_headers = ["Accession_id", "Genus/Species/Code", "Leader", "Core", "Start", "End", "Total Score", "Valid Precursor" ] + svm_headers
     features_csv_file = open(dir_prefix + "temp_features.csv", 'w')
-    svm_csv_file = open("ripp_modules/{}/svm/fitting_set.csv".format(peptide_type), 'w')
+    svm_csv_file = open("{}/svm/fitting_set.csv".format(FILE_DIR), 'w')
     features_writer = csv.writer(features_csv_file)
     svm_writer = csv.writer(svm_csv_file)
     features_writer.writerow(features_headers)
@@ -96,7 +98,7 @@ class Ripp(VirtualRipp):
     def set_split(self):
         """Try to identify cleavage site using regular expressions"""
         
-        f_scores = self.get_fimo_score("ripp_modules/{}/{}_leader_fimo.txt".format(peptide_type, peptide_type))  
+        f_scores = self.get_fimo_score("{}/{}_leader_fimo.txt".format(FILE_DIR, peptide_type))  
         l_stop = sorted([0] + f_scores[2])[-1]
         if len(f_scores[0]) > 0:
             self.score += 10

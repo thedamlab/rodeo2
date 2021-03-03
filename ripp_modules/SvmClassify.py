@@ -59,6 +59,8 @@ import csv
 
 from sklearn import svm
 from sklearn import preprocessing
+import pathlib
+FILE_DIR = pathlib.Path(__file__).parent.absolute()
 
 
 class SVMRunner(object):
@@ -67,7 +69,7 @@ class SVMRunner(object):
         self.peptide_type = peptide_type
         # CONFIGURATION OPTIONS
         ''' change these as desired '''
-        prefix = 'ripp_modules/{}/svm'.format(peptide_type)
+        prefix = '{}/{}/svm'.format(FILE_DIR, peptide_type)
         self.input_training_file = '{}/{}_training_set.csv'.format(prefix, peptide_type)     # the CSV containing the training set
         self.input_fitting_file = '{}/fitting_set.csv'.format(prefix)          # the CSV containing the data to be fitted
         self.output_filename = '{}/fitting_results.csv'.format(prefix)      # output filename; this will be a CSV with the first column being the primary key and the second being the classification

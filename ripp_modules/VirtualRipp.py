@@ -37,6 +37,8 @@ import logging
 import socket
 import ripp_modules.SvmClassify as svmc
 from rodeo_main import VERBOSITY
+import pathlib
+FILE_DIR = pathlib.Path(__file__).parent.absolute()
 
 WEB_TOOL = False
 if socket.gethostname() == "rodeo.scs.illinois.edu":
@@ -84,7 +86,7 @@ def ripp_write_rows(output_dir, peptide_type, accession_id, genus_species, list_
     dir_prefix = output_dir + '/{}/'.format(peptide_type)
     global index
     features_csv_file = open(dir_prefix + "temp_features.csv", 'a')
-    svm_csv_file = open("ripp_modules/{}/svm/fitting_set.csv".format(peptide_type), 'a')
+    svm_csv_file = open(os.path.join(FILE_DIR, "{}/svm/fitting_set.csv".format(peptide_type)), 'a')
     features_writer = csv.writer(features_csv_file)
     svm_writer = csv.writer(svm_csv_file)
     for row in list_of_rows:
@@ -95,7 +97,7 @@ def ripp_write_rows(output_dir, peptide_type, accession_id, genus_species, list_
 def run_svm(output_dir, peptide_type, cutoff, feature_count=5):
     runner = svmc.SVMRunner(peptide_type)
     runner.run_svm()
-    svm_output_reader = csv.reader(open("ripp_modules/{}/svm/fitting_results.csv".format(peptide_type)))
+    svm_output_reader = csv.reader(open(os.path.join(FILE_DIR, "{}/svm/fitting_results.csv".format(peptide_type))))
     final_output_writer = csv.writer(open(output_dir + "/{}/{}_features.csv".format(peptide_type, peptide_type), 'w'))
     features_reader = csv.reader(open(output_dir + "/{}/temp_features.csv".format(peptide_type)))
     header_row = next(features_reader) #skip header
@@ -237,7 +239,7 @@ class VirtualRipp(object):
             logger.error("{} not a valid peptide type".format(self.peptide_type))
             
         svm.run_svm()
-        svm_output_reader = csv.reader(open("ripp_modules/" + self.peptide_type + "/svm/fitting_results.csv"))
+        svm_output_reader = csv.reader(open(os.path.join(FILE_DIR, self.peptide_type, "svm/fitting_results.csv")))
         final_output_writer = csv.writer(open(output_dir + "/" + self.peptide_type + '/'\
                                               + self.peptide_type + "_features.csv", 'w'))
         features_reader = csv.reader(open(output_dir + "/" + self.peptide_type + '/'\
@@ -260,7 +262,7 @@ class VirtualRipp(object):
     def run_fimo_simple(self, query_motif_file=None):
     #TODO change to temp file
         if not query_motif_file:
-            query_motif_file = "ripp_modules/" + self.peptide_type + '/' + self.peptide_type + "_fimo.txt"
+            query_motif_file = os.path.join(FILE_DIR, self.peptide_type, self.peptide_type + "_fimo.txt")
         pid = str(os.getpid())
         try:
             with open("/tmp/" + pid + "FIMO.seq", 'w+') as tfile:
