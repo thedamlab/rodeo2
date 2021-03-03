@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #==============================================================================
 # Copyright (C) 2017 Bryce L. Kille
@@ -50,7 +51,7 @@ if socket.gethostname() == "rodeo.scs.illinois.edu":
     WEB_TOOL = True
 if WEB_TOOL:
     os.chdir(RODEO_DIR)
-VERSION = "2.2.0"
+VERSION = "2.3.0"
 VERBOSITY = logging.INFO
 QUEUE_CAP = "END_OF_QUEUE"
 processes = []
